@@ -1,0 +1,32 @@
+name: ci-simulated
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.15.2
+
+      - name: Helm lint charts
+        run: |
+          helm lint helm/charts/frontend
+          helm lint helm/charts/backend
+          helm lint helm/charts/postgres
+
+      - name: Template sanity check (dev env)
+        run: |
+          helm template frontend-dev helm/charts/frontend -f helm/values/frontend-dev.yaml >/dev/null
+          helm template backend-dev helm/charts/backend -f helm/values/backend-dev.yaml >/dev/null
+          helm template postgres-dev helm/charts/postgres -f helm/values/postgres-dev.yaml >/dev/null
+

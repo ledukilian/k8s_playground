@@ -1,0 +1,27 @@
+apiVersion: k3d.io/v1alpha5
+kind: Simple
+metadata:
+  name: k8s-playground
+servers: 1
+agents: 2
+network: k8s-playground
+image: rancher/k3s:v1.30.2-k3s1
+ports:
+  - port: 80:80@loadbalancer
+  - port: 443:443@loadbalancer
+kubeAPI:
+  hostPort: "6444"
+registries:
+  create:
+    name: k3d-playground-registry
+    hostPort: "5111"
+options:
+  k3s:
+    extraServerArgs:
+      - "--disable=servicelb"
+  kubeconfig:
+    updateDefaultKubeconfig: true
+    switchCurrentContext: true
+  runtime:
+    gpuRequest: "none"
+

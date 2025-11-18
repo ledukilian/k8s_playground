@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: List
+metadata:
+  name: playground-namespaces
+items:
+  - apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: dev
+      labels:
+        playground/env: dev
+  - apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: staging
+      labels:
+        playground/env: staging
+  - apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: prod
+      labels:
+        playground/env: prod
+

@@ -1,0 +1,7 @@
+auth:
+  database: dev_playground
+  username: playground
+  password: devpass
+persistence:
+  size: 3Gi
+

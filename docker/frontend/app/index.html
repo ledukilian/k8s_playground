@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kubernetes Playground – Frontend démo</title>
+    <style>
+      :root {
+        font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #0f172a;
+        color: #f8fafc;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .card {
+        width: min(540px, 90vw);
+        border-radius: 24px;
+        border: 1px solid rgba(148, 163, 184, 0.3);
+        padding: 2.5rem;
+        background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(30, 64, 175, 0.65));
+        box-shadow: 0 15px 50px rgba(15, 23, 42, 0.6);
+      }
+      h1 {
+        font-size: clamp(1.6rem, 4vw, 2.4rem);
+        margin-bottom: 0.5rem;
+      }
+      p {
+        margin: 0.5rem 0;
+        line-height: 1.6;
+        color: rgba(226, 232, 240, 0.9);
+      }
+      code {
+        background: rgba(15, 118, 110, 0.2);
+        padding: 0.2rem 0.5rem;
+        border-radius: 6px;
+        font-size: 0.9rem;
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.25rem 0.7rem;
+        border-radius: 999px;
+        font-size: 0.85rem;
+        background: rgba(248, 250, 252, 0.1);
+        margin-bottom: 1rem;
+      }
+      .cta {
+        margin-top: 1.5rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.8rem 1.6rem;
+        border-radius: 14px;
+        border: 1px solid rgba(96, 165, 250, 0.5);
+        text-decoration: none;
+        font-weight: 600;
+        color: #e0f2fe;
+      }
+      small {
+        display: block;
+        margin-top: 2rem;
+        font-size: 0.8rem;
+        color: rgba(148, 163, 184, 0.8);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="badge">
+        <span>🧪</span>
+        <span>Kubernetes Playground</span>
+      </div>
+      <h1 id="banner">Chargement du banner…</h1>
+      <p>
+        Ce frontend est servi par NGINX et récupère la configuration exposée par un
+        <code>ConfigMap</code>. Il pointe ensuite vers l'API Helm du namespace courant.
+      </p>
+      <p id="api-url"></p>
+      <a class="cta" id="cta" href="#">
+        Consulter l'API
+        <span aria-hidden="true">↗</span>
+      </a>
+      <small>
+        Variables & feature-flags injectés depuis
+        <code>frontend/templates/configmap.yaml</code>.
+      </small>
+    </div>
+
+    <script>
+      async function hydrate() {
+        try {
+          const res = await fetch("./config/app-config.json", { cache: "no-cache" });
+          const json = await res.json();
+          document.getElementById("banner").textContent = json.banner;
+          document.getElementById("api-url").textContent = `API actuelle : ${json.apiBaseUrl}`;
+          document.getElementById("cta").href = json.apiBaseUrl;
+        } catch (err) {
+          document.getElementById("banner").textContent = "ConfigMap introuvable 😅";
+          document.getElementById("api-url").textContent = err.message;
+        }
+      }
+      hydrate();
+    </script>
+  </body>
+</html>
+

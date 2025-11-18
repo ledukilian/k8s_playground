@@ -1,0 +1,26 @@
+replicaCount: 2
+image:
+  repository: k3d-playground-registry.localhost:5111/backend
+  tag: staging
+ingress:
+  hosts:
+    - host: staging-api.localhost
+      paths:
+        - path: /
+          pathType: Prefix
+config:
+  appEnv: staging
+  appMessage: "Staging – tests d'intégration"
+  featureTips:
+    enableCrashEndpoint: true
+    enableSlowEndpoint: false
+    enableErrorEndpoint: true
+  database:
+    host: postgres-staging
+    port: 5432
+    name: staging_playground
+    user: playground
+secrets:
+  databasePassword: stagingpass
+  apiToken: staging-token
+

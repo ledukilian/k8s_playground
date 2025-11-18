@@ -1,0 +1,26 @@
+replicaCount: 3
+image:
+  repository: k3d-playground-registry.localhost:5111/backend
+  tag: prod
+ingress:
+  hosts:
+    - host: prod-api.localhost
+      paths:
+        - path: /
+          pathType: Prefix
+config:
+  appEnv: prod
+  appMessage: "Prod – circuit critique"
+  featureTips:
+    enableCrashEndpoint: false
+    enableSlowEndpoint: false
+    enableErrorEndpoint: false
+  database:
+    host: postgres-prod
+    port: 5432
+    name: prod_playground
+    user: playground
+secrets:
+  databasePassword: prodpass
+  apiToken: prod-token
+

@@ -1,0 +1,38 @@
+# Editors / OS
+.DS_Store
+.idea/
+.vscode/
+*.suo
+*.user
+*.swp
+
+# Node / frontend
+node_modules/
+dist/
+build/
+.parcel-cache/
+
+# Python / misc
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+
+# Docker / Helm
+*.tgz
+chart.lock
+charts/*.tgz
+.helmcache/
+.helmrepo/
+
+# Logs & env
+*.log
+*.out
+coverage/
+.env
+.env.*
+
+# k3d / kube artifacts
+kubeconfig
+.kube/
+tmp/
+

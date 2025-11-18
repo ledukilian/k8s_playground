@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kubernetes Playground</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧪</text></svg>">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script>
+    // Activer dark mode par défaut si pas de préférence sauvegardée
+    if (!localStorage.getItem('theme')) {
+      localStorage.setItem('theme', 'dark');
+      document.documentElement.classList.add('dark');
+    } else {
+      const theme = localStorage.getItem('theme');
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    }
+  </script>
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in { animation: fadeIn 0.5s ease-out; }
+    .mobile-menu-hidden { display: none; }
+    .mobile-menu-visible { display: block; }
+    html { scroll-behavior: smooth; }
+    h2[id], h1[id] { scroll-margin-top: 80px; }
+  </style>
+</head>
+
+<body class="bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50 dark:from-zinc-900 dark:via-zinc-800 dark:to-zinc-900 text-gray-900 dark:text-zinc-100 min-h-screen transition-colors">
+
+  <!-- NAVBAR STICKY -->
+  <header class="sticky top-0 z-30 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border-b border-gray-200/80 dark:border-zinc-700/80 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center gap-2 sm:gap-3">
+          <span class="text-2xl sm:text-3xl">🧪</span>
+          <div>
+            <div class="font-bold text-base sm:text-lg">Kubernetes Playground</div>
+            <div class="text-xs text-gray-500 dark:text-zinc-400 hidden sm:block">k3d • Traefik • Helm • k9s</div>
+          </div>
+        </div>
+        
+        <!-- Desktop Navigation -->
+        <nav class="hidden md:flex items-center gap-1 text-sm">
+          <a href="index.html" class="px-4 py-2 text-gray-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">Introduction</a>
+          <a href="demarrage.html" class="px-4 py-2 text-gray-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">Démarrage</a>
+          <a href="exercices.html" class="px-4 py-2 text-gray-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">Exercices</a>
+          <a href="ressources.html" class="px-4 py-2 text-gray-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">Ressources</a>
+          <a href="astuces.html" class="px-4 py-2 font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30">Astuces</a>
+        </nav>
+
+        <!-- Desktop Score -->
+        <div class="hidden md:flex items-center gap-3">
+          <div 
+            id="score-container"
+            class="text-base font-bold bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 px-3 py-1.5 cursor-pointer transition-all"
+            style="color: #2563eb;"
+            title="Cliquer pour réinitialiser"
+          >
+            <span id="score">0</span> pts
+          </div>
+          <a href="https://github.com/ledukilian/k8s_playground" target="_blank" rel="noopener noreferrer"
+             class="p-2 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors"
+             title="Voir sur GitHub">
+            <svg class="w-5 h-5 text-gray-700 dark:text-zinc-300" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+          </a>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-btn" class="md:hidden p-2 border-2 border-gray-300 dark:border-zinc-600 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Mobile Menu -->
+      <div id="mobile-menu" class="mobile-menu-hidden md:hidden pb-4 border-t border-gray-200 dark:border-zinc-700 mt-2 pt-4">
+        <nav class="flex flex-col gap-2">
+          <a href="index.html" class="px-4 py-2 text-gray-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">Introduction</a>
+          <a href="demarrage.html" class="px-4 py-2 text-gray-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">Démarrage</a>
+          <a href="exercices.html" class="px-4 py-2 text-gray-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">Exercices</a>
+          <a href="ressources.html" class="px-4 py-2 text-gray-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">Ressources</a>
+          <a href="astuces.html" class="px-4 py-2 font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30">Astuces</a>
+        </nav>
+        <div class="mt-4 pt-4 border-t border-gray-200 dark:border-zinc-700 flex flex-col gap-3">
+          <div 
+            id="score-container-mobile"
+            class="text-base font-bold bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 px-3 py-1.5 cursor-pointer transition-all text-center"
+            style="color: #2563eb;"
+            title="Cliquer pour réinitialiser"
+          >
+            <span id="score-mobile">0</span> pts
+          </div>
+          <a href="https://github.com/ledukilian/k8s_playground" target="_blank" rel="noopener noreferrer"
+             class="p-2 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors text-center"
+             title="Voir sur GitHub">
+            <svg class="w-5 h-5 text-gray-700 dark:text-zinc-300 mx-auto" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 pt-6 sm:pt-8 space-y-8 sm:space-y-10 fade-in scroll-smooth">
+
+    <!-- INTRO -->
+    <section class="bg-gradient-to-br from-blue-50 via-indigo-50/50 to-blue-50 dark:from-zinc-900 dark:via-zinc-800 dark:to-zinc-900 p-6 sm:p-8 border-l-4 border-blue-600 dark:border-blue-500 shadow-sm">
+      <h1 id="astuces" class="text-2xl sm:text-3xl font-bold mb-4 text-gray-800 dark:text-zinc-100">💡 Astuces dev & devops (orientées réel)</h1>
+      <p class="text-base sm:text-lg text-gray-700 dark:text-zinc-300 leading-relaxed">
+        Ces astuces sont pensées comme si tu travaillais sur un vrai projet client :
+        contraintes de temps, clusters partagés, CI/CD, bugs en prod…  
+        L'idée : t'aider à prendre de bons réflexes pendant que tu joues avec le playground.
+      </p>
+    </section>
+
+    <!-- ASTUCES KUBERNETES DE BASE -->
+    <section class="bg-white dark:bg-zinc-800 p-6 sm:p-8 border-l-4 border-blue-600 dark:border-blue-500 shadow-sm">
+      <h2 id="reflexes-k8s" class="text-lg sm:text-xl font-semibold mb-3 text-gray-800 dark:text-zinc-100 border-b-2 border-gray-200 dark:border-zinc-700 pb-3">🟢 Reflexes Kubernetes de base</h2>
+      <ul class="space-y-2 text-sm sm:text-base">
+        <li class="flex items-start gap-2">
+          <span class="text-blue-700 dark:text-blue-400 font-bold mt-0.5">•</span>
+          <div>
+            <strong>Événements avant tout :</strong> <code class="bg-gray-100 dark:bg-zinc-700 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">kubectl get events -A --sort-by=.lastTimestamp</code> puis <code class="bg-gray-100 dark:bg-zinc-700 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">kubectl describe pod &lt;nom&gt; -n &lt;ns&gt;</code>
+          </div>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-blue-700 dark:text-blue-400 font-bold mt-0.5">•</span>
+          <div>
+            <strong>Namespaces systématiques :</strong> <code class="bg-gray-100 dark:bg-zinc-700 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">kubectl create namespace playground</code> + <code class="bg-gray-100 dark:bg-zinc-700 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">kubectl config set-context --current --namespace=playground</code>
+          </div>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-blue-700 dark:text-blue-400 font-bold mt-0.5">•</span>
+          <div>
+            <strong>Service avant Ingress :</strong> Vérifier <code class="bg-gray-100 dark:bg-zinc-700 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">kubectl describe service</code> et les labels des pods. 50% des "Ingress cassé" = problème de Service.
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ASTUCES HELM & CONFIG -->
+    <section class="bg-white dark:bg-zinc-800 p-6 sm:p-8 border-l-4 border-blue-600 dark:border-blue-500 shadow-sm">
+      <h2 id="astuces-helm" class="text-lg sm:text-xl font-semibold mb-3 text-gray-800 dark:text-zinc-100 border-b-2 border-gray-200 dark:border-zinc-700 pb-3">🔵 Astuces Helm & configuration</h2>
+      <ul class="space-y-2 text-sm sm:text-base">
+        <li class="flex items-start gap-2">
+          <span class="text-blue-700 dark:text-blue-400 font-bold mt-0.5">•</span>
+          <div>
+            <strong>Jamais de modification directe :</strong> Toujours modifier <code class="bg-gray-100 dark:bg-zinc-700 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">values.yaml</code> puis <code class="bg-gray-100 dark:bg-zinc-700 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">helm upgrade</code>. GitOps = vérité dans Git.
+          </div>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-blue-700 dark:text-blue-400 font-bold mt-0.5">•</span>
+          <div>
+            <strong>Valeurs par environnement :</strong> <code class="bg-gray-100 dark:bg-zinc-700 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">frontend/dev.yaml</code>, <code class="bg-gray-100 dark:bg-zinc-700 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">backend/staging.yaml</code>, <code class="bg-gray-100 dark:bg-zinc-700 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">postgres/prod.yaml</code>
+          </div>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-blue-700 dark:text-blue-400 font-bold mt-0.5">•</span>
+          <div>
+            <strong>Rollback rapide :</strong> <code class="bg-gray-100 dark:bg-zinc-700 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">helm history &lt;release&gt;</code> puis <code class="bg-gray-100 dark:bg-zinc-700 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">helm rollback &lt;release&gt; &lt;revision&gt;</code>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ASTUCES DEV / DEVOPS "VRAIE VIE" -->
+    <section class="bg-white dark:bg-zinc-800 p-6 sm:p-8 border-l-4 border-blue-600 dark:border-blue-500 shadow-sm">
+      <h2 id="astuces-vraie-vie" class="text-lg sm:text-xl font-semibold mb-3 text-gray-800 dark:text-zinc-100 border-b-2 border-gray-200 dark:border-zinc-700 pb-3">🧰 Astuces "vraie vie" pour dev & devops</h2>
+      <ul class="space-y-2 text-sm sm:text-base">
+        <li class="flex items-start gap-2">
+          <span class="text-blue-700 dark:text-blue-400 font-bold mt-0.5">•</span>
+          <div>
+            <strong>Reproduire en local :</strong> Même image Docker, mêmes valeurs Helm, mêmes env vars. Plus tu reproduis, plus tu es autonome.
+          </div>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-blue-700 dark:text-blue-400 font-bold mt-0.5">•</span>
+          <div>
+            <strong>Ressources raisonnables :</strong> Définir <code class="bg-gray-100 dark:bg-zinc-700 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">resources.requests</code> et <code class="bg-gray-100 dark:bg-zinc-700 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">limits</code>. Scaling progressif (2→4→6) plutôt que 2→20.
+          </div>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-blue-700 dark:text-blue-400 font-bold mt-0.5">•</span>
+          <div>
+            <strong>Documenter les commandes utiles :</strong> Lister images, mapper Ingress→Service, trouver pods en erreur. Ça aide toi et tes collègues.
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- CONCLUSION -->
+    <section class="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 p-6 sm:p-8 border-l-4 border-blue-600 dark:border-blue-500 shadow-sm">
+      <h2 id="utilisation" class="text-lg sm:text-xl font-semibold mb-4 text-gray-800 dark:text-zinc-100 border-b-2 border-blue-200 dark:border-blue-800 pb-3">🧭 Comment utiliser ces astuces</h2>
+      <p class="text-base sm:text-lg text-gray-700 dark:text-zinc-300 leading-relaxed">
+        Pendant les exercices, reviens ici avant de cliquer sur "✅ Voir solution". Objectif : analyser, observer, puis corriger.
+      </p>
+    </section>
+
+  </main>
+
+  <!-- SCORE SCRIPT (COMMUN) / theme -->
+  <script>
+    const scoreElement = document.getElementById('score');
+    const scoreElementMobile = document.getElementById('score-mobile');
+    const scoreContainer = document.getElementById('score-container');
+    const scoreContainerMobile = document.getElementById('score-container-mobile');
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    function computeScoreFromLocalStorage() {
+      let score = 0;
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('exo_')) {
+          const raw = localStorage.getItem(key);
+          const val = parseInt(raw, 10);
+          if (!isNaN(val)) {
+            score += val;
+          }
+        }
+      }
+      return score;
+    }
+
+    function refreshScore() {
+      const score = computeScoreFromLocalStorage();
+      if (scoreElement) {
+        scoreElement.textContent = score;
+      }
+      if (scoreElementMobile) {
+        scoreElementMobile.textContent = score;
+      }
+    }
+
+    function resetScore() {
+      if (confirm('Réinitialiser tous les exercices et le score ?')) {
+        Object.keys(localStorage).forEach((key) => {
+          if (key.startsWith('exo_')) {
+            localStorage.removeItem(key);
+          }
+        });
+        localStorage.setItem('score_total', '0');
+        refreshScore();
+      }
+    }
+
+    if (scoreContainer) scoreContainer.addEventListener('click', resetScore);
+    if (scoreContainerMobile) scoreContainerMobile.addEventListener('click', resetScore);
+
+    if (mobileMenuBtn && mobileMenu) {
+      mobileMenuBtn.addEventListener('click', () => {
+        if (mobileMenu.classList.contains('mobile-menu-hidden')) {
+          mobileMenu.classList.remove('mobile-menu-hidden');
+          mobileMenu.classList.add('mobile-menu-visible');
+        } else {
+          mobileMenu.classList.remove('mobile-menu-visible');
+          mobileMenu.classList.add('mobile-menu-hidden');
+        }
+      });
+    }
+
+    // Initialisation
+    refreshScore();
+  </script>
+
+</body>
+</html>

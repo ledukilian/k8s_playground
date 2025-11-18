@@ -1,0 +1,17 @@
+replicaCount: 3
+image:
+  repository: k3d-playground-registry.localhost:5111/frontend
+  tag: prod
+ingress:
+  hosts:
+    - host: prod-front.localhost
+      paths:
+        - path: /
+          pathType: Prefix
+config:
+  banner: "PROD – Client final"
+  apiBaseUrl: "https://prod-api.localhost"
+  featureFlags:
+    enableDebugPanel: false
+    showTrainingHints: false
+

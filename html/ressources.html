@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kubernetes Playground</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧪</text></svg>">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script>
+    // Activer dark mode par défaut si pas de préférence sauvegardée
+    if (!localStorage.getItem('theme')) {
+      localStorage.setItem('theme', 'dark');
+      document.documentElement.classList.add('dark');
+    } else {
+      const theme = localStorage.getItem('theme');
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    }
+  </script>
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in { animation: fadeIn 0.5s ease-out; }
+    .mobile-menu-hidden { display: none; }
+    .mobile-menu-visible { display: block; }
+    html { scroll-behavior: smooth; }
+    h2[id], h1[id] { scroll-margin-top: 80px; }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50 dark:from-zinc-900 dark:via-zinc-800 dark:to-zinc-900 text-gray-800 dark:text-zinc-100 dark:text-zinc-100 min-h-screen transition-colors">
+
+  <!-- Navbar commune -->
+  <header class="sticky top-0 z-30 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border-b border-gray-200/80 dark:border-zinc-700/80 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center gap-2 sm:gap-3">
+          <span class="text-2xl sm:text-3xl">🧪</span>
+          <div>
+            <div class="font-bold text-base sm:text-lg">Kubernetes Playground</div>
+            <div class="text-xs text-gray-500 dark:text-zinc-400 hidden sm:block">k3d • Traefik • Helm • k9s</div>
+          </div>
+        </div>
+        
+        <!-- Desktop Navigation -->
+        <nav class="hidden md:flex items-center gap-1 text-sm">
+          <a href="index.html" class="px-4 py-2 text-gray-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">Introduction</a>
+          <a href="demarrage.html" class="px-4 py-2 text-gray-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">Démarrage</a>
+          <a href="exercices.html" class="px-4 py-2 text-gray-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">Exercices</a>
+          <a href="ressources.html" class="px-4 py-2 font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30">Ressources</a>
+          <a href="astuces.html" class="px-4 py-2 text-gray-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">Astuces</a>
+        </nav>
+
+        <!-- Desktop Score -->
+        <div class="hidden md:flex items-center gap-3">
+          <div 
+            id="score-container"
+            class="text-base font-bold bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 px-3 py-1.5 cursor-pointer transition-all"
+            style="color: #2563eb;"
+            title="Cliquer pour réinitialiser"
+          >
+            <span id="score-total">0</span> pts
+          </div>
+          <a href="https://github.com/ledukilian/k8s_playground" target="_blank" rel="noopener noreferrer"
+             class="p-2 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors"
+             title="Voir sur GitHub">
+            <svg class="w-5 h-5 text-gray-700 dark:text-zinc-300" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+          </a>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-btn" class="md:hidden p-2 border-2 border-gray-300 dark:border-zinc-600 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Mobile Menu -->
+      <div id="mobile-menu" class="mobile-menu-hidden md:hidden pb-4 border-t border-gray-200 dark:border-zinc-700 mt-2 pt-4">
+        <nav class="flex flex-col gap-2">
+          <a href="index.html" class="px-4 py-2 text-gray-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">Introduction</a>
+          <a href="demarrage.html" class="px-4 py-2 text-gray-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">Démarrage</a>
+          <a href="exercices.html" class="px-4 py-2 text-gray-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">Exercices</a>
+          <a href="ressources.html" class="px-4 py-2 font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30">Ressources</a>
+          <a href="astuces.html" class="px-4 py-2 text-gray-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">Astuces</a>
+        </nav>
+        <div class="mt-4 pt-4 border-t border-gray-200 dark:border-zinc-700 flex flex-col gap-3">
+          <div 
+            id="score-container-mobile"
+            class="text-base font-bold bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 px-3 py-1.5 cursor-pointer transition-all text-center"
+            style="color: #2563eb;"
+            title="Cliquer pour réinitialiser"
+          >
+            <span id="score-total-mobile">0</span> pts
+          </div>
+          <a href="https://github.com/ledukilian/k8s_playground" target="_blank" rel="noopener noreferrer"
+             class="p-2 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors text-center"
+             title="Voir sur GitHub">
+            <svg class="w-5 h-5 text-gray-700 dark:text-zinc-300 mx-auto" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 pt-6 sm:pt-8 space-y-8 sm:space-y-10 fade-in scroll-smooth">
+
+    <section class="bg-gradient-to-br from-blue-50 via-indigo-50/50 to-blue-50 dark:from-zinc-900 dark:via-zinc-800 dark:to-zinc-900 p-6 sm:p-8 border-l-4 border-blue-600 dark:border-blue-500 shadow-sm">
+      <h1 id="ressources" class="text-2xl sm:text-3xl font-bold mb-4 text-gray-800 dark:text-zinc-100">📚 Ressources pratiques</h1>
+      <p class="text-base sm:text-lg text-gray-700 dark:text-zinc-300 mb-6 leading-relaxed">
+        Quelques liens et rappels pour t'aider pendant les exercices. Tu peux compléter cette page avec
+        les outils internes de ton projet (docs, Confluence, Notion…).
+      </p>
+
+      <div class="grid gap-6 sm:gap-8 md:grid-cols-2">
+        <div class="bg-white dark:bg-zinc-800 p-5 sm:p-6 border-l-4 border-blue-600 dark:border-blue-500 shadow-sm">
+          <h2 id="kubernetes" class="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-800 dark:text-zinc-100 border-b-2 border-gray-200 dark:border-zinc-700 pb-2">Kubernetes</h2>
+          <ul class="list-disc list-inside text-sm sm:text-base text-gray-700 dark:text-zinc-300 space-y-2 ml-2">
+            <li><a href="https://kubernetes.io/docs/home/" target="_blank" class="text-blue-700 dark:text-blue-400 hover:underline font-medium">Documentation Kubernetes</a></li>
+            <li><a href="https://kubernetes.io/docs/reference/kubectl/" target="_blank" class="text-blue-700 dark:text-blue-400 hover:underline font-medium">Référence kubectl</a></li>
+            <li><a href="https://kubernetes.io/docs/concepts/" target="_blank" class="text-blue-700 dark:text-blue-400 hover:underline font-medium">Concepts (Pods, Services, Deployments…)</a></li>
+          </ul>
+        </div>
+        <div class="bg-white dark:bg-zinc-800 p-5 sm:p-6 border-l-4 border-blue-600 dark:border-blue-500 shadow-sm">
+          <h2 id="outils" class="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-800 dark:text-zinc-100 border-b-2 border-gray-200 dark:border-zinc-700 pb-2">k3d, Traefik, Helm & k9s</h2>
+          <ul class="list-disc list-inside text-sm sm:text-base text-gray-700 dark:text-zinc-300 space-y-2 ml-2">
+            <li><a href="https://k3d.io/" target="_blank" class="text-blue-700 dark:text-blue-400 hover:underline font-medium">k3d – Kubernetes dans Docker</a></li>
+            <li><a href="https://doc.traefik.io/traefik/" target="_blank" class="text-blue-700 dark:text-blue-400 hover:underline font-medium">Documentation Traefik</a></li>
+            <li><a href="https://helm.sh/docs/" target="_blank" class="text-blue-700 dark:text-blue-400 hover:underline font-medium">Documentation Helm</a></li>
+            <li><a href="https://github.com/derailed/k9s" target="_blank" class="text-blue-700 dark:text-blue-400 hover:underline font-medium">k9s – TUI pour Kubernetes</a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white dark:bg-zinc-800 p-6 sm:p-8 border-l-4 border-blue-600 dark:border-blue-500 shadow-sm">
+      <h2 id="cheatsheet" class="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-gray-800 dark:text-zinc-100 border-b-2 border-gray-200 dark:border-zinc-700 pb-3">🧾 Cheatsheet kubectl</h2>
+      <div class="space-y-4 sm:space-y-5">
+        <div class="bg-gray-50 dark:bg-zinc-900/50 p-4 sm:p-5 border-2 border-gray-300 dark:border-zinc-700">
+          <h3 class="font-semibold text-base sm:text-lg text-gray-800 dark:text-zinc-100 mb-3">Inspection</h3>
+          <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 p-3 sm:p-4 overflow-x-auto text-xs sm:text-sm font-mono border-2 border-gray-700 dark:border-zinc-600"><code># Lister tous les pods dans tous les namespaces
+kubectl get pods -A
+
+# Lister les services dans un namespace
+kubectl get svc -n playground
+
+# Lister les deployments dans un namespace
+kubectl get deploy -n playground
+
+# Décrire un pod (détails, événements, etc.)
+kubectl describe pod &lt;nom&gt; -n playground</code></pre>
+        </div>
+        <div class="bg-gray-50 dark:bg-zinc-900/50 p-4 sm:p-5 border-2 border-gray-300 dark:border-zinc-700">
+          <h3 class="font-semibold text-base sm:text-lg text-gray-800 dark:text-zinc-100 mb-3">Logs & exec</h3>
+          <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 p-3 sm:p-4 overflow-x-auto text-xs sm:text-sm font-mono border-2 border-gray-700 dark:border-zinc-600"><code># Voir les logs d'un pod
+kubectl logs &lt;pod&gt; -n playground
+
+# Suivre les logs en temps réel (comme tail -f)
+kubectl logs -f &lt;pod&gt; -n playground
+
+# Exécuter une commande dans un pod (ouvre un shell)
+kubectl exec -it &lt;pod&gt; -n playground -- sh</code></pre>
+        </div>
+        <div class="bg-gray-50 dark:bg-zinc-900/50 p-4 sm:p-5 border-2 border-gray-300 dark:border-zinc-700">
+          <h3 class="font-semibold text-base sm:text-lg text-gray-800 dark:text-zinc-100 mb-3">Scale & rollout</h3>
+          <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 p-3 sm:p-4 overflow-x-auto text-xs sm:text-sm font-mono border-2 border-gray-700 dark:border-zinc-600"><code># Changer le nombre de replicas d'un deployment
+kubectl scale deploy frontend -n playground --replicas=3
+
+# Voir le statut d'un rollout (déploiement en cours)
+kubectl rollout status deploy/frontend -n playground
+
+# Redémarrer un deployment (force un nouveau rollout)
+kubectl rollout restart deploy/backend -n playground</code></pre>
+        </div>
+        <div class="bg-gray-50 dark:bg-zinc-900/50 p-4 sm:p-5 border-2 border-gray-300 dark:border-zinc-700">
+          <h3 class="font-semibold text-base sm:text-lg text-gray-800 dark:text-zinc-100 mb-3">ConfigMaps, Secrets & fichiers</h3>
+          <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 p-3 sm:p-4 overflow-x-auto text-xs sm:text-sm font-mono border-2 border-gray-700 dark:border-zinc-600"><code># Lister les ConfigMaps dans un namespace
+kubectl get cm -n playground
+
+# Lister les Secrets dans un namespace
+kubectl get secret -n playground
+
+# Appliquer un fichier YAML (créer ou mettre à jour)
+kubectl apply -f fichier.yaml
+
+# Supprimer des ressources définies dans un fichier YAML
+kubectl delete -f fichier.yaml</code></pre>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Script commun score / reset / theme -->
+  <script>
+    const scoreElement = document.getElementById('score-total');
+    const scoreElementMobile = document.getElementById('score-total-mobile');
+    const scoreContainer = document.getElementById('score-container');
+    const scoreContainerMobile = document.getElementById('score-container-mobile');
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    function updateScore() {
+      let score = parseInt(localStorage.getItem('score_total') || '0', 10);
+      if (isNaN(score)) score = 0;
+      if (scoreElement) scoreElement.textContent = score;
+      if (scoreElementMobile) scoreElementMobile.textContent = score;
+    }
+
+    function initScore() {
+      let score = parseInt(localStorage.getItem('score_total') || '0', 10);
+      if (isNaN(score)) score = 0;
+      localStorage.setItem('score_total', score);
+      updateScore();
+    }
+
+    function resetScore() {
+      if (confirm('Réinitialiser tous les exercices et le score ?')) {
+        Object.keys(localStorage).forEach((key) => {
+          if (key.startsWith('exo_')) {
+            localStorage.removeItem(key);
+          }
+        });
+        localStorage.setItem('score_total', '0');
+        updateScore();
+      }
+    }
+
+    if (scoreContainer) scoreContainer.addEventListener('click', resetScore);
+    if (scoreContainerMobile) scoreContainerMobile.addEventListener('click', resetScore);
+
+    if (mobileMenuBtn && mobileMenu) {
+      mobileMenuBtn.addEventListener('click', () => {
+        if (mobileMenu.classList.contains('mobile-menu-hidden')) {
+          mobileMenu.classList.remove('mobile-menu-hidden');
+          mobileMenu.classList.add('mobile-menu-visible');
+        } else {
+          mobileMenu.classList.remove('mobile-menu-visible');
+          mobileMenu.classList.add('mobile-menu-hidden');
+        }
+      });
+    }
+
+    initScore();
+  </script>
+</body>
+</html>

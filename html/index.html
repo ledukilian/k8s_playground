@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kubernetes Playground</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧪</text></svg>">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script>
+    // Initialize theme before page renders to prevent flash
+    (function() {
+      const theme = localStorage.getItem('theme') || 'dark';
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    })();
+  </script>
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in { animation: fadeIn 0.5s ease-out; }
+    .mobile-menu-hidden { display: none; }
+    .mobile-menu-visible { display: block; }
+    html { scroll-behavior: smooth; }
+    h2[id], h1[id] { scroll-margin-top: 80px; }
+    pre code { display: block; }
+    @media (max-width: 640px) {
+      pre { font-size: 0.7rem; padding: 0.75rem; }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50 dark:from-zinc-900 dark:via-zinc-800 dark:to-zinc-900 text-gray-800 dark:text-zinc-100 min-h-screen transition-colors">
+
+  <!-- Navbar commune -->
+  <header class="sticky top-0 z-30 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border-b border-gray-200/80 dark:border-zinc-700/80 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center gap-2 sm:gap-3">
+          <span class="text-2xl sm:text-3xl">🧪</span>
+          <div>
+            <div class="font-bold text-base sm:text-lg">Kubernetes Playground</div>
+            <div class="text-xs text-gray-500 dark:text-zinc-400 hidden sm:block">k3d • Traefik • Helm • k9s</div>
+          </div>
+        </div>
+        
+        <!-- Desktop Navigation -->
+        <nav class="hidden md:flex items-center gap-1 text-sm">
+          <a href="index.html" class="px-4 py-2 font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30">Introduction</a>
+          <a href="demarrage.html" class="px-4 py-2 text-gray-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">Démarrage</a>
+          <a href="exercices.html" class="px-4 py-2 text-gray-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">Exercices</a>
+          <a href="ressources.html" class="px-4 py-2 text-gray-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">Ressources</a>
+          <a href="astuces.html" class="px-4 py-2 text-gray-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">Astuces</a>
+        </nav>
+
+        <!-- Desktop Score -->
+        <div class="hidden md:flex items-center gap-3">
+          <div 
+            id="score-container"
+            class="text-base font-bold bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 px-3 py-1.5 cursor-pointer transition-all"
+            style="color: #2563eb;"
+            title="Cliquer pour réinitialiser"
+          >
+            <span id="score-total">0</span> pts
+          </div>
+          <a href="https://github.com/ledukilian/k8s_playground" target="_blank" rel="noopener noreferrer"
+             class="p-2 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors"
+             title="Voir sur GitHub">
+            <svg class="w-5 h-5 text-gray-700 dark:text-zinc-300" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+          </a>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-btn" class="md:hidden p-2 border-2 border-gray-300 dark:border-zinc-600 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Mobile Menu -->
+      <div id="mobile-menu" class="mobile-menu-hidden md:hidden pb-4 border-t border-gray-200 dark:border-zinc-700 mt-2 pt-4">
+        <nav class="flex flex-col gap-2">
+          <a href="index.html" class="px-4 py-2 font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30">Introduction</a>
+          <a href="demarrage.html" class="px-4 py-2 text-gray-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">Démarrage</a>
+          <a href="exercices.html" class="px-4 py-2 text-gray-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">Exercices</a>
+          <a href="ressources.html" class="px-4 py-2 text-gray-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">Ressources</a>
+          <a href="astuces.html" class="px-4 py-2 text-gray-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">Astuces</a>
+        </nav>
+        <div class="mt-4 pt-4 border-t border-gray-200 dark:border-zinc-700 flex flex-col gap-3">
+          <div 
+            id="score-container-mobile"
+            class="text-base font-bold bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 px-3 py-1.5 cursor-pointer transition-all text-center"
+            style="color: #2563eb;"
+            title="Cliquer pour réinitialiser"
+          >
+            <span id="score-total-mobile">0</span> pts
+          </div>
+          <a href="https://github.com/ledukilian/k8s_playground" target="_blank" rel="noopener noreferrer"
+             class="p-2 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors text-center"
+             title="Voir sur GitHub">
+            <svg class="w-5 h-5 text-gray-700 dark:text-zinc-300 mx-auto" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 pt-6 sm:pt-8 space-y-8 sm:space-y-10 fade-in scroll-smooth">
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-br from-blue-50 via-indigo-50/50 to-blue-50 dark:from-zinc-900 dark:via-zinc-800 dark:to-zinc-900 p-6 sm:p-8 border-l-4 border-blue-600 dark:border-blue-500 shadow-sm">
+      <h1 id="introduction" class="text-2xl sm:text-3xl font-bold mb-4 text-gray-800 dark:text-zinc-100">ℹ️ Introduction</h1>
+      <p class="text-base sm:text-lg text-gray-700 dark:text-zinc-300 mb-3 leading-relaxed">
+        Un playground complet pour s'entraîner sur une stack Kubernetes réaliste : cluster <strong class="text-blue-700 dark:text-blue-400">k3d</strong>, 
+        <strong class="text-blue-700 dark:text-blue-400">Traefik</strong> en Ingress, déploiement via <strong class="text-blue-700 dark:text-blue-400">Helm</strong>,
+        et exploration avec <strong class="text-blue-700 dark:text-blue-400">kubectl</strong> et <strong class="text-blue-700 dark:text-blue-400">k9s</strong>.
+      </p>
+      <p class="text-sm sm:text-base text-gray-600 dark:text-zinc-400 leading-relaxed mb-4">
+        L'objectif est de pratiquer le cycle de vie quotidien d'un développeur / devops :
+        déployer, diagnostiquer, corriger, scaler, rollback(er?)…
+      </p>
+      <a href="demarrage.html"
+         class="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 dark:bg-blue-700 text-white text-sm font-semibold hover:bg-blue-700 dark:hover:bg-blue-600 transition-all border-2 border-blue-700 dark:border-blue-600">
+        Démarrer
+      </a>
+    </section>
+
+    <!-- Structure du repository avec tree -->
+    <section class="bg-white dark:bg-zinc-800 p-6 sm:p-8 lg:p-10 border-l-4 border-blue-600 dark:border-blue-500 shadow-sm">
+      <h2 id="structure" class="text-xl sm:text-2xl font-semibold mb-6 text-gray-800 dark:text-zinc-100 border-b-2 border-gray-200 dark:border-zinc-700 pb-3">Structure du repository</h2>
+      <div class="bg-gray-50 dark:bg-zinc-900/50 p-4 sm:p-6 overflow-x-auto border-2 border-gray-300 dark:border-zinc-700">
+        <pre class="font-mono text-xs sm:text-sm text-gray-800 dark:text-zinc-200 leading-relaxed whitespace-pre"><code>📁 k8s-playground/
+├─ 📝 README.md                       <span class="text-gray-500 dark:text-zinc-500 text-xs"># Documentation synthétique du projet</span>
+├─ ⚙️ Makefile                        <span class="text-gray-500 dark:text-zinc-500 text-xs"># Commandes centralisées (build, deploy, clean)</span>
+├─ ⚙️ .gitignore                      <span class="text-gray-500 dark:text-zinc-500 text-xs"># Fichiers ignorés par Git</span>
+├─ 📁 <span class="text-gray-500 dark:text-zinc-500 opacity-70">html/</span>                           <span class="text-gray-500 dark:text-zinc-500 text-xs"># Site statique (GitHub Pages)</span>
+│  ├─ 🌐 index.html                   <span class="text-gray-500 dark:text-zinc-500 text-xs"># Page d'introduction</span>
+│  ├─ 🌐 demarrage.html               <span class="text-gray-500 dark:text-zinc-500 text-xs"># Guide de démarrage / setup</span>
+│  ├─ 🌐 exercices.html               <span class="text-gray-500 dark:text-zinc-500 text-xs"># Liste d'exos + points + indices + solutions</span>
+│  ├─ 🌐 ressources.html              <span class="text-gray-500 dark:text-zinc-500 text-xs"># Liens pratiques & cheatsheets</span>
+│  └─ 🌐 astuces.html                 <span class="text-gray-500 dark:text-zinc-500 text-xs"># Astuces dev / devops orientées réel</span>
+├─ 📁 <span class="text-blue-600 dark:text-blue-400 font-semibold">k3d/</span>                            <span class="text-gray-500 dark:text-zinc-500 text-xs"># Configuration k3d</span>
+│  ├─ 📄 k3d-cluster.yaml             <span class="text-gray-500 dark:text-zinc-500 text-xs"># Définition du cluster (1 server, 2 agents, ports 80/443)</span>
+│  └─ 📁 scripts/                     <span class="text-gray-500 dark:text-zinc-500 text-xs"># Scripts de gestion du cluster</span>
+│     ├─ 🔧 create-cluster.sh         <span class="text-gray-500 dark:text-zinc-500 text-xs"># Création du cluster k3d</span>
+│     └─ 🔧 delete-cluster.sh         <span class="text-gray-500 dark:text-zinc-500 text-xs"># Suppression du cluster k3d</span>
+├─ 📁 <span class="text-blue-600 dark:text-blue-400 font-semibold">k8s/</span>                            <span class="text-gray-500 dark:text-zinc-500 text-xs"># Manifests "cluster-wide" & génériques</span>
+│  ├─ 📊 namespaces.yaml              <span class="text-gray-500 dark:text-zinc-500 text-xs"># Namespaces dev / staging / prod</span>
+│  ├─ 📁 metrics-server/              <span class="text-gray-500 dark:text-zinc-500 text-xs"># Metrics Server</span>
+│  │  └─ 📊 metrics-server.yaml       <span class="text-gray-500 dark:text-zinc-500 text-xs"># Déploiement du metrics-server</span>
+│  ├─ 📁 rbac/                        <span class="text-gray-500 dark:text-zinc-500 text-xs"># RBAC (rôles et permissions)</span>
+│  │  ├─ 📊 sa-readonly-dev.yaml      <span class="text-gray-500 dark:text-zinc-500 text-xs"># ServiceAccount lecture seule</span>
+│  │  ├─ 📊 role-readonly-pods.yaml   <span class="text-gray-500 dark:text-zinc-500 text-xs"># Role lecture pods</span>
+│  │  └─ 📊 rb-readonly-dev.yaml      <span class="text-gray-500 dark:text-zinc-500 text-xs"># RoleBinding → ServiceAccount</span>
+│  ├─ 📁 networkpolicies/             <span class="text-gray-500 dark:text-zinc-500 text-xs"># NetworkPolicies</span>
+│  │  ├─ 📊 np-frontend-to-backend.yaml <span class="text-gray-500 dark:text-zinc-500 text-xs"># Autorise frontend → backend</span>
+│  │  └─ 📊 np-backend-to-postgres.yaml <span class="text-gray-500 dark:text-zinc-500 text-xs"># Autorise backend → PostgreSQL</span>
+│  └─ 📁 ingress/                     <span class="text-gray-500 dark:text-zinc-500 text-xs"># Ingress</span>
+│     └─ 📊 traefik-dashboard.yaml    <span class="text-gray-500 dark:text-zinc-500 text-xs"># (optionnel) Ingress pour dashboard Traefik</span>
+├─ 📁 <span class="text-blue-600 dark:text-blue-400 font-semibold">helm/</span>                            <span class="text-gray-500 dark:text-zinc-500 text-xs"># Charts Helm</span>
+│  ├─ 📁 charts/                      <span class="text-gray-500 dark:text-zinc-500 text-xs"># Charts Helm des applications</span>
+│  │  ├─ 📁 frontend/                 <span class="text-gray-500 dark:text-zinc-500 text-xs"># Chart Helm pour l'app frontend</span>
+│  │  │  ├─ 📦 Chart.yaml             <span class="text-gray-500 dark:text-zinc-500 text-xs"># Métadonnées du chart</span>
+│  │  │  ├─ 📦 values.yaml            <span class="text-gray-500 dark:text-zinc-500 text-xs"># Valeurs par défaut (génériques)</span>
+│  │  │  └─ 📁 templates/             <span class="text-gray-500 dark:text-zinc-500 text-xs"># Templates Kubernetes</span>
+│  │  │     ├─ 📊 deployment.yaml     <span class="text-gray-500 dark:text-zinc-500 text-xs"># Deployment frontend</span>
+│  │  │     ├─ 📊 service.yaml        <span class="text-gray-500 dark:text-zinc-500 text-xs"># Service frontend</span>
+│  │  │     ├─ 📊 ingress.yaml        <span class="text-gray-500 dark:text-zinc-500 text-xs"># Ingress frontend</span>
+│  │  │     └─ 📊 configmap.yaml      <span class="text-gray-500 dark:text-zinc-500 text-xs"># ConfigMap frontend</span>
+│  │  ├─ 📁 backend/                  <span class="text-gray-500 dark:text-zinc-500 text-xs"># Chart Helm backend API</span>
+│  │  │  ├─ 📦 Chart.yaml             <span class="text-gray-500 dark:text-zinc-500 text-xs"># Métadonnées du chart</span>
+│  │  │  ├─ 📦 values.yaml            <span class="text-gray-500 dark:text-zinc-500 text-xs"># Valeurs par défaut</span>
+│  │  │  └─ 📁 templates/             <span class="text-gray-500 dark:text-zinc-500 text-xs"># Templates Kubernetes</span>
+│  │  │     ├─ 📊 deployment.yaml     <span class="text-gray-500 dark:text-zinc-500 text-xs"># Deployment backend</span>
+│  │  │     ├─ 📊 service.yaml        <span class="text-gray-500 dark:text-zinc-500 text-xs"># Service backend</span>
+│  │  │     ├─ 📊 ingress.yaml        <span class="text-gray-500 dark:text-zinc-500 text-xs"># Ingress backend</span>
+│  │  │     ├─ 📊 configmap.yaml      <span class="text-gray-500 dark:text-zinc-500 text-xs"># ConfigMap backend</span>
+│  │  │     ├─ 🔒 secret.yaml         <span class="text-gray-500 dark:text-zinc-500 text-xs"># Secret backend (credentials DB)</span>
+│  │  │     └─ 📊 probes.yaml         <span class="text-gray-500 dark:text-zinc-500 text-xs"># Readiness & Liveness probes</span>
+│  │  └─ 📁 postgres/                 <span class="text-gray-500 dark:text-zinc-500 text-xs"># Chart Helm PostgreSQL simple (local)</span>
+│  │     ├─ 📦 Chart.yaml             <span class="text-gray-500 dark:text-zinc-500 text-xs"># Métadonnées du chart</span>
+│  │     ├─ 📦 values.yaml            <span class="text-gray-500 dark:text-zinc-500 text-xs"># Valeurs par défaut</span>
+│  │     └─ 📁 templates/             <span class="text-gray-500 dark:text-zinc-500 text-xs"># Templates Kubernetes</span>
+│  │        ├─ 📊 statefulset.yaml    <span class="text-gray-500 dark:text-zinc-500 text-xs"># StatefulSet PostgreSQL</span>
+│  │        ├─ 📊 service.yaml        <span class="text-gray-500 dark:text-zinc-500 text-xs"># Service PostgreSQL</span>
+│  │        └─ 📊 pvc.yaml            <span class="text-gray-500 dark:text-zinc-500 text-xs"># PersistentVolumeClaim</span>
+│  └─ 📁 values/                      <span class="text-gray-500 dark:text-zinc-500 text-xs"># Overrides par environnement</span>
+│     ├─ 📁 frontend/                 <span class="text-gray-500 dark:text-zinc-500 text-xs"># Valeurs frontend</span>
+│     │  ├─ 📦 dev.yaml               <span class="text-gray-500 dark:text-zinc-500 text-xs"># Valeurs frontend dev</span>
+│     │  ├─ 📦 staging.yaml           <span class="text-gray-500 dark:text-zinc-500 text-xs"># Valeurs frontend staging</span>
+│     │  └─ 📦 prod.yaml              <span class="text-gray-500 dark:text-zinc-500 text-xs"># Valeurs frontend prod</span>
+│     ├─ 📁 backend/                  <span class="text-gray-500 dark:text-zinc-500 text-xs"># Valeurs backend</span>
+│     │  ├─ 📦 dev.yaml               <span class="text-gray-500 dark:text-zinc-500 text-xs"># Valeurs backend dev</span>
+│     │  ├─ 📦 staging.yaml           <span class="text-gray-500 dark:text-zinc-500 text-xs"># Valeurs backend staging</span>
+│     │  └─ 📦 prod.yaml              <span class="text-gray-500 dark:text-zinc-500 text-xs"># Valeurs backend prod</span>
+│     └─ 📁 postgres/                 <span class="text-gray-500 dark:text-zinc-500 text-xs"># Valeurs postgres</span>
+│        ├─ 📦 dev.yaml               <span class="text-gray-500 dark:text-zinc-500 text-xs"># Valeurs postgres dev</span>
+│        ├─ 📦 staging.yaml           <span class="text-gray-500 dark:text-zinc-500 text-xs"># Valeurs postgres staging</span>
+│        └─ 📦 prod.yaml              <span class="text-gray-500 dark:text-zinc-500 text-xs"># Valeurs postgres prod</span>
+├─ 📁 <span class="text-blue-600 dark:text-blue-400 font-semibold">docker/</span>                         <span class="text-gray-500 dark:text-zinc-500 text-xs"># Images démo simples</span>
+│  ├─ 📁 frontend/                    <span class="text-gray-500 dark:text-zinc-500 text-xs"># Application frontend</span>
+│  │  ├─ 🐳 Dockerfile                <span class="text-gray-500 dark:text-zinc-500 text-xs"># NGINX servant un build Angular / HTML static</span>
+│  │  └─ 📁 app/                      <span class="text-gray-500 dark:text-zinc-500 text-xs"># (optionnel) sources front / index.html</span>
+│  └─ 📁 backend/                      <span class="text-gray-500 dark:text-zinc-500 text-xs"># Application backend</span>
+│     ├─ 🐳 Dockerfile                <span class="text-gray-500 dark:text-zinc-500 text-xs"># Mini API (Node/Express ou Go)</span>
+│     └─ 📁 src/                      <span class="text-gray-500 dark:text-zinc-500 text-xs"># Code source de l'API de démo</span>
+├─ 📁 <span class="text-blue-600 dark:text-blue-400 font-semibold">scripts/</span>                        <span class="text-gray-500 dark:text-zinc-500 text-xs"># Scripts "CI/CD simulée" & utilitaires</span>
+│  ├─ 🔧 build-images.sh              <span class="text-gray-500 dark:text-zinc-500 text-xs"># Build des images Docker frontend/backend</span>
+│  ├─ 🔧 push-images-local.sh         <span class="text-gray-500 dark:text-zinc-500 text-xs"># (optionnel) push vers le registry k3d</span>
+│  ├─ 🔧 deploy-dev.sh                <span class="text-gray-500 dark:text-zinc-500 text-xs"># Déploiement Helm en dev</span>
+│  ├─ 🔧 deploy-staging.sh            <span class="text-gray-500 dark:text-zinc-500 text-xs"># Déploiement Helm en staging</span>
+│  ├─ 🔧 deploy-prod.sh               <span class="text-gray-500 dark:text-zinc-500 text-xs"># Déploiement Helm en prod</span>
+│  ├─ 🔧 teardown-dev.sh              <span class="text-gray-500 dark:text-zinc-500 text-xs"># Désinstalle les releases dev</span>
+│  ├─ 🔧 teardown-all.sh              <span class="text-gray-500 dark:text-zinc-500 text-xs"># Clean total des releases</span>
+│  ├─ 🔧 port-forward-db.sh           <span class="text-gray-500 dark:text-zinc-500 text-xs"># Port-forward PostgreSQL pour inspection</span>
+│  └─ 🔧 k9s.sh                       <span class="text-gray-500 dark:text-zinc-500 text-xs"># Lance k9s avec le bon context/namespace</span>
+└─ 📁 <span class="text-blue-600 dark:text-blue-400 font-semibold">.github/</span>                        <span class="text-gray-500 dark:text-zinc-500 text-xs"># (optionnel) CI simulée</span>
+   └─ 📁 workflows/                    <span class="text-gray-500 dark:text-zinc-500 text-xs"># Workflows GitHub Actions</span>
+      └─ 🚀 ci-simulated.yaml         <span class="text-gray-500 dark:text-zinc-500 text-xs"># Exemple de pipeline (lint + helm lint)</span></code></pre>
+      </div>
+    </section>
+
+
+  </main>
+
+  <!-- Script commun score / reset -->
+  <script>
+    // Score management
+    function initScore() {
+      const scoreElement = document.getElementById('score-total');
+      const scoreElementMobile = document.getElementById('score-total-mobile');
+      const scoreContainer = document.getElementById('score-container');
+      const scoreContainerMobile = document.getElementById('score-container-mobile');
+
+      function updateScore() {
+        let score = parseInt(localStorage.getItem('score_total') || '0', 10);
+        if (isNaN(score)) score = 0;
+        if (scoreElement) scoreElement.textContent = score;
+        if (scoreElementMobile) scoreElementMobile.textContent = score;
+      }
+
+      function resetScore() {
+        if (confirm('Réinitialiser tous les exercices et le score ?')) {
+          Object.keys(localStorage).forEach((key) => {
+            if (key.startsWith('exo_')) {
+              localStorage.removeItem(key);
+            }
+          });
+          localStorage.setItem('score_total', '0');
+          updateScore();
+        }
+      }
+
+      if (scoreContainer) scoreContainer.addEventListener('click', resetScore);
+      if (scoreContainerMobile) scoreContainerMobile.addEventListener('click', resetScore);
+      updateScore();
+    }
+
+    // Mobile menu
+    function initMobileMenu() {
+      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+      const mobileMenu = document.getElementById('mobile-menu');
+
+      if (mobileMenuBtn && mobileMenu) {
+        mobileMenuBtn.addEventListener('click', () => {
+          mobileMenu.classList.toggle('mobile-menu-hidden');
+          mobileMenu.classList.toggle('mobile-menu-visible');
+        });
+      }
+    }
+
+    // Initialize everything when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() {
+        initScore();
+        initMobileMenu();
+      });
+    } else {
+      // DOM already loaded
+      initScore();
+      initMobileMenu();
+    }
+  </script>
+</body>
+</html>

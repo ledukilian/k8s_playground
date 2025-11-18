@@ -1,0 +1,16 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: readonly-pods-binding
+  namespace: dev
+  labels:
+    app.kubernetes.io/name: readonly-dev
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: readonly-pods
+subjects:
+  - kind: ServiceAccount
+    name: readonly-dev
+    namespace: dev
+

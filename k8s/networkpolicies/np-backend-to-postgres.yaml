@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-backend-to-postgres
+  namespace: dev
+  labels:
+    app.kubernetes.io/name: backend-to-postgres
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: postgres
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/component: backend
+      ports:
+        - port: 5432
+          protocol: TCP
+---
+# Déployer une copie adaptée pour staging/prod si la politique réseau est activée globalement.
+

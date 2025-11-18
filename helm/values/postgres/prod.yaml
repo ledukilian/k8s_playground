@@ -1,0 +1,7 @@
+auth:
+  database: prod_playground
+  username: playground
+  password: prodpass
+persistence:
+  size: 10Gi
+

@@ -1,0 +1,17 @@
+replicaCount: 2
+image:
+  repository: k3d-playground-registry.localhost:5111/frontend
+  tag: staging
+ingress:
+  hosts:
+    - host: staging-front.localhost
+      paths:
+        - path: /
+          pathType: Prefix
+config:
+  banner: "STAGING – Pré-production"
+  apiBaseUrl: "http://staging-api.localhost"
+  featureFlags:
+    enableDebugPanel: true
+    showTrainingHints: false
+

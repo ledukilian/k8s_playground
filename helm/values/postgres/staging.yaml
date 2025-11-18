@@ -1,0 +1,7 @@
+auth:
+  database: staging_playground
+  username: playground
+  password: stagingpass
+persistence:
+  size: 5Gi
+

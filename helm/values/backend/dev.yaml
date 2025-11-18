@@ -1,0 +1,26 @@
+replicaCount: 1
+image:
+  repository: k3d-playground-registry.localhost:5111/backend
+  tag: dev
+ingress:
+  hosts:
+    - host: dev-api.localhost
+      paths:
+        - path: /
+          pathType: Prefix
+config:
+  appEnv: dev
+  appMessage: "DEV env – temps de réponse non garanti 😅"
+  featureTips:
+    enableCrashEndpoint: true
+    enableSlowEndpoint: true
+    enableErrorEndpoint: true
+  database:
+    host: postgres-dev
+    port: 5432
+    name: dev_playground
+    user: playground
+secrets:
+  databasePassword: devpass
+  apiToken: dev-token
+

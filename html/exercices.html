@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kubernetes Playground</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧪</text></svg>">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script>
+    (function() {
+      const theme = localStorage.getItem('theme') || 'dark';
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    })();
+  </script>
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in { animation: fadeIn 0.5s ease-out; }
+    .mobile-menu-hidden { display: none; }
+    .mobile-menu-visible { display: block; }
+    html { scroll-behavior: smooth; }
+    h2[id], h1[id] { scroll-margin-top: 80px; }
+    pre code { display: block; }
+    @media (max-width: 640px) {
+      pre { font-size: 0.7rem; padding: 0.75rem; }
+    }
+    .exercice-row:hover {
+      background-color: rgba(59, 130, 246, 0.05);
+    }
+    .dark .exercice-row:hover {
+      background-color: rgba(59, 130, 246, 0.1);
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50 dark:from-zinc-900 dark:via-zinc-800 dark:to-zinc-900 text-gray-800 dark:text-zinc-100 min-h-screen transition-colors">
+
+  <!-- Navbar commune -->
+  <header class="sticky top-0 z-30 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border-b border-gray-200/80 dark:border-zinc-700/80 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center gap-2 sm:gap-3">
+          <span class="text-2xl sm:text-3xl">🧪</span>
+          <div>
+            <div class="font-bold text-base sm:text-lg">Kubernetes Playground</div>
+            <div class="text-xs text-gray-500 dark:text-zinc-400 hidden sm:block">k3d • Traefik • Helm • k9s</div>
+          </div>
+        </div>
+        
+        <!-- Desktop Navigation -->
+        <nav class="hidden md:flex items-center gap-1 text-sm">
+          <a href="index.html" class="px-4 py-2 text-gray-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">Introduction</a>
+          <a href="demarrage.html" class="px-4 py-2 text-gray-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">Démarrage</a>
+          <a href="exercices.html" class="px-4 py-2 font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30">Exercices</a>
+          <a href="ressources.html" class="px-4 py-2 text-gray-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">Ressources</a>
+          <a href="astuces.html" class="px-4 py-2 text-gray-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">Astuces</a>
+        </nav>
+
+        <!-- Desktop Score -->
+        <div class="hidden md:flex items-center gap-3">
+          <div 
+            id="score-container"
+            class="text-base font-bold bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 px-3 py-1.5 cursor-pointer transition-all"
+            style="color: #2563eb;"
+            title="Cliquer pour réinitialiser"
+          >
+            <span id="score-total">0</span> pts
+          </div>
+          <a href="https://github.com/ledukilian/k8s_playground" target="_blank" rel="noopener noreferrer"
+             class="p-2 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors"
+             title="Voir sur GitHub">
+            <svg class="w-5 h-5 text-gray-700 dark:text-zinc-300" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+          </a>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-btn" class="md:hidden p-2 border-2 border-gray-300 dark:border-zinc-600 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Mobile Menu -->
+      <div id="mobile-menu" class="mobile-menu-hidden md:hidden pb-4 border-t border-gray-200 dark:border-zinc-700 mt-2 pt-4">
+        <nav class="flex flex-col gap-2">
+          <a href="index.html" class="px-4 py-2 text-gray-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">Introduction</a>
+          <a href="demarrage.html" class="px-4 py-2 text-gray-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">Démarrage</a>
+          <a href="exercices.html" class="px-4 py-2 font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30">Exercices</a>
+          <a href="ressources.html" class="px-4 py-2 text-gray-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">Ressources</a>
+          <a href="astuces.html" class="px-4 py-2 text-gray-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">Astuces</a>
+        </nav>
+        <div class="mt-4 pt-4 border-t border-gray-200 dark:border-zinc-700 flex flex-col gap-3">
+          <div 
+            id="score-container-mobile"
+            class="text-base font-bold bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 px-3 py-1.5 cursor-pointer transition-all text-center"
+            style="color: #2563eb;"
+            title="Cliquer pour réinitialiser"
+          >
+            <span id="score-total-mobile">0</span> pts
+          </div>
+          <a href="https://github.com/ledukilian/k8s_playground" target="_blank" rel="noopener noreferrer"
+             class="p-2 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors text-center"
+             title="Voir sur GitHub">
+            <svg class="w-5 h-5 text-gray-700 dark:text-zinc-300 mx-auto" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 pt-6 sm:pt-8 space-y-8 sm:space-y-10 fade-in scroll-smooth">
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-br from-blue-50 via-indigo-50/50 to-blue-50 dark:from-zinc-900 dark:via-zinc-800 dark:to-zinc-900 p-6 sm:p-8 border-l-4 border-blue-600 dark:border-blue-500 shadow-sm">
+      <h1 id="parcours" class="text-2xl sm:text-3xl font-bold mb-3 text-gray-800 dark:text-zinc-100">📋 Parcours d'exercices</h1>
+      <p class="text-base sm:text-lg text-gray-700 dark:text-zinc-300 leading-relaxed mb-2">
+        Chaque exercice correspond à une situation réaliste de développeur / devops :
+        lire des logs, corriger un déploiement, ajuster un Ingress, faire un rollback…
+        Coche un exercice quand tu l'as réellement effectué dans le cluster.
+      </p>
+      <p class="text-sm sm:text-base text-gray-600 dark:text-zinc-400 leading-relaxed">
+        Plus l'exercice est difficile, plus il rapporte de points. Utilise
+        <strong class="text-blue-700 dark:text-blue-400">💡 "Voir indice"</strong> si tu bloques, puis <strong class="text-blue-700 dark:text-blue-400">✅ "Voir solution"</strong> pour vérifier.
+      </p>
+    </section>
+
+    <!-- Tableau unique avec tous les exercices -->
+    <section class="bg-white dark:bg-zinc-800 p-6 sm:p-8 border-l-4 border-blue-600 dark:border-blue-500 shadow-sm">
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse">
+          <thead class="hidden sm:table-header-group">
+            <tr class="border-b-2 border-gray-300 dark:border-zinc-600">
+              <th class="text-left py-2 px-3 text-xs font-semibold text-gray-600 dark:text-zinc-400 w-12"></th>
+              <th class="text-left py-2 px-3 text-xs font-semibold text-gray-600 dark:text-zinc-400 hidden md:table-cell w-32">Type</th>
+              <th class="text-left py-2 px-3 text-xs font-semibold text-gray-600 dark:text-zinc-400">Exercice</th>
+              <th class="text-center py-2 px-3 text-xs font-semibold text-gray-600 dark:text-zinc-400 w-24">Difficulté</th>
+              <th class="text-center py-2 px-3 text-xs font-semibold text-gray-600 dark:text-zinc-400 w-20">Points</th>
+              <th class="text-center py-2 px-3 text-xs font-semibold text-gray-600 dark:text-zinc-400 w-32">Aide</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Exo 0.1 -->
+            <tr class="exercice-row border-b border-gray-200 dark:border-zinc-700 transition-colors" data-exo-id="0.1">
+              <td class="py-3 px-3">
+                <input type="checkbox" class="exercice h-5 w-5 cursor-pointer" data-id="0.1" data-points="1">
+              </td>
+              <td class="py-3 px-3 hidden md:table-cell">
+                <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900/30 text-slate-700 dark:text-slate-400">kubectl</span>
+              </td>
+              <td class="py-3 px-3">
+                <div>
+                  <div class="font-semibold text-sm text-gray-800 dark:text-zinc-100 mb-1">Vérifier que kubectl fonctionne</div>
+                  <p class="text-xs text-gray-600 dark:text-zinc-400">Vérifie que <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">kubectl</code> est bien installé et configuré en exécutant une commande simple.</p>
+                  <div class="mt-2 space-y-2 hidden" data-hint="0.1">
+                    <div class="text-xs text-gray-600 dark:text-zinc-400 pl-2 border-l-2 border-blue-200 dark:border-blue-800">
+                      <strong class="text-blue-600 dark:text-blue-400">💡 Indice :</strong> Utilise <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">kubectl version</code> ou <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">kubectl cluster-info</code>.
+                    </div>
+                  </div>
+                  <div class="mt-2 space-y-2 hidden" data-solution="0.1">
+                    <div class="text-xs text-gray-600 dark:text-zinc-400 space-y-2 pl-2 border-l-2 border-green-200 dark:border-green-800">
+                      <p><strong class="text-green-600 dark:text-green-400">✅ Solution :</strong></p>
+                      <p>Commande :</p>
+                      <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs p-2 overflow-x-auto font-mono border border-gray-700 dark:border-zinc-600"><code>kubectl version --client
+kubectl cluster-info</code></pre>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <span class="text-xs px-2 py-1 rounded-full bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-medium">Facile</span>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <span class="text-xs px-2 py-1 rounded-full bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-medium">1 pt</span>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <div class="flex gap-1 justify-center">
+                  <button onclick="toggleHelp('0.1', 'hint')" class="text-xs px-2 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded transition-colors">💡</button>
+                  <button onclick="toggleHelp('0.1', 'solution')" class="text-xs px-2 py-1 bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/50 rounded transition-colors">✅</button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Exo 0.2 -->
+            <tr class="exercice-row border-b border-gray-200 dark:border-zinc-700 transition-colors" data-exo-id="0.2">
+              <td class="py-3 px-3">
+                <input type="checkbox" class="exercice h-5 w-5 cursor-pointer" data-id="0.2" data-points="1">
+              </td>
+              <td class="py-3 px-3 hidden md:table-cell">
+                <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900/30 text-slate-700 dark:text-slate-400">kubectl</span>
+              </td>
+              <td class="py-3 px-3">
+                <div>
+                  <div class="font-semibold text-sm text-gray-800 dark:text-zinc-100 mb-1">Lister les namespaces</div>
+                  <p class="text-xs text-gray-600 dark:text-zinc-400">Affiche la liste de tous les namespaces présents dans ton cluster.</p>
+                  <div class="mt-2 space-y-2 hidden" data-hint="0.2">
+                    <div class="text-xs text-gray-600 dark:text-zinc-400 pl-2 border-l-2 border-blue-200 dark:border-blue-800">
+                      <strong class="text-blue-600 dark:text-blue-400">💡 Indice :</strong> Utilise <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">kubectl get</code> avec le type de ressource approprié.
+                    </div>
+                  </div>
+                  <div class="mt-2 space-y-2 hidden" data-solution="0.2">
+                    <div class="text-xs text-gray-600 dark:text-zinc-400 space-y-2 pl-2 border-l-2 border-green-200 dark:border-green-800">
+                      <p><strong class="text-green-600 dark:text-green-400">✅ Solution :</strong></p>
+                      <p>Commande :</p>
+                      <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs p-2 overflow-x-auto font-mono border border-gray-700 dark:border-zinc-600"><code>kubectl get namespaces
+# ou en raccourci :
+kubectl get ns</code></pre>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <span class="text-xs px-2 py-1 rounded-full bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-medium">Facile</span>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <span class="text-xs px-2 py-1 rounded-full bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-medium">1 pt</span>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <div class="flex gap-1 justify-center">
+                  <button onclick="toggleHelp('0.2', 'hint')" class="text-xs px-2 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded transition-colors">💡</button>
+                  <button onclick="toggleHelp('0.2', 'solution')" class="text-xs px-2 py-1 bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/50 rounded transition-colors">✅</button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Exo 0.3 -->
+            <tr class="exercice-row border-b border-gray-200 dark:border-zinc-700 transition-colors" data-exo-id="0.3">
+              <td class="py-3 px-3">
+                <input type="checkbox" class="exercice h-5 w-5 cursor-pointer" data-id="0.3" data-points="1">
+              </td>
+              <td class="py-3 px-3 hidden md:table-cell">
+                <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900/30 text-slate-700 dark:text-slate-400">kubectl</span>
+              </td>
+              <td class="py-3 px-3">
+                <div>
+                  <div class="font-semibold text-sm text-gray-800 dark:text-zinc-100 mb-1">Voir les nodes du cluster</div>
+                  <p class="text-xs text-gray-600 dark:text-zinc-400">Affiche la liste des nodes (machines) qui composent ton cluster Kubernetes.</p>
+                  <div class="mt-2 space-y-2 hidden" data-hint="0.3">
+                    <div class="text-xs text-gray-600 dark:text-zinc-400 pl-2 border-l-2 border-blue-200 dark:border-blue-800">
+                      <strong class="text-blue-600 dark:text-blue-400">💡 Indice :</strong> Utilise <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">kubectl get nodes</code>.
+                    </div>
+                  </div>
+                  <div class="mt-2 space-y-2 hidden" data-solution="0.3">
+                    <div class="text-xs text-gray-600 dark:text-zinc-400 space-y-2 pl-2 border-l-2 border-green-200 dark:border-green-800">
+                      <p><strong class="text-green-600 dark:text-green-400">✅ Solution :</strong></p>
+                      <p>Commande :</p>
+                      <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs p-2 overflow-x-auto font-mono border border-gray-700 dark:border-zinc-600"><code>kubectl get nodes</code></pre>
+                      <p>Tu devrais voir au moins un node (le serveur k3d).</p>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <span class="text-xs px-2 py-1 rounded-full bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-medium">Facile</span>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <span class="text-xs px-2 py-1 rounded-full bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-medium">1 pt</span>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <div class="flex gap-1 justify-center">
+                  <button onclick="toggleHelp('0.3', 'hint')" class="text-xs px-2 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded transition-colors">💡</button>
+                  <button onclick="toggleHelp('0.3', 'solution')" class="text-xs px-2 py-1 bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/50 rounded transition-colors">✅</button>
+                </div>
+              </td>
+            </tr>
+            <!-- Exo 1 -->
+            <tr class="exercice-row border-b border-gray-200 dark:border-zinc-700 transition-colors" data-exo-id="1">
+              <td class="py-3 px-3">
+                <input type="checkbox" class="exercice h-5 w-5 cursor-pointer" data-id="1" data-points="1">
+              </td>
+              <td class="py-3 px-3 hidden md:table-cell">
+                <span class="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-900/30 text-slate-700 dark:text-slate-400">kubectl</span>
+              </td>
+              <td class="py-3 px-3">
+                <div>
+                  <div class="font-semibold text-sm text-gray-800 dark:text-zinc-100 mb-1">Lister les pods de tous les namespaces</div>
+                  <p class="text-xs text-gray-600 dark:text-zinc-400">Depuis ton cluster local, liste tous les pods qui tournent, dans tous les namespaces, puis identifie le namespace où tourne ton application front.</p>
+                  <div class="mt-2 space-y-2 hidden" data-hint="1">
+                    <div class="text-xs text-gray-600 dark:text-zinc-400 pl-2 border-l-2 border-blue-200 dark:border-blue-800">
+                      <strong class="text-blue-600 dark:text-blue-400">💡 Indice :</strong> Pense au flag <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">-A</code> ou <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">--all-namespaces</code> avec <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">kubectl get pods</code>.
+                    </div>
+                  </div>
+                  <div class="mt-2 space-y-2 hidden" data-solution="1">
+                    <div class="text-xs text-gray-600 dark:text-zinc-400 space-y-2 pl-2 border-l-2 border-green-200 dark:border-green-800">
+                      <p><strong class="text-green-600 dark:text-green-400">✅ Solution :</strong></p>
+                      <p>Commande possible :</p>
+                      <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs p-2 overflow-x-auto font-mono border border-gray-700 dark:border-zinc-600"><code>kubectl get pods -A</code></pre>
+                      <p>Repère ensuite un pod ayant un nom du type <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">frontend-…</code> et note son namespace.</p>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <span class="text-xs px-2 py-1 rounded-full bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-medium">Facile</span>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <span class="text-xs px-2 py-1 rounded-full bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-medium">1 pt</span>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <div class="flex gap-1 justify-center">
+                  <button onclick="toggleHelp('1', 'hint')" class="text-xs px-2 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded transition-colors">💡</button>
+                  <button onclick="toggleHelp('1', 'solution')" class="text-xs px-2 py-1 bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/50 rounded transition-colors">✅</button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Exo 2 -->
+            <tr class="exercice-row border-b border-gray-200 dark:border-zinc-700 transition-colors" data-exo-id="2">
+              <td class="py-3 px-3">
+                <input type="checkbox" class="exercice h-5 w-5 cursor-pointer" data-id="2" data-points="1">
+              </td>
+              <td class="py-3 px-3 hidden md:table-cell">
+                <span class="text-xs px-2 py-1 rounded bg-cyan-100 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-400">k9s</span>
+              </td>
+              <td class="py-3 px-3">
+                <div>
+                  <div class="font-semibold text-sm text-gray-800 dark:text-zinc-100 mb-1">Inspecter les pods avec k9s</div>
+                  <p class="text-xs text-gray-600 dark:text-zinc-400">Ouvre k9s, navigue jusqu'au namespace de ton application, puis affiche les logs d'un pod backend.</p>
+                  <div class="mt-2 space-y-2 hidden" data-hint="2">
+                    <div class="text-xs text-gray-600 dark:text-zinc-400 pl-2 border-l-2 border-blue-200 dark:border-blue-800">
+                      <strong class="text-blue-600 dark:text-blue-400">💡 Indice :</strong> Une fois dans k9s, tu peux changer de namespace avec <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">:</code> puis le nom du namespace. Utilise <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">l</code> sur un pod pour voir les logs.
+                    </div>
+                  </div>
+                  <div class="mt-2 space-y-2 hidden" data-solution="2">
+                    <div class="text-xs text-gray-600 dark:text-zinc-400 space-y-2 pl-2 border-l-2 border-green-200 dark:border-green-800">
+                      <p><strong class="text-green-600 dark:text-green-400">✅ Solution :</strong></p>
+                      <ul class="list-disc list-inside space-y-1">
+                        <li>Exécuter <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">k9s</code> dans ton terminal.</li>
+                        <li>Taper <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">:</code> puis le nom du namespace (ex. <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">playground</code>).</li>
+                        <li>Se positionner sur un pod backend, puis appuyer sur <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">l</code> pour afficher les logs.</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <span class="text-xs px-2 py-1 rounded-full bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-medium">Facile</span>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <span class="text-xs px-2 py-1 rounded-full bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-medium">1 pt</span>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <div class="flex gap-1 justify-center">
+                  <button onclick="toggleHelp('2', 'hint')" class="text-xs px-2 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded transition-colors">💡</button>
+                  <button onclick="toggleHelp('2', 'solution')" class="text-xs px-2 py-1 bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/50 rounded transition-colors">✅</button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Exo 3 -->
+            <tr class="exercice-row border-b border-gray-200 dark:border-zinc-700 transition-colors" data-exo-id="3">
+              <td class="py-3 px-3">
+                <input type="checkbox" class="exercice h-5 w-5 cursor-pointer" data-id="3" data-points="2">
+              </td>
+              <td class="py-3 px-3 hidden md:table-cell">
+                <span class="text-xs px-2 py-1 rounded bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400">Deployment</span>
+              </td>
+              <td class="py-3 px-3">
+                <div>
+                  <div class="font-semibold text-sm text-gray-800 dark:text-zinc-100 mb-1">Scaler le frontend de 1 à 3 replicas</div>
+                  <p class="text-xs text-gray-600 dark:text-zinc-400">Augmente le nombre de replicas du Deployment frontend à 3, puis vérifie que le changement est effectif.</p>
+                  <div class="mt-2 space-y-2 hidden" data-hint="3">
+                    <div class="text-xs text-gray-600 dark:text-zinc-400 pl-2 border-l-2 border-blue-200 dark:border-blue-800">
+                      <strong class="text-blue-600 dark:text-blue-400">💡 Indice :</strong> Tu peux utiliser soit <code>kubectl scale</code>, soit modifier la spec du Deployment (manifeste ou values Helm).
+                    </div>
+                  </div>
+                  <div class="mt-2 space-y-2 hidden" data-solution="3">
+                    <div class="text-xs text-gray-600 dark:text-zinc-400 space-y-2 pl-2 border-l-2 border-green-200 dark:border-green-800">
+                      <p><strong class="text-green-600 dark:text-green-400">✅ Solution :</strong></p>
+                      <p>Exemple avec <code>kubectl</code> :</p>
+                      <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs p-2 overflow-x-auto font-mono border border-gray-700 dark:border-zinc-600"><code>kubectl scale deployment frontend -n playground --replicas=3
+kubectl get pods -n playground</code></pre>
+                      <p>Tu dois voir 3 pods <code>frontend-…</code> en état <code>Running</code>.</p>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <span class="text-xs px-2 py-1 rounded-full bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 font-medium">Moyen</span>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <span class="text-xs px-2 py-1 rounded-full bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 font-medium">2 pts</span>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <div class="flex gap-1 justify-center">
+                  <button onclick="toggleHelp('3', 'hint')" class="text-xs px-2 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded transition-colors">💡</button>
+                  <button onclick="toggleHelp('3', 'solution')" class="text-xs px-2 py-1 bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/50 rounded transition-colors">✅</button>
+                </div>
+              </td>
+            </tr>
+            <!-- Exo 4 -->
+            <tr class="exercice-row border-b border-gray-200 dark:border-zinc-700 transition-colors" data-exo-id="4">
+              <td class="py-3 px-3">
+                <input type="checkbox" class="exercice h-5 w-5 cursor-pointer" data-id="4" data-points="2">
+              </td>
+              <td class="py-3 px-3 hidden md:table-cell">
+                <span class="text-xs px-2 py-1 rounded bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400">Ingress</span>
+              </td>
+              <td class="py-3 px-3">
+                <div>
+                  <div class="font-semibold text-sm text-gray-800 dark:text-zinc-100 mb-1">Changer le host de l'Ingress frontend</div>
+                  <p class="text-xs text-gray-600 dark:text-zinc-400">Modifie l'Ingress pour que le frontend soit accessible via <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">play.localhost</code> au lieu de <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">frontend.localhost</code>.</p>
+                  <div class="mt-2 space-y-2 hidden" data-hint="4">
+                    <div class="text-xs text-gray-600 dark:text-zinc-400 pl-2 border-l-2 border-blue-200 dark:border-blue-800">
+                      <strong class="text-blue-600 dark:text-blue-400">💡 Indice :</strong> L'host est défini dans les règles de l'Ingress (champ <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">spec.rules[].host</code>). Pense aussi à ajouter une entrée dans ton <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">/etc/hosts</code> si nécessaire.
+                    </div>
+                  </div>
+                  <div class="mt-2 space-y-2 hidden" data-solution="4">
+                    <div class="text-xs text-gray-600 dark:text-zinc-400 space-y-2 pl-2 border-l-2 border-green-200 dark:border-green-800">
+                      <p><strong class="text-green-600 dark:text-green-400">✅ Solution :</strong></p>
+                      <p>Exemple (extrait d'Ingress) :</p>
+                      <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs p-2 overflow-x-auto font-mono border border-gray-700 dark:border-zinc-600"><code>spec:
+  rules:
+    - host: play.localhost
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80</code></pre>
+                      <p>Puis dans <code>/etc/hosts</code> (ou équivalent) :</p>
+                      <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs p-2 overflow-x-auto font-mono border border-gray-700 dark:border-zinc-600"><code>127.0.0.1   play.localhost</code></pre>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <span class="text-xs px-2 py-1 rounded-full bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 font-medium">Moyen</span>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <span class="text-xs px-2 py-1 rounded-full bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 font-medium">2 pts</span>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <div class="flex gap-1 justify-center">
+                  <button onclick="toggleHelp('4', 'hint')" class="text-xs px-2 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded transition-colors">💡</button>
+                  <button onclick="toggleHelp('4', 'solution')" class="text-xs px-2 py-1 bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/50 rounded transition-colors">✅</button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Exo 5 -->
+            <tr class="exercice-row border-b border-gray-200 dark:border-zinc-700 transition-colors" data-exo-id="5">
+              <td class="py-3 px-3">
+                <input type="checkbox" class="exercice h-5 w-5 cursor-pointer" data-id="5" data-points="2">
+              </td>
+              <td class="py-3 px-3 hidden md:table-cell">
+                <span class="text-xs px-2 py-1 rounded bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400">Ingress</span>
+              </td>
+              <td class="py-3 px-3">
+                <div>
+                  <div class="font-semibold text-sm text-gray-800 dark:text-zinc-100 mb-1">Exposer le backend via le chemin <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">/api</code></div>
+                  <p class="text-xs text-gray-600 dark:text-zinc-400">Configure l'Ingress pour que la route <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">http://play.localhost/api</code> soit envoyée au service backend.</p>
+                  <div class="mt-2 space-y-2 hidden" data-hint="5">
+                    <div class="text-xs text-gray-600 dark:text-zinc-400 pl-2 border-l-2 border-blue-200 dark:border-blue-800">
+                      <strong class="text-blue-600 dark:text-blue-400">💡 Indice :</strong> Tu peux ajouter un second path dans la même règle d'Ingress (dans <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">spec.rules[].http.paths</code>), avec un backend différent pointant vers le service backend.
+                    </div>
+                  </div>
+                  <div class="mt-2 space-y-2 hidden" data-solution="5">
+                    <div class="text-xs text-gray-600 dark:text-zinc-400 space-y-2 pl-2 border-l-2 border-green-200 dark:border-green-800">
+                      <p><strong class="text-green-600 dark:text-green-400">✅ Solution :</strong></p>
+                      <p>Exemple :</p>
+                      <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs p-2 overflow-x-auto font-mono border border-gray-700 dark:border-zinc-600"><code>spec:
+  rules:
+    - host: play.localhost
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: backend
+                port:
+                  number: 80</code></pre>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <span class="text-xs px-2 py-1 rounded-full bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 font-medium">Moyen</span>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <span class="text-xs px-2 py-1 rounded-full bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 font-medium">2 pts</span>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <div class="flex gap-1 justify-center">
+                  <button onclick="toggleHelp('5', 'hint')" class="text-xs px-2 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded transition-colors">💡</button>
+                  <button onclick="toggleHelp('5', 'solution')" class="text-xs px-2 py-1 bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/50 rounded transition-colors">✅</button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Exo 6 -->
+            <tr class="exercice-row border-b border-gray-200 dark:border-zinc-700 transition-colors" data-exo-id="6">
+              <td class="py-3 px-3">
+                <input type="checkbox" class="exercice h-5 w-5 cursor-pointer" data-id="6" data-points="3">
+              </td>
+              <td class="py-3 px-3 hidden md:table-cell">
+                <span class="text-xs px-2 py-1 rounded bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400">Traefik</span>
+              </td>
+              <td class="py-3 px-3">
+                <div>
+                  <div class="font-semibold text-sm text-gray-800 dark:text-zinc-100 mb-1">Accéder au dashboard Traefik</div>
+                  <p class="text-xs text-gray-600 dark:text-zinc-400">Expose le dashboard Traefik dans ton cluster via un Ingress dédié et vérifie qu'il liste tes routes.</p>
+                  <div class="mt-2 space-y-2 hidden" data-hint="6">
+                    <div class="text-xs text-gray-600 dark:text-zinc-400 pl-2 border-l-2 border-blue-200 dark:border-blue-800">
+                      <strong class="text-blue-600 dark:text-blue-400">💡 Indice :</strong> Le dashboard Traefik est généralement accessible via un service interne (ex. <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">traefik-dashboard</code>). Crée un Ingress pointant vers ce service sur le port 9000 (port par défaut du dashboard). Vérifie aussi que le dashboard est activé dans la configuration Traefik.
+                    </div>
+                  </div>
+                  <div class="mt-2 space-y-2 hidden" data-solution="6">
+                    <div class="text-xs text-gray-600 dark:text-zinc-400 space-y-2 pl-2 border-l-2 border-green-200 dark:border-green-800">
+                      <p><strong class="text-green-600 dark:text-green-400">✅ Solution :</strong></p>
+                      <p>1. Vérifier que le dashboard est activé dans Traefik (généralement activé par défaut dans k3d).</p>
+                      <p>2. Créer un Ingress pointant vers le service du dashboard :</p>
+                      <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs p-2 overflow-x-auto font-mono border border-gray-700 dark:border-zinc-600"><code>apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: traefik-dashboard
+  namespace: kube-system
+spec:
+  rules:
+    - host: traefik.localhost
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: traefik-dashboard
+                port:
+                  number: 9000</code></pre>
+                      <p>3. Ajouter <code>127.0.0.1 traefik.localhost</code> dans <code>/etc/hosts</code>.</p>
+                      <p>4. Accéder via <code>http://traefik.localhost</code>.</p>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <span class="text-xs px-2 py-1 rounded-full bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 font-medium">Difficile</span>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <span class="text-xs px-2 py-1 rounded-full bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 font-medium">3 pts</span>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <div class="flex gap-1 justify-center">
+                  <button onclick="toggleHelp('6', 'hint')" class="text-xs px-2 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded transition-colors">💡</button>
+                  <button onclick="toggleHelp('6', 'solution')" class="text-xs px-2 py-1 bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/50 rounded transition-colors">✅</button>
+                </div>
+              </td>
+            </tr>
+            <!-- Exo 7 -->
+            <tr class="exercice-row border-b border-gray-200 dark:border-zinc-700 transition-colors" data-exo-id="7">
+              <td class="py-3 px-3">
+                <input type="checkbox" class="exercice h-5 w-5 cursor-pointer" data-id="7" data-points="2">
+              </td>
+              <td class="py-3 px-3 hidden md:table-cell">
+                <span class="text-xs px-2 py-1 rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400">ConfigMap</span>
+              </td>
+              <td class="py-3 px-3">
+                <div>
+                  <div class="font-semibold text-sm text-gray-800 dark:text-zinc-100 mb-1">Ajouter un message via ConfigMap</div>
+                  <p class="text-xs text-gray-600 dark:text-zinc-400">Crée une ConfigMap contenant une clé <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">APP_MESSAGE</code>, monte-la dans le backend et expose son contenu sur un endpoint (ex. <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">/message</code>).</p>
+                  <div class="mt-2 space-y-2 hidden" data-hint="7">
+                    <div class="text-xs text-gray-600 dark:text-zinc-400 pl-2 border-l-2 border-blue-200 dark:border-blue-800">
+                      <strong class="text-blue-600 dark:text-blue-400">💡 Indice :</strong> Utilise <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">kubectl create configmap</code> ou crée un manifest YAML. Pour l'injecter dans le pod, utilise <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">env[].valueFrom.configMapKeyRef</code> dans le Deployment. Tu peux aussi monter la ConfigMap comme volume, mais la variable d'environnement est plus simple.
+                    </div>
+                  </div>
+                  <div class="mt-2 space-y-2 hidden" data-solution="7">
+                    <div class="text-xs text-gray-600 dark:text-zinc-400 space-y-2 pl-2 border-l-2 border-green-200 dark:border-green-800">
+                      <p><strong class="text-green-600 dark:text-green-400">✅ Solution :</strong></p>
+                      <p>1. Créer la ConfigMap :</p>
+                      <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs p-2 overflow-x-auto font-mono border border-gray-700 dark:border-zinc-600"><code>apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+  namespace: dev
+data:
+  APP_MESSAGE: "Hello from ConfigMap"</code></pre>
+                      <p>Ou en ligne de commande :</p>
+                      <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs p-2 overflow-x-auto font-mono border border-gray-700 dark:border-zinc-600"><code>kubectl create configmap backend-config \
+  -n dev \
+  --from-literal=APP_MESSAGE="Hello from ConfigMap"</code></pre>
+                      <p>2. Modifier le Deployment backend pour injecter la variable :</p>
+                      <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs p-2 overflow-x-auto font-mono border border-gray-700 dark:border-zinc-600"><code>env:
+  - name: APP_MESSAGE
+    valueFrom:
+      configMapKeyRef:
+        name: backend-config
+        key: APP_MESSAGE</code></pre>
+                      <p>3. Le code backend lit <code>APP_MESSAGE</code> et l'affiche sur l'endpoint <code>/message</code>.</p>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <span class="text-xs px-2 py-1 rounded-full bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 font-medium">Moyen</span>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <span class="text-xs px-2 py-1 rounded-full bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 font-medium">2 pts</span>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <div class="flex gap-1 justify-center">
+                  <button onclick="toggleHelp('7', 'hint')" class="text-xs px-2 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded transition-colors">💡</button>
+                  <button onclick="toggleHelp('7', 'solution')" class="text-xs px-2 py-1 bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/50 rounded transition-colors">✅</button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Exo 8 -->
+            <tr class="exercice-row border-b border-gray-200 dark:border-zinc-700 transition-colors" data-exo-id="8">
+              <td class="py-3 px-3">
+                <input type="checkbox" class="exercice h-5 w-5 cursor-pointer" data-id="8" data-points="2">
+              </td>
+              <td class="py-3 px-3 hidden md:table-cell">
+                <span class="text-xs px-2 py-1 rounded bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400">Secret</span>
+              </td>
+              <td class="py-3 px-3">
+                <div>
+                  <div class="font-semibold text-sm text-gray-800 dark:text-zinc-100 mb-1">Stocker un mot de passe dans un Secret</div>
+                  <p class="text-xs text-gray-600 dark:text-zinc-400">Crée un Secret avec une clé <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">DB_PASSWORD</code> et injecte-le comme variable d'environnement dans le backend, au lieu de mettre le mot de passe en clair.</p>
+                  <div class="mt-2 space-y-2 hidden" data-hint="8">
+                    <div class="text-xs text-gray-600 dark:text-zinc-400 pl-2 border-l-2 border-blue-200 dark:border-blue-800">
+                      <strong class="text-blue-600 dark:text-blue-400">💡 Indice :</strong> Utilise <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">kubectl create secret generic</code> avec <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">--from-literal</code>. Pour l'injecter, utilise <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">env[].valueFrom.secretKeyRef</code> dans le Deployment, similaire à ConfigMap mais avec <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">secretKeyRef</code>.
+                    </div>
+                  </div>
+                  <div class="mt-2 space-y-2 hidden" data-solution="8">
+                    <div class="text-xs text-gray-600 dark:text-zinc-400 space-y-2 pl-2 border-l-2 border-green-200 dark:border-green-800">
+                      <p><strong class="text-green-600 dark:text-green-400">✅ Solution :</strong></p>
+                      <p>1. Créer le Secret (en ligne de commande) :</p>
+                      <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs p-2 overflow-x-auto font-mono border border-gray-700 dark:border-zinc-600"><code>kubectl create secret generic db-credentials \
+  -n dev \
+  --from-literal=DB_PASSWORD=supersecret</code></pre>
+                      <p>Ou via un manifest YAML (les valeurs doivent être encodées en base64) :</p>
+                      <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs p-2 overflow-x-auto font-mono border border-gray-700 dark:border-zinc-600"><code>apiVersion: v1
+kind: Secret
+metadata:
+  name: db-credentials
+  namespace: dev
+type: Opaque
+data:
+  DB_PASSWORD: c3VwZXJzZWNyZXQ=  # base64 de "supersecret"</code></pre>
+                      <p>2. Modifier le Deployment backend pour injecter la variable :</p>
+                      <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs p-2 overflow-x-auto font-mono border border-gray-700 dark:border-zinc-600"><code>env:
+  - name: DB_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: db-credentials
+        key: DB_PASSWORD</code></pre>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <span class="text-xs px-2 py-1 rounded-full bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 font-medium">Moyen</span>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <span class="text-xs px-2 py-1 rounded-full bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 font-medium">2 pts</span>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <div class="flex gap-1 justify-center">
+                  <button onclick="toggleHelp('8', 'hint')" class="text-xs px-2 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded transition-colors">💡</button>
+                  <button onclick="toggleHelp('8', 'solution')" class="text-xs px-2 py-1 bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/50 rounded transition-colors">✅</button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Exo 9 -->
+            <tr class="exercice-row border-b border-gray-200 dark:border-zinc-700 transition-colors" data-exo-id="9">
+              <td class="py-3 px-3">
+                <input type="checkbox" class="exercice h-5 w-5 cursor-pointer" data-id="9" data-points="3">
+              </td>
+              <td class="py-3 px-3 hidden md:table-cell">
+                <span class="text-xs px-2 py-1 rounded bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400">Helm</span>
+              </td>
+              <td class="py-3 px-3">
+                <div>
+                  <div class="font-semibold text-sm text-gray-800 dark:text-zinc-100 mb-1">Modifier la config via Helm et déployer</div>
+                  <p class="text-xs text-gray-600 dark:text-zinc-400">Change un paramètre dans les <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">values.yaml</code> du chart frontend (par exemple le titre affiché ou le nombre de replicas), puis applique la modification avec <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">helm upgrade</code>.</p>
+                  <div class="mt-2 space-y-2 hidden" data-hint="9">
+                    <div class="text-xs text-gray-600 dark:text-zinc-400 pl-2 border-l-2 border-blue-200 dark:border-blue-800">
+                      <strong class="text-blue-600 dark:text-blue-400">💡 Indice :</strong> Regarde dans <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">helm/values/frontend/dev.yaml</code> (ou le fichier values correspondant à ton environnement). Modifie une valeur comme <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">replicaCount</code> ou <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">image.tag</code>. Utilise <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">helm upgrade &lt;release-name&gt; &lt;chart-path&gt; -n &lt;namespace&gt; -f &lt;values-file&gt;</code> pour appliquer les changements.
+                    </div>
+                  </div>
+                  <div class="mt-2 space-y-2 hidden" data-solution="9">
+                    <div class="text-xs text-gray-600 dark:text-zinc-400 space-y-2 pl-2 border-l-2 border-green-200 dark:border-green-800">
+                      <p><strong class="text-green-600 dark:text-green-400">✅ Solution :</strong></p>
+                      <p>1. Modifier le fichier values (ex. <code>helm/values/frontend/dev.yaml</code>) :</p>
+                      <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs p-2 overflow-x-auto font-mono border border-gray-700 dark:border-zinc-600"><code>replicaCount: 3
+# ou modifier image.tag, appTitle, etc.</code></pre>
+                      <p>2. Appliquer la mise à jour avec Helm :</p>
+                      <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs p-2 overflow-x-auto font-mono border border-gray-700 dark:border-zinc-600"><code>helm upgrade frontend-dev ./helm/charts/frontend \
+  -n dev \
+  -f helm/values/frontend/dev.yaml</code></pre>
+                      <p>3. Vérifier que les pods ont été mis à jour :</p>
+                      <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs p-2 overflow-x-auto font-mono border border-gray-700 dark:border-zinc-600"><code>kubectl get pods -n dev
+helm list -n dev</code></pre>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <span class="text-xs px-2 py-1 rounded-full bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 font-medium">Difficile</span>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <span class="text-xs px-2 py-1 rounded-full bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 font-medium">3 pts</span>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <div class="flex gap-1 justify-center">
+                  <button onclick="toggleHelp('9', 'hint')" class="text-xs px-2 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded transition-colors">💡</button>
+                  <button onclick="toggleHelp('9', 'solution')" class="text-xs px-2 py-1 bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/50 rounded transition-colors">✅</button>
+                </div>
+              </td>
+            </tr>
+            <!-- Exo 10 -->
+            <tr class="exercice-row border-b border-gray-200 dark:border-zinc-700 transition-colors" data-exo-id="10">
+              <td class="py-3 px-3">
+                <input type="checkbox" class="exercice h-5 w-5 cursor-pointer" data-id="10" data-points="3">
+              </td>
+              <td class="py-3 px-3 hidden md:table-cell">
+                <span class="text-xs px-2 py-1 rounded bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400">Incident</span>
+              </td>
+              <td class="py-3 px-3">
+                <div>
+                  <div class="font-semibold text-sm text-gray-800 dark:text-zinc-100 mb-1">Corriger une image Docker invalide</div>
+                  <p class="text-xs text-gray-600 dark:text-zinc-400">Simule un incident en mettant une image Docker invalide sur le backend, constate l'erreur, puis corrige pour rétablir le service.</p>
+                  <div class="mt-2 space-y-2 hidden" data-hint="10">
+                    <div class="text-xs text-gray-600 dark:text-zinc-400 pl-2 border-l-2 border-blue-200 dark:border-blue-800">
+                      <strong class="text-blue-600 dark:text-blue-400">💡 Indice :</strong> Modifie l'image du backend dans le Deployment (via <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">kubectl set image</code> ou dans les values Helm) avec une image inexistante (ex. <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">backend:does-not-exist</code>). Utilise <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">kubectl get pods</code> et <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">kubectl describe pod</code> pour diagnostiquer l'erreur <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">ImagePullBackOff</code>.
+                    </div>
+                  </div>
+                  <div class="mt-2 space-y-2 hidden" data-solution="10">
+                    <div class="text-xs text-gray-600 dark:text-zinc-400 space-y-2 pl-2 border-l-2 border-green-200 dark:border-green-800">
+                      <p><strong class="text-green-600 dark:text-green-400">✅ Solution :</strong></p>
+                      <p>1. Simuler l'incident en modifiant l'image :</p>
+                      <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs p-2 overflow-x-auto font-mono border border-gray-700 dark:border-zinc-600"><code>kubectl set image deployment/backend backend=backend:does-not-exist -n dev
+# ou modifier dans helm/values/backend/dev.yaml</code></pre>
+                      <p>2. Observer l'erreur :</p>
+                      <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs p-2 overflow-x-auto font-mono border border-gray-700 dark:border-zinc-600"><code>kubectl get pods -n dev
+# Les pods seront en état ImagePullBackOff ou ErrImagePull
+
+kubectl describe pod &lt;pod-name&gt; -n dev
+# Voir les événements et l'erreur détaillée</code></pre>
+                      <p>3. Corriger en remettant l'image correcte :</p>
+                      <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs p-2 overflow-x-auto font-mono border border-gray-700 dark:border-zinc-600"><code>kubectl set image deployment/backend backend=backend:latest -n dev
+# ou corriger dans values.yaml et faire helm upgrade</code></pre>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <span class="text-xs px-2 py-1 rounded-full bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 font-medium">Difficile</span>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <span class="text-xs px-2 py-1 rounded-full bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 font-medium">3 pts</span>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <div class="flex gap-1 justify-center">
+                  <button onclick="toggleHelp('10', 'hint')" class="text-xs px-2 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded transition-colors">💡</button>
+                  <button onclick="toggleHelp('10', 'solution')" class="text-xs px-2 py-1 bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/50 rounded transition-colors">✅</button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Exo 11 -->
+            <tr class="exercice-row border-b border-gray-200 dark:border-zinc-700 transition-colors" data-exo-id="11">
+              <td class="py-3 px-3">
+                <input type="checkbox" class="exercice h-5 w-5 cursor-pointer" data-id="11" data-points="3">
+              </td>
+              <td class="py-3 px-3 hidden md:table-cell">
+                <span class="text-xs px-2 py-1 rounded bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400">Helm</span>
+              </td>
+              <td class="py-3 px-3">
+                <div>
+                  <div class="font-semibold text-sm text-gray-800 dark:text-zinc-100 mb-1">Faire un rollback Helm après un déploiement cassé</div>
+                  <p class="text-xs text-gray-600 dark:text-zinc-400">Fais volontairement une mauvaise modification via Helm (front cassé), puis utilise <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">helm rollback</code> pour revenir à la version précédente.</p>
+                  <div class="mt-2 space-y-2 hidden" data-hint="11">
+                    <div class="text-xs text-gray-600 dark:text-zinc-400 pl-2 border-l-2 border-blue-200 dark:border-blue-800">
+                      <strong class="text-blue-600 dark:text-blue-400">💡 Indice :</strong> Après un <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">helm upgrade</code> qui casse l'app, utilise <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">helm history &lt;release-name&gt;</code> pour voir toutes les révisions. Le numéro de révision correspond à l'ordre chronologique (1 = première, 2 = deuxième, etc.). Utilise <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">helm rollback &lt;release-name&gt; &lt;revision-number&gt;</code> pour revenir à une révision spécifique.
+                    </div>
+                  </div>
+                  <div class="mt-2 space-y-2 hidden" data-solution="11">
+                    <div class="text-xs text-gray-600 dark:text-zinc-400 space-y-2 pl-2 border-l-2 border-green-200 dark:border-green-800">
+                      <p><strong class="text-green-600 dark:text-green-400">✅ Solution :</strong></p>
+                      <p>1. Faire une mauvaise modification (ex. image invalide, config cassée) :</p>
+                      <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs p-2 overflow-x-auto font-mono border border-gray-700 dark:border-zinc-600"><code>helm upgrade frontend-dev ./helm/charts/frontend \
+  -n dev \
+  -f helm/values/frontend/dev.yaml \
+  --set image.tag=broken</code></pre>
+                      <p>2. Constater que l'application est cassée :</p>
+                      <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs p-2 overflow-x-auto font-mono border border-gray-700 dark:border-zinc-600"><code>kubectl get pods -n dev
+# Les pods sont en erreur</code></pre>
+                      <p>3. Voir l'historique des révisions :</p>
+                      <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs p-2 overflow-x-auto font-mono border border-gray-700 dark:border-zinc-600"><code>helm history frontend-dev -n dev
+# Affiche toutes les révisions avec leur numéro</code></pre>
+                      <p>4. Rollback à la révision précédente (ou une révision spécifique) :</p>
+                      <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs p-2 overflow-x-auto font-mono border border-gray-700 dark:border-zinc-600"><code>helm rollback frontend-dev -n dev
+# Rollback à la révision précédente (par défaut)
+
+# Ou spécifier un numéro de révision :
+helm rollback frontend-dev 2 -n dev</code></pre>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <span class="text-xs px-2 py-1 rounded-full bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 font-medium">Difficile</span>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <span class="text-xs px-2 py-1 rounded-full bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 font-medium">3 pts</span>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <div class="flex gap-1 justify-center">
+                  <button onclick="toggleHelp('11', 'hint')" class="text-xs px-2 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded transition-colors">💡</button>
+                  <button onclick="toggleHelp('11', 'solution')" class="text-xs px-2 py-1 bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/50 rounded transition-colors">✅</button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Exo 12 -->
+            <tr class="exercice-row border-b border-gray-200 dark:border-zinc-700 transition-colors" data-exo-id="12">
+              <td class="py-3 px-3">
+                <input type="checkbox" class="exercice h-5 w-5 cursor-pointer" data-id="12" data-points="2">
+              </td>
+              <td class="py-3 px-3 hidden md:table-cell">
+                <span class="text-xs px-2 py-1 rounded bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400">Namespace</span>
+              </td>
+              <td class="py-3 px-3">
+                <div>
+                  <div class="font-semibold text-sm text-gray-800 dark:text-zinc-100 mb-1">Créer un namespace de feature isolé</div>
+                  <p class="text-xs text-gray-600 dark:text-zinc-400">Crée un namespace <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">feature-x</code> et déploie-y une seconde instance du frontend avec un titre différent (via Helm), accessible sur un autre host.</p>
+                  <div class="mt-2 space-y-2 hidden" data-hint="12">
+                    <div class="text-xs text-gray-600 dark:text-zinc-400 pl-2 border-l-2 border-blue-200 dark:border-blue-800">
+                      <strong class="text-blue-600 dark:text-blue-400">💡 Indice :</strong> Crée le namespace avec <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">kubectl create namespace feature-x</code>. Pour Helm, utilise un nom de release différent (ex. <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">frontend-feature-x</code>) et spécifie le namespace avec <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">-n feature-x</code>. Crée un fichier values spécifique ou utilise <code class="bg-gray-100 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs font-mono text-blue-700 dark:text-blue-400">--set</code> pour modifier le titre et l'host de l'Ingress.
+                    </div>
+                  </div>
+                  <div class="mt-2 space-y-2 hidden" data-solution="12">
+                    <div class="text-xs text-gray-600 dark:text-zinc-400 space-y-2 pl-2 border-l-2 border-green-200 dark:border-green-800">
+                      <p><strong class="text-green-600 dark:text-green-400">✅ Solution :</strong></p>
+                      <p>1. Créer le namespace :</p>
+                      <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs p-2 overflow-x-auto font-mono border border-gray-700 dark:border-zinc-600"><code>kubectl create namespace feature-x</code></pre>
+                      <p>2. Créer un fichier values spécifique (optionnel) :</p>
+                      <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs p-2 overflow-x-auto font-mono border border-gray-700 dark:border-zinc-600"><code># helm/values/frontend/feature-x.yaml
+appTitle: "Feature X - K8s Playground"
+ingress:
+  host: feature-x.localhost</code></pre>
+                      <p>3. Déployer avec Helm dans le nouveau namespace :</p>
+                      <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs p-2 overflow-x-auto font-mono border border-gray-700 dark:border-zinc-600"><code>helm install frontend-feature-x ./helm/charts/frontend \
+  -n feature-x \
+  -f helm/values/frontend/feature-x.yaml
+
+# Ou avec --set :
+helm install frontend-feature-x ./helm/charts/frontend \
+  -n feature-x \
+  --set appTitle="Feature X" \
+  --set ingress.host=feature-x.localhost</code></pre>
+                      <p>4. Ajouter l'entrée dans <code>/etc/hosts</code> :</p>
+                      <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs p-2 overflow-x-auto font-mono border border-gray-700 dark:border-zinc-600"><code>127.0.0.1   feature-x.localhost</code></pre>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <span class="text-xs px-2 py-1 rounded-full bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 font-medium">Moyen</span>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <span class="text-xs px-2 py-1 rounded-full bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 font-medium">2 pts</span>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <div class="flex gap-1 justify-center">
+                  <button onclick="toggleHelp('12', 'hint')" class="text-xs px-2 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded transition-colors">💡</button>
+                  <button onclick="toggleHelp('12', 'solution')" class="text-xs px-2 py-1 bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/50 rounded transition-colors">✅</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Script commun score / reset + gestion exos / theme -->
+  <script>
+    const scoreElement = document.getElementById('score-total');
+    const scoreElementMobile = document.getElementById('score-total-mobile');
+    const scoreContainer = document.getElementById('score-container');
+    const scoreContainerMobile = document.getElementById('score-container-mobile');
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const checkboxes = document.querySelectorAll('.exercice');
+
+    function updateScore() {
+      let score = parseInt(localStorage.getItem('score_total') || '0', 10);
+      if (isNaN(score)) score = 0;
+      if (scoreElement) scoreElement.textContent = score;
+      if (scoreElementMobile) scoreElementMobile.textContent = score;
+    }
+
+    function initScore() {
+      let score = parseInt(localStorage.getItem('score_total') || '0', 10);
+      if (isNaN(score)) score = 0;
+      localStorage.setItem('score_total', score);
+      updateScore();
+    }
+
+    function loadCheckboxState() {
+      checkboxes.forEach(cb => {
+        const id = cb.dataset.id;
+        const saved = localStorage.getItem('exo_' + id);
+        cb.checked = (saved === '1');
+      });
+    }
+
+    checkboxes.forEach(cb => {
+      cb.addEventListener('change', () => {
+        const id = cb.dataset.id;
+        const points = parseInt(cb.dataset.points || '1', 10);
+        const key = 'exo_' + id;
+        const previously = localStorage.getItem(key) === '1';
+        let score = parseInt(localStorage.getItem('score_total') || '0', 10);
+        if (isNaN(score)) score = 0;
+
+        if (cb.checked && !previously) {
+          localStorage.setItem(key, '1');
+          score += points;
+        } else if (!cb.checked && previously) {
+          localStorage.setItem(key, '0');
+          score -= points;
+        }
+
+        localStorage.setItem('score_total', String(score));
+        updateScore();
+      });
+    });
+
+    function resetScore() {
+      if (confirm('Réinitialiser tous les exercices et le score ?')) {
+        Object.keys(localStorage).forEach((key) => {
+          if (key.startsWith('exo_')) {
+            localStorage.removeItem(key);
+          }
+        });
+        localStorage.setItem('score_total', '0');
+        updateScore();
+        checkboxes.forEach(cb => cb.checked = false);
+      }
+    }
+
+    function toggleHelp(exoId, type) {
+      const row = document.querySelector(`[data-exo-id="${exoId}"]`);
+      if (!row) return;
+      
+      const hintDiv = row.querySelector(`[data-hint="${exoId}"]`);
+      const solutionDiv = row.querySelector(`[data-solution="${exoId}"]`);
+      
+      if (type === 'hint') {
+        if (hintDiv) {
+          const isHidden = hintDiv.classList.contains('hidden');
+          // Fermer la solution si elle est ouverte
+          if (solutionDiv) solutionDiv.classList.add('hidden');
+          // Toggle l'indice
+          hintDiv.classList.toggle('hidden');
+          // Scroll si on ouvre
+          if (!hintDiv.classList.contains('hidden')) {
+            hintDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        }
+      } else if (type === 'solution') {
+        if (solutionDiv) {
+          const isHidden = solutionDiv.classList.contains('hidden');
+          // Fermer l'indice si il est ouvert
+          if (hintDiv) hintDiv.classList.add('hidden');
+          // Toggle la solution
+          solutionDiv.classList.toggle('hidden');
+          // Scroll si on ouvre
+          if (!solutionDiv.classList.contains('hidden')) {
+            solutionDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        }
+      }
+    }
+
+    if (scoreContainer) scoreContainer.addEventListener('click', resetScore);
+    if (scoreContainerMobile) scoreContainerMobile.addEventListener('click', resetScore);
+
+    if (mobileMenuBtn && mobileMenu) {
+      mobileMenuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('mobile-menu-hidden');
+        mobileMenu.classList.toggle('mobile-menu-visible');
+      });
+    }
+
+    initScore();
+    loadCheckboxState();
+  </script>
+</body>
+</html>

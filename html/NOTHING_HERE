@@ -1,0 +1,4 @@
+Ce répertoire contient uniquement les fichiers HTML du site statique hébergé sur GitHub Pages.
+
+Les fichiers sources utiles sont dans les autres répertoires du repo (k3d/, k8s/, helm/, docker/, scripts/).
+

@@ -1,0 +1,17 @@
+replicaCount: 1
+image:
+  repository: k3d-playground-registry.localhost:5111/frontend
+  tag: dev
+ingress:
+  hosts:
+    - host: dev-front.localhost
+      paths:
+        - path: /
+          pathType: Prefix
+config:
+  banner: "DEV – Kubernetes Playground"
+  apiBaseUrl: "http://dev-api.localhost"
+  featureFlags:
+    enableDebugPanel: true
+    showTrainingHints: true
+
