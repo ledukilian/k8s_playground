@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Kubernetes Playground – Astuces</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- Navbar commune -->
+  <header class="sticky top-0 z-20 bg-white/80 backdrop-blur border-b border-gray-200">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="text-2xl">🧪</span>
+        <div>
+          <div class="font-bold text-lg">Kubernetes Playground</div>
+          <div class="text-xs text-gray-500">k3d • Traefik • Helm • k9s</div>
+        </div>
+      </div>
+      <nav class="flex gap-4 text-sm">
+        <a href="index.html" class="text-gray-700 hover:text-blue-600">Démarrage</a>
+        <a href="exercices.html" class="text-gray-700 hover:text-blue-600">Exercices</a>
+        <a href="ressources.html" class="text-gray-700 hover:text-blue-600">Ressources</a>
+        <a href="astuces.html" class="font-semibold text-blue-600">Astuces</a>
+      </nav>
+      <div class="flex items-center gap-3">
+        <div class="text-sm">
+          Score : <span id="score-total" class="font-bold text-blue-600">0</span> pts
+        </div>
+        <button
+          id="reset-btn"
+          class="text-xs px-2 py-1 border rounded-lg hover:bg-gray-50 transition"
+        >
+          Réinitialiser
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 pb-16 pt-6 space-y-8">
+
+    <section class="bg-white rounded-2xl shadow p-6">
+      <h1 class="text-3xl font-bold mb-4">💡 Astuces dev / devops au quotidien</h1>
+      <p class="text-gray-700">
+        Cette page regroupe des astuces concrètes pour diagnostiquer des incidents, comprendre ce qui se
+        passe dans ton cluster et éviter quelques pièges courants.
+      </p>
+    </section>
+
+    <section class="bg-white rounded-2xl shadow p-6 space-y-4">
+      <h2 class="text-2xl font-semibold mb-2">1. Diagnose toujours de haut en bas</h2>
+      <p class="text-gray-700 text-sm">
+        Quand quelque chose ne marche pas, pense “extérieur → intérieur” :
+      </p>
+      <ul class="list-disc list-inside text-sm text-gray-800 space-y-1">
+        <li>URL dans le navigateur (erreur réseau ? DNS ? certificat ?)</li>
+        <li>Ingress / Traefik : route bien créée ? bon host ? bon path ?</li>
+        <li>Service : cible les bons pods ? port correct ?</li>
+        <li>Pods : <code>Running</code> ? problème d’image ? crashloop ?</li>
+        <li>Application : logs applicatifs, variables d’environnement, configuration…</li>
+      </ul>
+    </section>
+
+    <section class="bg-white rounded-2xl shadow p-6 space-y-4">
+      <h2 class="text-2xl font-semibold mb-2">2. Utilise k9s comme un “htop” Kubernetes</h2>
+      <p class="text-gray-700 text-sm">
+        k9s te permet de voir rapidement ce qui ne va pas :
+      </p>
+      <ul class="list-disc list-inside text-sm text-gray-800 space-y-1">
+        <li><strong>Couleurs</strong> : repère immédiatement les pods en erreur.</li>
+        <li><strong>Logs</strong> : <code>l</code> pour les logs, <code>0</code>/<code>1</code>/<code>2</code> pour changer de container.</li>
+        <li><strong>Describe</strong> : <code>d</code> sur une ressource pour voir les événements récents.</li>
+        <li><strong>Filters</strong> : utilise <code>/</code> pour filtrer par nom.</li>
+      </ul>
+    </section>
+
+    <section class="bg-white rounded-2xl shadow p-6 space-y-4">
+      <h2 class="text-2xl font-semibold mb-2">3. Ne déploie pas à l’aveugle avec Helm</h2>
+      <p class="text-gray-700 text-sm">
+        Avant un <code>helm upgrade</code>, surtout en prod, pense à :
+      </p>
+      <ul class="list-disc list-inside text-sm text-gray-800 space-y-1">
+        <li>Faire un <code>helm diff</code> (plugin) entre l’ancienne et la nouvelle version.</li>
+        <li>Vérifier les <code>values.yaml</code> par environnement (dev / staging / prod).</li>
+        <li>Tester en local (comme dans ce playground) avant de pousser en environnement partagé.</li>
+      </ul>
+    </section>
+
+    <section class="bg-white rounded-2xl shadow p-6 space-y-4">
+      <h2 class="text-2xl font-semibold mb-2">4. Logique de nommage proche de la réalité</h2>
+      <p class="text-gray-700 text-sm">
+        Tu peux rapprocher ton playground de ton projet client en alignant le nommage :
+      </p>
+      <ul class="list-disc list-inside text-sm text-gray-800 space-y-1">
+        <li>Namespaces par contexte : <code>app-dev</code>, <code>app-staging</code>, <code>app-prod</code>.</li>
+        <li>Releases Helm : <code>app-frontend</code>, <code>app-backend</code>, <code>app-worker</code>.</li>
+        <li>Labels : <code>app=my-app</code>, <code>tier=frontend|backend|worker</code>, <code>env=dev|staging|prod</code>.</li>

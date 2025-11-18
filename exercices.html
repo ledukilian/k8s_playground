@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Kubernetes Playground – Exercices</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- Navbar commune -->
+  <header class="sticky top-0 z-20 bg-white/80 backdrop-blur border-b border-gray-200">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="text-2xl">🧪</span>
+        <div>
+          <div class="font-bold text-lg">Kubernetes Playground</div>
+          <div class="text-xs text-gray-500">k3d • Traefik • Helm • k9s</div>
+        </div>
+      </div>
+      <nav class="flex gap-4 text-sm">
+        <a href="index.html" class="text-gray-700 hover:text-blue-600">Démarrage</a>
+        <a href="exercices.html" class="font-semibold text-blue-600">Exercices</a>
+        <a href="ressources.html" class="text-gray-700 hover:text-blue-600">Ressources</a>
+        <a href="astuces.html" class="text-gray-700 hover:text-blue-600">Astuces</a>
+      </nav>
+      <div class="flex items-center gap-3">
+        <div class="text-sm">
+          Score : <span id="score-total" class="font-bold text-blue-600">0</span> pts
+        </div>
+        <button
+          id="reset-btn"
+          class="text-xs px-2 py-1 border rounded-lg hover:bg-gray-50 transition"
+        >
+          Réinitialiser
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 pb-16 pt-6 space-y-10">
+
+    <section class="bg-white rounded-2xl shadow p-6">
+      <h1 class="text-3xl font-bold mb-3">📋 Parcours d’exercices</h1>
+      <p class="text-gray-700">
+        Chaque exercice correspond à une situation réaliste de développeur / devops :
+        lire des logs, corriger un déploiement, ajuster un Ingress, faire un rollback…
+        Coche un exercice quand tu l’as réellement effectué dans le cluster.
+      </p>
+      <p class="text-gray-700 mt-2 text-sm">
+        Plus l’exercice est difficile, plus il rapporte de points. Utilise
+        <strong>“Voir indice”</strong> si tu bloques, puis <strong>“Voir solution”</strong> pour vérifier.
+      </p>
+    </section>
+
+    <!-- NIVEAU 1 -->
+    <section class="bg-white rounded-2xl shadow p-6 space-y-4">
+      <h2 class="text-2xl font-semibold mb-4">🟢 Niveau 1 — Découverte & inspection</h2>
+
+      <!-- Exo 1 -->
+      <article class="border rounded-xl p-4 space-y-2">
+        <div class="flex items-start gap-3">
+          <input type="checkbox"
+                 class="exercice mt-1 h-5 w-5"
+                 data-id="1"
+                 data-points="1">
+          <div class="flex-1">
+            <div class="flex items-center justify-between gap-2">
+              <h3 class="font-semibold">Lister les pods de tous les namespaces</h3>
+              <span class="text-xs px-2 py-1 rounded-full bg-blue-50 text-blue-700">1 pt</span>
+            </div>
+            <p class="text-sm text-gray-700">
+              Depuis ton cluster local, liste tous les pods qui tournent, dans tous les namespaces,
+              puis identifie le namespace où tourne ton application front.
+            </p>
+
+            <details class="mt-2 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-600">Voir indice</summary>
+              <div class="mt-1 text-gray-600">
+                Pense au flag <code>-A</code> ou <code>--all-namespaces</code> avec <code>kubectl get pods</code>.
+              </div>
+            </details>
+
+            <details class="mt-1 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-600">Voir solution</summary>
+              <div class="mt-1 text-gray-600 space-y-1">
+                <p>Commande possible :</p>
+                <pre class="bg-gray-900 text-gray-100 text-xs rounded-lg p-2 overflow-x-auto">
+kubectl get pods -A</pre>
+                <p>Repère ensuite un pod ayant un nom du type <code>frontend-…</code> et note son namespace.</p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </article>
+
+      <!-- Exo 2 -->
+      <article class="border rounded-xl p-4 space-y-2">
+        <div class="flex items-start gap-3">
+          <input type="checkbox"
+                 class="exercice mt-1 h-5 w-5"
+                 data-id="2"
+                 data-points="1">
+          <div class="flex-1">
+            <div class="flex items-center justify-between gap-2">
+              <h3 class="font-semibold">Inspecter les pods avec k9s</h3>
+              <span class="text-xs px-2 py-1 rounded-full bg-blue-50 text-blue-700">1 pt</span>
+            </div>
+            <p class="text-sm text-gray-700">
+              Ouvre k9s, navigue jusqu’au namespace de ton application, puis affiche les logs d’un pod backend.
+            </p>
+
+            <details class="mt-2 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-600">Voir indice</summary>
+              <div class="mt-1 text-gray-600">
+                Une fois dans k9s, tu peux changer de namespace avec <code>:</code> puis le nom du namespace.
+                Utilise <code>l</code> sur un pod pour voir les logs.
+              </div>
+            </details>
+
+            <details class="mt-1 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-600">Voir solution</summary>
+              <div class="mt-1 text-gray-600 space-y-1">
+                <ul class="list-disc list-inside">
+                  <li>Exécuter <code>k9s</code> dans ton terminal.</li>
+                  <li>Taper <code>:</code> puis le nom du namespace (ex. <code>playground</code>).</li>
+                  <li>Se positionner sur un pod backend, puis appuyer sur <code>l</code> pour afficher les logs.</li>
+                </ul>
+              </div>
+            </details>
+          </div>
+        </div>
+      </article>
+
+      <!-- Exo 3 -->
+      <article class="border rounded-xl p-4 space-y-2">
+        <div class="flex items-start gap-3">
+          <input type="checkbox"
+                 class="exercice mt-1 h-5 w-5"
+                 data-id="3"
+                 data-points="2">
+          <div class="flex-1">
+            <div class="flex items-center justify-between gap-2">
+              <h3 class="font-semibold">Scaler le frontend de 1 à 3 replicas</h3>
+              <span class="text-xs px-2 py-1 rounded-full bg-green-50 text-green-700">2 pts</span>
+            </div>
+            <p class="text-sm text-gray-700">
+              Augmente le nombre de replicas du Deployment frontend à 3, puis vérifie que le changement est effectif.
+            </p>
+
+            <details class="mt-2 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-600">Voir indice</summary>
+              <div class="mt-1 text-gray-600">
+                Tu peux utiliser soit <code>kubectl scale</code>, soit modifier la spec du Deployment
+                (manifeste ou values Helm).
+              </div>
+            </details>
+
+            <details class="mt-1 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-600">Voir solution</summary>
+              <div class="mt-1 text-gray-600 space-y-1">
+                <p>Exemple avec <code>kubectl</code> :</p>
+                <pre class="bg-gray-900 text-gray-100 text-xs rounded-lg p-2 overflow-x-auto">
+kubectl scale deployment frontend -n playground --replicas=3
+kubectl get pods -n playground</pre>
+                <p>Tu dois voir 3 pods <code>frontend-…</code> en état <code>Running</code>.</p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- NIVEAU 2 -->
+    <section class="bg-white rounded-2xl shadow p-6 space-y-4">
+      <h2 class="text-2xl font-semibold mb-4">🟡 Niveau 2 — Réseau & Ingress</h2>
+
+      <!-- Exo 4 -->
+      <article class="border rounded-xl p-4 space-y-2">
+        <div class="flex items-start gap-3">
+          <input type="checkbox"
+                 class="exercice mt-1 h-5 w-5"
+                 data-id="4"
+                 data-points="2">
+          <div class="flex-1">
+            <div class="flex items-center justify-between gap-2">
+              <h3 class="font-semibold">Changer le host de l’Ingress frontend</h3>
+              <span class="text-xs px-2 py-1 rounded-full bg-green-50 text-green-700">2 pts</span>
+            </div>
+            <p class="text-sm text-gray-700">
+              Modifie l’Ingress pour que le frontend soit accessible via
+              <code>play.localhost</code> au lieu de <code>frontend.localhost</code>.
+            </p>
+
+            <details class="mt-2 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-600">Voir indice</summary>
+              <div class="mt-1 text-gray-600">
+                L’host est défini dans les règles de l’Ingress. Pense aussi à ajouter une entrée dans ton
+                <code>/etc/hosts</code> si nécessaire.
+              </div>
+            </details>
+
+            <details class="mt-1 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-600">Voir solution</summary>
+              <div class="mt-1 text-gray-600 space-y-2">
+                <p>Exemple (extrait d’Ingress) :</p>
+                <pre class="bg-gray-900 text-gray-100 text-xs rounded-lg p-2 overflow-x-auto">
+spec:
+  rules:
+    - host: play.localhost
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80</pre>
+                <p>
+                  Puis dans <code>/etc/hosts</code> (ou équivalent) :
+                </p>
+                <pre class="bg-gray-900 text-gray-100 text-xs rounded-lg p-2 overflow-x-auto">
+127.0.0.1   play.localhost</pre>
+              </div>
+            </details>
+          </div>
+        </div>
+      </article>
+
+      <!-- Exo 5 -->
+      <article class="border rounded-xl p-4 space-y-2">
+        <div class="flex items-start gap-3">
+          <input type="checkbox"
+                 class="exercice mt-1 h-5 w-5"
+                 data-id="5"
+                 data-points="2">
+          <div class="flex-1">
+            <div class="flex items-center justify-between gap-2">
+              <h3 class="font-semibold">Exposer le backend via le chemin <code>/api</code></h3>
+              <span class="text-xs px-2 py-1 rounded-full bg-green-50 text-green-700">2 pts</span>
+            </div>
+            <p class="text-sm text-gray-700">
+              Configure l’Ingress pour que la route <code>http://play.localhost/api</code> soit envoyée au
+              service backend.
+            </p>
+
+            <details class="mt-2 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-600">Voir indice</summary>
+              <div class="mt-1 text-gray-600">
+                Tu peux ajouter un second path dans la même règle d’Ingress, avec un backend différent.
+              </div>
+            </details>
+
+            <details class="mt-1 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-600">Voir solution</summary>
+              <div class="mt-1 text-gray-600 space-y-2">
+                <p>Exemple :</p>
+                <pre class="bg-gray-900 text-gray-100 text-xs rounded-lg p-2 overflow-x-auto">
+spec:
+  rules:
+    - host: play.localhost
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: backend
+                port:
+                  number: 80</pre>
+              </div>
+            </details>
+          </div>
+        </div>
+      </article>
+
+      <!-- Exo 6 -->
+      <article class="border rounded-xl p-4 space-y-2">
+        <div class="flex items-start gap-3">
+          <input type="checkbox"
+                 class="exercice mt-1 h-5 w-5"
+                 data-id="6"
+                 data-points="3">
+          <div class="flex-1">
+            <div class="flex items-center justify-between gap-2">
+              <h3 class="font-semibold">Accéder au dashboard Traefik</h3>
+              <span class="text-xs px-2 py-1 rounded-full bg-yellow-50 text-yellow-700">3 pts</span>
+            </div>
+            <p class="text-sm text-gray-700">
+              Expose le dashboard Traefik dans ton cluster via un Ingress dédié et vérifie qu’il liste tes routes.
+            </p>
+
+            <details class="mt-2 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-600">Voir indice</summary>
+              <div class="mt-1 text-gray-600">
+                Traefik peut être configuré via une <em>Entrypoint</em> spécifique et un IngressRoute ou Ingress
+                selon la version / chart. Regarde les exemples du chart Helm Traefik.
+              </div>
+            </details>
+
+            <details class="mt-1 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-600">Voir solution</summary>
+              <div class="mt-1 text-gray-600 text-xs space-y-2">
+                <p>Une solution typique (à adapter à ta config Traefik / Helm) :</p>
+                <ul class="list-disc list-inside">
+                  <li>Activer le dashboard dans les <code>values.yaml</code> de Traefik.</li>
+                  <li>Créer un Ingress (ou IngressRoute) pointant vers le service interne du dashboard.</li>
+                  <li>Accéder via <code>http://traefik.localhost</code>.</li>
+                </ul>
+                <p>La mise en œuvre exacte dépendra de ton chart Traefik.</p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- NIVEAU 3 -->
+    <section class="bg-white rounded-2xl shadow p-6 space-y-4">
+      <h2 class="text-2xl font-semibold mb-4">🔵 Niveau 3 — ConfigMaps, Secrets & Helm</h2>
+
+      <!-- Exo 7 -->
+      <article class="border rounded-xl p-4 space-y-2">
+        <div class="flex items-start gap-3">
+          <input type="checkbox"
+                 class="exercice mt-1 h-5 w-5"
+                 data-id="7"
+                 data-points="2">
+          <div class="flex-1">
+            <div class="flex items-center justify-between gap-2">
+              <h3 class="font-semibold">Ajouter un message via ConfigMap</h3>
+              <span class="text-xs px-2 py-1 rounded-full bg-green-50 text-green-700">2 pts</span>
+            </div>
+            <p class="text-sm text-gray-700">
+              Crée une ConfigMap contenant une clé <code>APP_MESSAGE</code>, monte-la dans le backend et expose
+              son contenu sur un endpoint (ex. <code>/message</code>).
+            </p>
+
+            <details class="mt-2 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-600">Voir indice</summary>
+              <div class="mt-1 text-gray-600">
+                Tu peux passer la valeur soit en variable d’environnement, soit via un fichier monté dans un volume.
+              </div>
+            </details>
+
+            <details class="mt-1 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-600">Voir solution</summary>
+              <div class="mt-1 text-gray-600 text-xs space-y-2">
+                <p>Exemple ConfigMap :</p>
+                <pre class="bg-gray-900 text-gray-100 rounded-lg p-2 overflow-x-auto">
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+data:
+  APP_MESSAGE: "Hello from ConfigMap"</pre>
+                <p>Dans le Deployment backend :</p>
+                <pre class="bg-gray-900 text-gray-100 rounded-lg p-2 overflow-x-auto">
+env:
+  - name: APP_MESSAGE
+    valueFrom:
+      configMapKeyRef:
+        name: backend-config
+        key: APP_MESSAGE</pre>
+                <p>Le code backend lit ensuite <code>APP_MESSAGE</code> et l’affiche sur l’endpoint.</p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </article>
+
+      <!-- Exo 8 -->
+      <article class="border rounded-xl p-4 space-y-2">
+        <div class="flex items-start gap-3">
+          <input type="checkbox"
+                 class="exercice mt-1 h-5 w-5"
+                 data-id="8"
+                 data-points="2">
+          <div class="flex-1">
+            <div class="flex items-center justify-between gap-2">
+              <h3 class="font-semibold">Stocker un mot de passe dans un Secret</h3>
+              <span class="text-xs px-2 py-1 rounded-full bg-green-50 text-green-700">2 pts</span>
+            </div>
+            <p class="text-sm text-gray-700">
+              Crée un Secret avec une clé <code>DB_PASSWORD</code> et injecte-le comme variable d’environnement
+              dans le backend, au lieu de mettre le mot de passe en clair.
+            </p>
+
+            <details class="mt-2 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-600">Voir indice</summary>
+              <div class="mt-1 text-gray-600">
+                Tu peux utiliser <code>kubectl create secret</code> ou un manifest YAML de type Secret.
+              </div>
+            </details>
+
+            <details class="mt-1 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-600">Voir solution</summary>
+              <div class="mt-1 text-gray-600 text-xs space-y-2">
+                <p>Exemple en ligne de commande :</p>
+                <pre class="bg-gray-900 text-gray-100 rounded-lg p-2 overflow-x-auto">
+kubectl create secret generic db-credentials \
+  -n playground \
+  --from-literal=DB_PASSWORD=supersecret</pre>
+                <p>Dans le Deployment backend :</p>
+                <pre class="bg-gray-900 text-gray-100 rounded-lg p-2 overflow-x-auto">
+env:
+  - name: DB_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: db-credentials
+        key: DB_PASSWORD</pre>
+              </div>
+            </details>
+          </div>
+        </div>
+      </article>
+
+      <!-- Exo 9 -->
+      <article class="border rounded-xl p-4 space-y-2">
+        <div class="flex items-start gap-3">
+          <input type="checkbox"
+                 class="exercice mt-1 h-5 w-5"
+                 data-id="9"
+                 data-points="3">
+          <div class="flex-1">
+            <div class="flex items-center justify-between gap-2">
+              <h3 class="font-semibold">Modifier la config via Helm et déployer</h3>
+              <span class="text-xs px-2 py-1 rounded-full bg-yellow-50 text-yellow-700">3 pts</span>
+            </div>
+            <p class="text-sm text-gray-700">
+              Change un paramètre dans les <code>values.yaml</code> du chart frontend (par exemple le titre
+              affiché ou le nombre de replicas), puis applique la modification avec <code>helm upgrade</code>.
+            </p>
+
+            <details class="mt-2 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-600">Voir indice</summary>
+              <div class="mt-1 text-gray-600">
+                Regarde dans le dossier <code>helm/charts/app-frontend</code> et ses <code>values.yaml</code>.
+                Cherche une valeur facile à vérifier une fois déployée.
+              </div>
+            </details>
+
+            <details class="mt-1 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-600">Voir solution</summary>
+              <div class="mt-1 text-gray-600 text-xs space-y-2">
+                <p>Exemple :</p>
+                <pre class="bg-gray-900 text-gray-100 rounded-lg p-2 overflow-x-auto">
+# Modifier helm/values/values-dev.yaml
+
+replicaCount: 3
+appTitle: "K8s Playground – Dev"</pre>
+                <p>Appliquer la mise à jour :</p>
+                <pre class="bg-gray-900 text-gray-100 rounded-lg p-2 overflow-x-auto">
+helm upgrade app-frontend ./helm/charts/app-frontend \
+  -f helm/values/values-dev.yaml</pre>
+              </div>
+            </details>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- NIVEAU 4 -->
+    <section class="bg-white rounded-2xl shadow p-6 space-y-4">
+      <h2 class="text-2xl font-semibold mb-4">🔴 Niveau 4 — Gestion d’incidents & rollback</h2>
+
+      <!-- Exo 10 -->
+      <article class="border rounded-xl p-4 space-y-2">
+        <div class="flex items-start gap-3">
+          <input type="checkbox"
+                 class="exercice mt-1 h-5 w-5"
+                 data-id="10"
+                 data-points="3">
+          <div class="flex-1">
+            <div class="flex items-center justify-between gap-2">
+              <h3 class="font-semibold">Corriger une image Docker invalide</h3>
+              <span class="text-xs px-2 py-1 rounded-full bg-yellow-50 text-yellow-700">3 pts</span>
+            </div>
+            <p class="text-sm text-gray-700">
+              Simule un incident en mettant une image Docker invalide sur le backend, constate l’erreur,
+              puis corrige pour rétablir le service.
+            </p>
+
+            <details class="mt-2 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-600">Voir indice</summary>
+              <div class="mt-1 text-gray-600">
+                Modifie la version de l’image dans le Deployment ou les values Helm, par ex.
+                <code>backend:does-not-exist</code>, puis regarde les pods.
+              </div>
+            </details>
+
+            <details class="mt-1 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-600">Voir solution</summary>
+              <div class="mt-1 text-gray-600 text-xs space-y-2">
+                <p>Étapes :</p>
+                <ol class="list-decimal list-inside">
+                  <li>Changer l’image du backend en une valeur invalide.</li>
+                  <li>Déployer : pods en <code>ImagePullBackOff</code>.</li>
+                  <li>Inspecter avec <code>kubectl describe pod</code> ou k9s.</li>
+                  <li>Remettre l’image correcte, redéployer.</li>
+                </ol>
+              </div>
+            </details>
+          </div>
+        </div>
+      </article>
+
+      <!-- Exo 11 -->
+      <article class="border rounded-xl p-4 space-y-2">
+        <div class="flex items-start gap-3">
+          <input type="checkbox"
+                 class="exercice mt-1 h-5 w-5"
+                 data-id="11"
+                 data-points="3">
+          <div class="flex-1">
+            <div class="flex items-center justify-between gap-2">
+              <h3 class="font-semibold">Faire un rollback Helm après un déploiement cassé</h3>
+              <span class="text-xs px-2 py-1 rounded-full bg-yellow-50 text-yellow-700">3 pts</span>
+            </div>
+            <p class="text-sm text-gray-700">
+              Fais volontairement une mauvaise modification via Helm (front cassé), puis utilise
+              <code>helm rollback</code> pour revenir à la version précédente.
+            </p>
+
+            <details class="mt-2 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-600">Voir indice</summary>
+              <div class="mt-1 text-gray-600">
+                Regarde <code>helm history &lt;release-name&gt;</code> pour voir les révisions et
+                <code>helm rollback</code> pour revenir en arrière.
+              </div>
+            </details>
+
+            <details class="mt-1 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-600">Voir solution</summary>
+              <div class="mt-1 text-gray-600 text-xs space-y-2">
+                <p>Exemple :</p>
+                <pre class="bg-gray-900 text-gray-100 rounded-lg p-2 overflow-x-auto">
+# Mauvaise modification
+helm upgrade app-frontend ./helm/charts/app-frontend \
+  -f helm/values/values-broken.yaml
+
+# Constat : front KO
+helm history app-frontend
+
+# Rollback à la révision précédente
+helm rollback app-frontend 1</pre>
+              </div>
+            </details>
+          </div>
+        </div>
+      </article>
+
+      <!-- Exo 12 -->
+      <article class="border rounded-xl p-4 space-y-2">
+        <div class="flex items-start gap-3">
+          <input type="checkbox"
+                 class="exercice mt-1 h-5 w-5"
+                 data-id="12"
+                 data-points="2">
+          <div class="flex-1">
+            <div class="flex items-center justify-between gap-2">
+              <h3 class="font-semibold">Créer un namespace de feature isolé</h3>
+              <span class="text-xs px-2 py-1 rounded-full bg-green-50 text-green-700">2 pts</span>
+            </div>
+            <p class="text-sm text-gray-700">
+              Crée un namespace <code>feature-x</code> et déploie-y une seconde instance du frontend
+              avec un titre différent (via Helm), accessible sur un autre host.
+            </p>
+
+            <details class="mt-2 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-600">Voir indice</summary>
+              <div class="mt-1 text-gray-600">
+                Pense à passer le namespace à Helm (<code>-n feature-x</code>) et à changer le nom de la release
+                (ex. <code>app-frontend-feature-x</code>).
+              </div>
+            </details>
+
+            <details class="mt-1 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-600">Voir solution</summary>
+              <div class="mt-1 text-gray-600 text-xs space-y-2">
+                <p>Exemple :</p>
+                <pre class="bg-gray-900 text-gray-100 rounded-lg p-2 overflow-x-auto">
+kubectl create namespace feature-x
+
+helm install app-frontend-feature-x ./helm/charts/app-frontend \
+  -n feature-x \
+  -f helm/values/values-feature-x.yaml</pre>
+                <p>Avec un Ingress dédié sur un host du type <code>feature-x.localhost</code>.</p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </article>
+    </section>
+
+  </main>
+
+  <!-- Script commun score / reset + gestion exos -->
+  <script>
+    const scoreElement = document.getElementById('score-total');
+    const resetBtn = document.getElementById('reset-btn');
+    const checkboxes = document.querySelectorAll('.exercice');
+
+    function initScore() {
+      let score = parseInt(localStorage.getItem('score_total') || '0', 10);
+      if (isNaN(score)) score = 0;
+      localStorage.setItem('score_total', score);
+      scoreElement.textContent = score;
+    }
+
+    function loadCheckboxState() {
+      checkboxes.forEach(cb => {
+        const id = cb.dataset.id;
+        const saved = localStorage.getItem('exo_' + id);
+        cb.checked = (saved === '1');
+      });
+    }
+
+    function updateScoreDisplay() {
+      let score = parseInt(localStorage.getItem('score_total') || '0', 10);
+      if (isNaN(score)) score = 0;
+      scoreElement.textContent = score;
+    }
+
+    checkboxes.forEach(cb => {
+      cb.addEventListener('change', () => {
+        const id = cb.dataset.id;
+        const points = parseInt(cb.dataset.points || '1', 10);
+        const key = 'exo_' + id;
+        const previously = localStorage.getItem(key) === '1';
+        let score = parseInt(localStorage.getItem('score_total') || '0', 10);
+        if (isNaN(score)) score = 0;
+
+        if (cb.checked && !previously) {
+          localStorage.setItem(key, '1');
+          score += points;
+        } else if (!cb.checked && previously) {
+          localStorage.setItem(key, '0');
+          score -= points;
+        }
+
+        localStorage.setItem('score_total', String(score));
+        updateScoreDisplay();
+      });
+    });
+
+    resetBtn.addEventListener('click', () => {
+      Object.keys(localStorage).forEach((key) => {
+        if (key.startsWith('exo_')) {
+          localStorage.removeItem(key);
+        }
+      });
+      localStorage.setItem('score_total', '0');
+      scoreElement.textContent = '0';
+      checkboxes.forEach(cb => cb.checked = false);
+    });
+
+    initScore();
+    loadCheckboxState();
+  </script>
+</body>
+</html>
