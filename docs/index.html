@@ -13,19 +13,9 @@
     .fade-in { animation: fadeIn 0.5s ease-out; }
     .mobile-menu-hidden { display: none; }
     .mobile-menu-visible { display: block; }
-    .text-orange { color: #FF7000; }
-    .bg-orange-50 { background-color: #FFF5E6; }
-    .bg-orange-100 { background-color: #FFE6CC; }
-    .border-orange-100 { border-color: #FFE6CC; }
-    .hover\:text-orange:hover { color: #FF7000; }
-    .from-orange-50 { --tw-gradient-from: #FFF5E6; }
-    .to-orange-100 { --tw-gradient-to: #FFE6CC; }
-    .bg-gradient-orange { background: linear-gradient(to right, #FFF5E6, #FFE6CC); }
-    .bg-gradient-orange-btn { background: linear-gradient(to right, #FF7000, #FF8533); }
-    .hover\:bg-gradient-orange-btn:hover { background: linear-gradient(to right, #E65C00, #FF7000); }
   </style>
 </head>
-<body class="bg-gradient-to-br from-gray-50 via-orange-50/20 to-gray-50 text-gray-800 min-h-screen">
+<body class="bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50 text-gray-800 min-h-screen">
 
   <!-- Navbar commune -->
   <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-gray-200/80 shadow-sm">
@@ -41,18 +31,18 @@
         
         <!-- Desktop Navigation -->
         <nav class="hidden md:flex items-center gap-1 text-sm">
-          <a href="index.html" class="px-4 py-2 rounded-lg font-semibold text-orange bg-orange-50">Démarrage</a>
-          <a href="exercices.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-orange hover:bg-gray-50 transition-colors">Exercices</a>
-          <a href="ressources.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-orange hover:bg-gray-50 transition-colors">Ressources</a>
-          <a href="astuces.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-orange hover:bg-gray-50 transition-colors">Astuces</a>
+          <a href="index.html" class="px-4 py-2 rounded-lg font-semibold text-blue-600 bg-blue-50">Démarrage</a>
+          <a href="exercices.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors">Exercices</a>
+          <a href="ressources.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors">Ressources</a>
+          <a href="astuces.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors">Astuces</a>
         </nav>
 
         <!-- Desktop Score -->
         <div class="hidden md:flex items-center gap-3">
           <div 
             id="score-container"
-            class="text-base font-bold bg-gradient-orange px-5 py-2.5 rounded-xl border-2 border-orange-100 cursor-pointer hover:shadow-md transition-all"
-            style="color: #FF7000;"
+            class="text-base font-bold bg-gradient-to-r from-blue-50 to-indigo-50 px-5 py-2.5 rounded-xl border-2 border-blue-100 cursor-pointer transition-all"
+            style="color: #2563eb;"
             title="Cliquer pour réinitialiser"
           >
             <span id="score-total">0</span> pts
@@ -70,16 +60,16 @@
       <!-- Mobile Menu -->
       <div id="mobile-menu" class="mobile-menu-hidden md:hidden pb-4 border-t border-gray-200 mt-2 pt-4">
         <nav class="flex flex-col gap-2">
-          <a href="index.html" class="px-4 py-2 rounded-lg font-semibold text-orange bg-orange-50">Démarrage</a>
-          <a href="exercices.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-orange hover:bg-gray-50 transition-colors">Exercices</a>
-          <a href="ressources.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-orange hover:bg-gray-50 transition-colors">Ressources</a>
-          <a href="astuces.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-orange hover:bg-gray-50 transition-colors">Astuces</a>
+          <a href="index.html" class="px-4 py-2 rounded-lg font-semibold text-blue-600 bg-blue-50">Démarrage</a>
+          <a href="exercices.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors">Exercices</a>
+          <a href="ressources.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors">Ressources</a>
+          <a href="astuces.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors">Astuces</a>
         </nav>
         <div class="mt-4 pt-4 border-t border-gray-200">
           <div 
             id="score-container-mobile"
-            class="text-base font-bold bg-gradient-orange px-5 py-2.5 rounded-xl border-2 border-orange-100 cursor-pointer hover:shadow-md transition-all text-center"
-            style="color: #FF7000;"
+            class="text-base font-bold bg-gradient-to-r from-blue-50 to-indigo-50 px-5 py-2.5 rounded-xl border-2 border-blue-100 cursor-pointer transition-all text-center"
+            style="color: #2563eb;"
             title="Cliquer pour réinitialiser"
           >
             <span id="score-total-mobile">0</span> pts
@@ -95,8 +85,8 @@
       <h1 class="text-2xl sm:text-3xl font-bold mb-4 text-gray-800">🚀 Démarrage du playground</h1>
       <p class="text-gray-700 mb-4 leading-relaxed">
         Ce playground reproduit une stack proche d'un projet réel : cluster Kubernetes local avec
-        <strong class="text-orange">k3d</strong>, <strong class="text-orange">Traefik</strong> en Ingress, déploiement via <strong class="text-orange">Helm</strong>,
-        et exploration avec <strong class="text-orange">kubectl</strong> et <strong class="text-orange">k9s</strong>.
+        <strong class="text-blue-700">k3d</strong>, <strong class="text-blue-700">Traefik</strong> en Ingress, déploiement via <strong class="text-blue-700">Helm</strong>,
+        et exploration avec <strong class="text-blue-700">kubectl</strong> et <strong class="text-blue-700">k9s</strong>.
       </p>
       <p class="text-gray-700 leading-relaxed">
         L'objectif est de pratiquer le cycle de vie quotidien d'un développeur / devops :
@@ -108,15 +98,15 @@
       <h2 class="text-xl sm:text-2xl font-semibold mb-4 text-gray-800">1. Prérequis</h2>
       <ul class="list-disc list-inside space-y-2 sm:space-y-3 text-gray-700 ml-2">
         <li>Docker (daemon en cours d'exécution)</li>
-        <li><code class="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-orange">kubectl</code> installé et dans le <code class="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-orange">PATH</code></li>
-        <li><code class="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-orange">helm</code> installé</li>
-        <li><code class="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-orange">k3d</code> installé</li>
-        <li><code class="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-orange">k9s</code> (optionnel mais fortement recommandé)</li>
+        <li><code class="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-blue-700">kubectl</code> installé et dans le <code class="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-blue-700">PATH</code></li>
+        <li><code class="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-blue-700">helm</code> installé</li>
+        <li><code class="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-blue-700">k3d</code> installé</li>
+        <li><code class="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-blue-700">k9s</code> (optionnel mais fortement recommandé)</li>
       </ul>
     </section>
 
     <section class="bg-white rounded-2xl shadow-lg p-6 sm:p-8 border border-gray-100">
-      <h2 class="text-xl sm:text-2xl font-semibold mb-4 text-gray-800">2. Cloner et lancer le repo <code class="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-orange">k8s_playground</code></h2>
+      <h2 class="text-xl sm:text-2xl font-semibold mb-4 text-gray-800">2. Cloner et lancer le repo <code class="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-blue-700">k8s_playground</code></h2>
 
       <ol class="list-decimal list-inside space-y-5 sm:space-y-6 text-gray-700 ml-2">
         <li>
@@ -143,9 +133,9 @@ kubectl get pods -A</code></pre>
         <li>
           <span class="font-medium">Accéder aux applications :</span>
           <ul class="list-disc list-inside ml-5 mt-2 space-y-1 text-sm">
-            <li>Frontend : <code class="bg-gray-100 px-2 py-0.5 rounded text-xs font-mono text-orange">http://frontend.localhost</code></li>
-            <li>Backend / API : <code class="bg-gray-100 px-2 py-0.5 rounded text-xs font-mono text-orange">http://api.localhost</code></li>
-            <li>(Optionnel) Dashboard Traefik : <code class="bg-gray-100 px-2 py-0.5 rounded text-xs font-mono text-orange">http://traefik.localhost</code></li>
+            <li>Frontend : <code class="bg-gray-100 px-2 py-0.5 rounded text-xs font-mono text-blue-700">http://frontend.localhost</code></li>
+            <li>Backend / API : <code class="bg-gray-100 px-2 py-0.5 rounded text-xs font-mono text-blue-700">http://api.localhost</code></li>
+            <li>(Optionnel) Dashboard Traefik : <code class="bg-gray-100 px-2 py-0.5 rounded text-xs font-mono text-blue-700">http://traefik.localhost</code></li>
           </ul>
         </li>
 
@@ -156,14 +146,14 @@ kubectl get pods -A</code></pre>
       </ol>
     </section>
 
-    <section class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl shadow-lg p-6 sm:p-8 border border-orange-100">
+    <section class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl shadow-lg p-6 sm:p-8 border border-blue-100">
       <h2 class="text-xl sm:text-2xl font-semibold mb-4 text-gray-800">3. Prochaine étape</h2>
       <p class="text-gray-700 mb-6 leading-relaxed">
         Quand le cluster est prêt et que tu vois les pods tourner, passe à la page
-        <strong class="text-orange">Exercices</strong> pour commencer le parcours gamifié.
+        <strong class="text-blue-700">Exercices</strong> pour commencer le parcours gamifié.
       </p>
       <a href="exercices.html"
-         class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-orange-btn text-white text-sm font-semibold hover:bg-gradient-orange-btn transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+         class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
         Aller aux exercices →
       </a>
     </section>

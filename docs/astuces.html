@@ -13,16 +13,10 @@
     .fade-in { animation: fadeIn 0.5s ease-out; }
     .mobile-menu-hidden { display: none; }
     .mobile-menu-visible { display: block; }
-    .text-orange { color: #FF7000; }
-    .bg-orange-50 { background-color: #FFF5E6; }
-    .bg-orange-100 { background-color: #FFE6CC; }
-    .border-orange-100 { border-color: #FFE6CC; }
-    .hover\:text-orange:hover { color: #FF7000; }
-    .bg-gradient-orange { background: linear-gradient(to right, #FFF5E6, #FFE6CC); }
   </style>
 </head>
 
-<body class="bg-gradient-to-br from-gray-50 via-orange-50/20 to-gray-50 text-gray-900 min-h-screen">
+<body class="bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50 text-gray-900 min-h-screen">
 
   <!-- NAVBAR STICKY -->
   <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-gray-200/80 shadow-sm">
@@ -38,18 +32,18 @@
         
         <!-- Desktop Navigation -->
         <nav class="hidden md:flex items-center gap-1 text-sm">
-          <a href="index.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-orange hover:bg-gray-50 transition-colors">Démarrage</a>
-          <a href="exercices.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-orange hover:bg-gray-50 transition-colors">Exercices</a>
-          <a href="ressources.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-orange hover:bg-gray-50 transition-colors">Ressources</a>
-          <a href="astuces.html" class="px-4 py-2 rounded-lg font-semibold text-orange bg-orange-50">Astuces</a>
+          <a href="index.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-blue-700 hover:bg-gray-50 transition-colors">Démarrage</a>
+          <a href="exercices.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-blue-700 hover:bg-gray-50 transition-colors">Exercices</a>
+          <a href="ressources.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-blue-700 hover:bg-gray-50 transition-colors">Ressources</a>
+          <a href="astuces.html" class="px-4 py-2 rounded-lg font-semibold text-blue-700 bg-blue-50">Astuces</a>
         </nav>
 
         <!-- Desktop Score -->
         <div class="hidden md:flex items-center gap-3">
           <div 
             id="score-container"
-            class="text-base font-bold bg-gradient-orange px-5 py-2.5 rounded-xl border-2 border-orange-100 cursor-pointer hover:shadow-md transition-all"
-            style="color: #FF7000;"
+            class="text-base font-bold bg-gradient-to-r from-blue-50 to-indigo-50 px-5 py-2.5 rounded-xl border-2 border-blue-100 cursor-pointer transition-all"
+            style="color: #2563eb;"
             title="Cliquer pour réinitialiser"
           >
             <span id="score">0</span> pts
@@ -67,16 +61,16 @@
       <!-- Mobile Menu -->
       <div id="mobile-menu" class="mobile-menu-hidden md:hidden pb-4 border-t border-gray-200 mt-2 pt-4">
         <nav class="flex flex-col gap-2">
-          <a href="index.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-orange hover:bg-gray-50 transition-colors">Démarrage</a>
-          <a href="exercices.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-orange hover:bg-gray-50 transition-colors">Exercices</a>
-          <a href="ressources.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-orange hover:bg-gray-50 transition-colors">Ressources</a>
-          <a href="astuces.html" class="px-4 py-2 rounded-lg font-semibold text-orange bg-orange-50">Astuces</a>
+          <a href="index.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-blue-700 hover:bg-gray-50 transition-colors">Démarrage</a>
+          <a href="exercices.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-blue-700 hover:bg-gray-50 transition-colors">Exercices</a>
+          <a href="ressources.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-blue-700 hover:bg-gray-50 transition-colors">Ressources</a>
+          <a href="astuces.html" class="px-4 py-2 rounded-lg font-semibold text-blue-700 bg-blue-50">Astuces</a>
         </nav>
         <div class="mt-4 pt-4 border-t border-gray-200">
           <div 
             id="score-container-mobile"
-            class="text-base font-bold bg-gradient-orange px-5 py-2.5 rounded-xl border-2 border-orange-100 cursor-pointer hover:shadow-md transition-all text-center"
-            style="color: #FF7000;"
+            class="text-base font-bold bg-gradient-to-r from-blue-50 to-indigo-50 px-5 py-2.5 rounded-xl border-2 border-blue-100 cursor-pointer transition-all text-center"
+            style="color: #2563eb;"
             title="Cliquer pour réinitialiser"
           >
             <span id="score-mobile">0</span> pts
@@ -103,21 +97,21 @@
       <h2 class="text-lg sm:text-xl font-semibold mb-3 text-gray-800">🟢 Reflexes Kubernetes de base</h2>
       <ul class="space-y-2 text-sm sm:text-base">
         <li class="flex items-start gap-2">
-          <span class="text-orange font-bold mt-0.5">•</span>
+          <span class="text-blue-700 font-bold mt-0.5">•</span>
           <div>
-            <strong>Événements avant tout :</strong> <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">kubectl get events -A --sort-by=.lastTimestamp</code> puis <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">kubectl describe pod &lt;nom&gt; -n &lt;ns&gt;</code>
+            <strong>Événements avant tout :</strong> <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700">kubectl get events -A --sort-by=.lastTimestamp</code> puis <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700">kubectl describe pod &lt;nom&gt; -n &lt;ns&gt;</code>
           </div>
         </li>
         <li class="flex items-start gap-2">
-          <span class="text-orange font-bold mt-0.5">•</span>
+          <span class="text-blue-700 font-bold mt-0.5">•</span>
           <div>
-            <strong>Namespaces systématiques :</strong> <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">kubectl create namespace playground</code> + <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">kubectl config set-context --current --namespace=playground</code>
+            <strong>Namespaces systématiques :</strong> <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700">kubectl create namespace playground</code> + <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700">kubectl config set-context --current --namespace=playground</code>
           </div>
         </li>
         <li class="flex items-start gap-2">
-          <span class="text-orange font-bold mt-0.5">•</span>
+          <span class="text-blue-700 font-bold mt-0.5">•</span>
           <div>
-            <strong>Service avant Ingress :</strong> Vérifier <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">kubectl describe service</code> et les labels des pods. 50% des "Ingress cassé" = problème de Service.
+            <strong>Service avant Ingress :</strong> Vérifier <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700">kubectl describe service</code> et les labels des pods. 50% des "Ingress cassé" = problème de Service.
           </div>
         </li>
       </ul>
@@ -128,21 +122,21 @@
       <h2 class="text-lg sm:text-xl font-semibold mb-3 text-gray-800">🔵 Astuces Helm & configuration</h2>
       <ul class="space-y-2 text-sm sm:text-base">
         <li class="flex items-start gap-2">
-          <span class="text-orange font-bold mt-0.5">•</span>
+          <span class="text-blue-700 font-bold mt-0.5">•</span>
           <div>
-            <strong>Jamais de modification directe :</strong> Toujours modifier <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">values.yaml</code> puis <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">helm upgrade</code>. GitOps = vérité dans Git.
+            <strong>Jamais de modification directe :</strong> Toujours modifier <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700">values.yaml</code> puis <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700">helm upgrade</code>. GitOps = vérité dans Git.
           </div>
         </li>
         <li class="flex items-start gap-2">
-          <span class="text-orange font-bold mt-0.5">•</span>
+          <span class="text-blue-700 font-bold mt-0.5">•</span>
           <div>
-            <strong>Valeurs par environnement :</strong> <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">values-dev.yaml</code>, <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">values-recette.yaml</code>, <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">values-prod.yaml</code>
+            <strong>Valeurs par environnement :</strong> <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700">values-dev.yaml</code>, <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700">values-recette.yaml</code>, <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700">values-prod.yaml</code>
           </div>
         </li>
         <li class="flex items-start gap-2">
-          <span class="text-orange font-bold mt-0.5">•</span>
+          <span class="text-blue-700 font-bold mt-0.5">•</span>
           <div>
-            <strong>Rollback rapide :</strong> <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">helm history &lt;release&gt;</code> puis <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">helm rollback &lt;release&gt; &lt;revision&gt;</code>
+            <strong>Rollback rapide :</strong> <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700">helm history &lt;release&gt;</code> puis <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700">helm rollback &lt;release&gt; &lt;revision&gt;</code>
           </div>
         </li>
       </ul>
@@ -153,19 +147,19 @@
       <h2 class="text-lg sm:text-xl font-semibold mb-3 text-gray-800">🧰 Astuces "vraie vie" pour dev & devops</h2>
       <ul class="space-y-2 text-sm sm:text-base">
         <li class="flex items-start gap-2">
-          <span class="text-orange font-bold mt-0.5">•</span>
+          <span class="text-blue-700 font-bold mt-0.5">•</span>
           <div>
             <strong>Reproduire en local :</strong> Même image Docker, mêmes valeurs Helm, mêmes env vars. Plus tu reproduis, plus tu es autonome.
           </div>
         </li>
         <li class="flex items-start gap-2">
-          <span class="text-orange font-bold mt-0.5">•</span>
+          <span class="text-blue-700 font-bold mt-0.5">•</span>
           <div>
-            <strong>Ressources raisonnables :</strong> Définir <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">resources.requests</code> et <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">limits</code>. Scaling progressif (2→4→6) plutôt que 2→20.
+            <strong>Ressources raisonnables :</strong> Définir <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700">resources.requests</code> et <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700">limits</code>. Scaling progressif (2→4→6) plutôt que 2→20.
           </div>
         </li>
         <li class="flex items-start gap-2">
-          <span class="text-orange font-bold mt-0.5">•</span>
+          <span class="text-blue-700 font-bold mt-0.5">•</span>
           <div>
             <strong>Documenter les commandes utiles :</strong> Lister images, mapper Ingress→Service, trouver pods en erreur. Ça aide toi et tes collègues.
           </div>
@@ -174,7 +168,7 @@
     </section>
 
     <!-- CONCLUSION -->
-    <section class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl shadow-lg p-4 sm:p-6 border border-orange-100">
+    <section class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl shadow-lg p-4 sm:p-6 border border-blue-100">
       <h2 class="text-lg sm:text-xl font-semibold mb-2 text-gray-800">🧭 Comment utiliser ces astuces</h2>
       <p class="text-gray-700 text-sm leading-relaxed">
         Pendant les exercices, reviens ici avant de cliquer sur "✅ Voir solution". Objectif : analyser, observer, puis corriger.

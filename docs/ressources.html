@@ -13,15 +13,9 @@
     .fade-in { animation: fadeIn 0.5s ease-out; }
     .mobile-menu-hidden { display: none; }
     .mobile-menu-visible { display: block; }
-    .text-orange { color: #FF7000; }
-    .bg-orange-50 { background-color: #FFF5E6; }
-    .bg-orange-100 { background-color: #FFE6CC; }
-    .border-orange-100 { border-color: #FFE6CC; }
-    .hover\:text-orange:hover { color: #FF7000; }
-    .bg-gradient-orange { background: linear-gradient(to right, #FFF5E6, #FFE6CC); }
   </style>
 </head>
-<body class="bg-gradient-to-br from-gray-50 via-orange-50/20 to-gray-50 text-gray-800 min-h-screen">
+<body class="bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50 text-gray-800 min-h-screen">
 
   <!-- Navbar commune -->
   <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-gray-200/80 shadow-sm">
@@ -37,18 +31,18 @@
         
         <!-- Desktop Navigation -->
         <nav class="hidden md:flex items-center gap-1 text-sm">
-          <a href="index.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-orange hover:bg-gray-50 transition-colors">Démarrage</a>
-          <a href="exercices.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-orange hover:bg-gray-50 transition-colors">Exercices</a>
-          <a href="ressources.html" class="px-4 py-2 rounded-lg font-semibold text-orange bg-orange-50">Ressources</a>
-          <a href="astuces.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-orange hover:bg-gray-50 transition-colors">Astuces</a>
+          <a href="index.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-blue-700 hover:bg-gray-50 transition-colors">Démarrage</a>
+          <a href="exercices.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-blue-700 hover:bg-gray-50 transition-colors">Exercices</a>
+          <a href="ressources.html" class="px-4 py-2 rounded-lg font-semibold text-blue-700 bg-blue-50">Ressources</a>
+          <a href="astuces.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-blue-700 hover:bg-gray-50 transition-colors">Astuces</a>
         </nav>
 
         <!-- Desktop Score -->
         <div class="hidden md:flex items-center gap-3">
           <div 
             id="score-container"
-            class="text-base font-bold bg-gradient-orange px-5 py-2.5 rounded-xl border-2 border-orange-100 cursor-pointer hover:shadow-md transition-all"
-            style="color: #FF7000;"
+            class="text-base font-bold bg-gradient-to-r from-blue-50 to-indigo-50 px-5 py-2.5 rounded-xl border-2 border-blue-100 cursor-pointer transition-all"
+            style="color: #2563eb;"
             title="Cliquer pour réinitialiser"
           >
             <span id="score-total">0</span> pts
@@ -66,16 +60,16 @@
       <!-- Mobile Menu -->
       <div id="mobile-menu" class="mobile-menu-hidden md:hidden pb-4 border-t border-gray-200 mt-2 pt-4">
         <nav class="flex flex-col gap-2">
-          <a href="index.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-orange hover:bg-gray-50 transition-colors">Démarrage</a>
-          <a href="exercices.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-orange hover:bg-gray-50 transition-colors">Exercices</a>
-          <a href="ressources.html" class="px-4 py-2 rounded-lg font-semibold text-orange bg-orange-50">Ressources</a>
-          <a href="astuces.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-orange hover:bg-gray-50 transition-colors">Astuces</a>
+          <a href="index.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-blue-700 hover:bg-gray-50 transition-colors">Démarrage</a>
+          <a href="exercices.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-blue-700 hover:bg-gray-50 transition-colors">Exercices</a>
+          <a href="ressources.html" class="px-4 py-2 rounded-lg font-semibold text-blue-700 bg-blue-50">Ressources</a>
+          <a href="astuces.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-blue-700 hover:bg-gray-50 transition-colors">Astuces</a>
         </nav>
         <div class="mt-4 pt-4 border-t border-gray-200">
           <div 
             id="score-container-mobile"
-            class="text-base font-bold bg-gradient-orange px-5 py-2.5 rounded-xl border-2 border-orange-100 cursor-pointer hover:shadow-md transition-all text-center"
-            style="color: #FF7000;"
+            class="text-base font-bold bg-gradient-to-r from-blue-50 to-indigo-50 px-5 py-2.5 rounded-xl border-2 border-blue-100 cursor-pointer transition-all text-center"
+            style="color: #2563eb;"
             title="Cliquer pour réinitialiser"
           >
             <span id="score-total-mobile">0</span> pts
@@ -98,18 +92,18 @@
         <div class="bg-gray-50 rounded-xl p-5 sm:p-6 border border-gray-200">
           <h2 class="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-800">Kubernetes</h2>
           <ul class="list-disc list-inside text-sm sm:text-base text-gray-700 space-y-2 ml-2">
-            <li><a href="https://kubernetes.io/docs/home/" target="_blank" class="text-orange hover:underline font-medium">Documentation Kubernetes</a></li>
-            <li><a href="https://kubernetes.io/docs/reference/kubectl/" target="_blank" class="text-orange hover:underline font-medium">Référence kubectl</a></li>
-            <li><a href="https://kubernetes.io/docs/concepts/" target="_blank" class="text-orange hover:underline font-medium">Concepts (Pods, Services, Deployments…)</a></li>
+            <li><a href="https://kubernetes.io/docs/home/" target="_blank" class="text-blue-700 hover:underline font-medium">Documentation Kubernetes</a></li>
+            <li><a href="https://kubernetes.io/docs/reference/kubectl/" target="_blank" class="text-blue-700 hover:underline font-medium">Référence kubectl</a></li>
+            <li><a href="https://kubernetes.io/docs/concepts/" target="_blank" class="text-blue-700 hover:underline font-medium">Concepts (Pods, Services, Deployments…)</a></li>
           </ul>
         </div>
         <div class="bg-gray-50 rounded-xl p-5 sm:p-6 border border-gray-200">
           <h2 class="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-800">k3d, Traefik, Helm & k9s</h2>
           <ul class="list-disc list-inside text-sm sm:text-base text-gray-700 space-y-2 ml-2">
-            <li><a href="https://k3d.io/" target="_blank" class="text-orange hover:underline font-medium">k3d – Kubernetes dans Docker</a></li>
-            <li><a href="https://doc.traefik.io/traefik/" target="_blank" class="text-orange hover:underline font-medium">Documentation Traefik</a></li>
-            <li><a href="https://helm.sh/docs/" target="_blank" class="text-orange hover:underline font-medium">Documentation Helm</a></li>
-            <li><a href="https://github.com/derailed/k9s" target="_blank" class="text-orange hover:underline font-medium">k9s – TUI pour Kubernetes</a></li>
+            <li><a href="https://k3d.io/" target="_blank" class="text-blue-700 hover:underline font-medium">k3d – Kubernetes dans Docker</a></li>
+            <li><a href="https://doc.traefik.io/traefik/" target="_blank" class="text-blue-700 hover:underline font-medium">Documentation Traefik</a></li>
+            <li><a href="https://helm.sh/docs/" target="_blank" class="text-blue-700 hover:underline font-medium">Documentation Helm</a></li>
+            <li><a href="https://github.com/derailed/k9s" target="_blank" class="text-blue-700 hover:underline font-medium">k9s – TUI pour Kubernetes</a></li>
           </ul>
         </div>
       </div>

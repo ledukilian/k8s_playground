@@ -13,15 +13,9 @@
     .fade-in { animation: fadeIn 0.5s ease-out; }
     .mobile-menu-hidden { display: none; }
     .mobile-menu-visible { display: block; }
-    .text-orange { color: #FF7000; }
-    .bg-orange-50 { background-color: #FFF5E6; }
-    .bg-orange-100 { background-color: #FFE6CC; }
-    .border-orange-100 { border-color: #FFE6CC; }
-    .hover\:text-orange:hover { color: #FF7000; }
-    .bg-gradient-orange { background: linear-gradient(to right, #FFF5E6, #FFE6CC); }
   </style>
 </head>
-<body class="bg-gradient-to-br from-gray-50 via-orange-50/20 to-gray-50 text-gray-800 min-h-screen">
+<body class="bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50 text-gray-800 min-h-screen">
 
   <!-- Navbar commune -->
   <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-gray-200/80 shadow-sm">
@@ -37,18 +31,18 @@
         
         <!-- Desktop Navigation -->
         <nav class="hidden md:flex items-center gap-1 text-sm">
-          <a href="index.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-orange hover:bg-gray-50 transition-colors">Démarrage</a>
-          <a href="exercices.html" class="px-4 py-2 rounded-lg font-semibold text-orange bg-orange-50">Exercices</a>
-          <a href="ressources.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-orange hover:bg-gray-50 transition-colors">Ressources</a>
-          <a href="astuces.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-orange hover:bg-gray-50 transition-colors">Astuces</a>
+          <a href="index.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-blue-700 hover:bg-gray-50 transition-colors">Démarrage</a>
+          <a href="exercices.html" class="px-4 py-2 rounded-lg font-semibold text-blue-700 bg-blue-50">Exercices</a>
+          <a href="ressources.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-blue-700 hover:bg-gray-50 transition-colors">Ressources</a>
+          <a href="astuces.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-blue-700 hover:bg-gray-50 transition-colors">Astuces</a>
         </nav>
 
         <!-- Desktop Score -->
         <div class="hidden md:flex items-center gap-3">
           <div 
             id="score-container"
-            class="text-base font-bold bg-gradient-orange px-5 py-2.5 rounded-xl border-2 border-orange-100 cursor-pointer hover:shadow-md transition-all"
-            style="color: #FF7000;"
+            class="text-base font-bold bg-gradient-to-r from-blue-50 to-indigo-50 px-5 py-2.5 rounded-xl border-2 border-blue-100 cursor-pointer transition-all"
+            style="color: #2563eb;"
             title="Cliquer pour réinitialiser"
           >
             <span id="score-total">0</span> pts
@@ -66,16 +60,16 @@
       <!-- Mobile Menu -->
       <div id="mobile-menu" class="mobile-menu-hidden md:hidden pb-4 border-t border-gray-200 mt-2 pt-4">
         <nav class="flex flex-col gap-2">
-          <a href="index.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-orange hover:bg-gray-50 transition-colors">Démarrage</a>
-          <a href="exercices.html" class="px-4 py-2 rounded-lg font-semibold text-orange bg-orange-50">Exercices</a>
-          <a href="ressources.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-orange hover:bg-gray-50 transition-colors">Ressources</a>
-          <a href="astuces.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-orange hover:bg-gray-50 transition-colors">Astuces</a>
+          <a href="index.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-blue-700 hover:bg-gray-50 transition-colors">Démarrage</a>
+          <a href="exercices.html" class="px-4 py-2 rounded-lg font-semibold text-blue-700 bg-blue-50">Exercices</a>
+          <a href="ressources.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-blue-700 hover:bg-gray-50 transition-colors">Ressources</a>
+          <a href="astuces.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-blue-700 hover:bg-gray-50 transition-colors">Astuces</a>
         </nav>
         <div class="mt-4 pt-4 border-t border-gray-200">
           <div 
             id="score-container-mobile"
-            class="text-base font-bold bg-gradient-orange px-5 py-2.5 rounded-xl border-2 border-orange-100 cursor-pointer hover:shadow-md transition-all text-center"
-            style="color: #FF7000;"
+            class="text-base font-bold bg-gradient-to-r from-blue-50 to-indigo-50 px-5 py-2.5 rounded-xl border-2 border-blue-100 cursor-pointer transition-all text-center"
+            style="color: #2563eb;"
             title="Cliquer pour réinitialiser"
           >
             <span id="score-total-mobile">0</span> pts
@@ -96,7 +90,7 @@
       </p>
       <p class="text-gray-700 text-sm sm:text-base leading-relaxed">
         Plus l'exercice est difficile, plus il rapporte de points. Utilise
-        <strong class="text-orange">💡 "Voir indice"</strong> si tu bloques, puis <strong class="text-orange">✅ "Voir solution"</strong> pour vérifier.
+        <strong class="text-blue-700">💡 "Voir indice"</strong> si tu bloques, puis <strong class="text-blue-700">✅ "Voir solution"</strong> pour vérifier.
       </p>
     </section>
 
@@ -114,21 +108,21 @@
           <div class="flex-1 min-w-0">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
               <h3 class="font-semibold text-base sm:text-lg text-gray-800">Vérifier que kubectl fonctionne</h3>
-              <span class="text-xs px-2.5 py-1 rounded-full bg-orange-50 text-orange font-medium w-fit">1 pt</span>
+              <span class="text-xs px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 font-medium w-fit">1 pt</span>
             </div>
             <p class="text-sm sm:text-base text-gray-700 leading-relaxed mt-2">
-              Vérifie que <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">kubectl</code> est bien installé et configuré en exécutant une commande simple.
+              Vérifie que <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700">kubectl</code> est bien installé et configuré en exécutant une commande simple.
             </p>
 
             <details class="mt-3 text-sm">
-              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">💡 Voir indice</summary>
-              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-orange-200">
-                Utilise <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">kubectl version</code> ou <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">kubectl cluster-info</code>.
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-700 font-medium py-1">💡 Voir indice</summary>
+              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-blue-200">
+                Utilise <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700">kubectl version</code> ou <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700">kubectl cluster-info</code>.
               </div>
             </details>
 
             <details class="mt-2 text-sm">
-              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">✅ Voir solution</summary>
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-700 font-medium py-1">✅ Voir solution</summary>
               <div class="mt-2 text-gray-600 space-y-2 pl-2 border-l-2 border-green-200">
                 <p>Commande :</p>
                 <pre class="bg-gray-900 text-gray-100 text-xs sm:text-sm rounded-lg p-3 overflow-x-auto font-mono"><code>kubectl version --client
@@ -149,21 +143,21 @@ kubectl cluster-info</code></pre>
           <div class="flex-1 min-w-0">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
               <h3 class="font-semibold text-base sm:text-lg text-gray-800">Lister les namespaces</h3>
-              <span class="text-xs px-2.5 py-1 rounded-full bg-orange-50 text-orange font-medium w-fit">1 pt</span>
+              <span class="text-xs px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 font-medium w-fit">1 pt</span>
             </div>
             <p class="text-sm sm:text-base text-gray-700 leading-relaxed mt-2">
               Affiche la liste de tous les namespaces présents dans ton cluster.
             </p>
 
             <details class="mt-3 text-sm">
-              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">💡 Voir indice</summary>
-              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-orange-200">
-                Utilise <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">kubectl get</code> avec le type de ressource approprié.
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-700 font-medium py-1">💡 Voir indice</summary>
+              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-blue-200">
+                Utilise <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700">kubectl get</code> avec le type de ressource approprié.
               </div>
             </details>
 
             <details class="mt-2 text-sm">
-              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">✅ Voir solution</summary>
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-700 font-medium py-1">✅ Voir solution</summary>
               <div class="mt-2 text-gray-600 space-y-2 pl-2 border-l-2 border-green-200">
                 <p>Commande :</p>
                 <pre class="bg-gray-900 text-gray-100 text-xs sm:text-sm rounded-lg p-3 overflow-x-auto font-mono"><code>kubectl get namespaces
@@ -185,21 +179,21 @@ kubectl get ns</code></pre>
           <div class="flex-1 min-w-0">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
               <h3 class="font-semibold text-base sm:text-lg text-gray-800">Voir les nodes du cluster</h3>
-              <span class="text-xs px-2.5 py-1 rounded-full bg-orange-50 text-orange font-medium w-fit">1 pt</span>
+              <span class="text-xs px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 font-medium w-fit">1 pt</span>
             </div>
             <p class="text-sm sm:text-base text-gray-700 leading-relaxed mt-2">
               Affiche la liste des nodes (machines) qui composent ton cluster Kubernetes.
             </p>
 
             <details class="mt-3 text-sm">
-              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">💡 Voir indice</summary>
-              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-orange-200">
-                Utilise <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">kubectl get nodes</code>.
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-700 font-medium py-1">💡 Voir indice</summary>
+              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-blue-200">
+                Utilise <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700">kubectl get nodes</code>.
               </div>
             </details>
 
             <details class="mt-2 text-sm">
-              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">✅ Voir solution</summary>
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-700 font-medium py-1">✅ Voir solution</summary>
               <div class="mt-2 text-gray-600 space-y-2 pl-2 border-l-2 border-green-200">
                 <p>Commande :</p>
                 <pre class="bg-gray-900 text-gray-100 text-xs sm:text-sm rounded-lg p-3 overflow-x-auto font-mono"><code>kubectl get nodes</code></pre>
@@ -225,7 +219,7 @@ kubectl get ns</code></pre>
           <div class="flex-1 min-w-0">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
               <h3 class="font-semibold text-base sm:text-lg text-gray-800">Lister les pods de tous les namespaces</h3>
-              <span class="text-xs px-2.5 py-1 rounded-full bg-orange-50 text-orange font-medium w-fit">1 pt</span>
+              <span class="text-xs px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 font-medium w-fit">1 pt</span>
             </div>
             <p class="text-sm sm:text-base text-gray-700 leading-relaxed mt-2">
               Depuis ton cluster local, liste tous les pods qui tournent, dans tous les namespaces,
@@ -233,18 +227,18 @@ kubectl get ns</code></pre>
             </p>
 
             <details class="mt-3 text-sm">
-              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">💡 Voir indice</summary>
-              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-orange-200">
-                Pense au flag <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">-A</code> ou <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">--all-namespaces</code> avec <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">kubectl get pods</code>.
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-700 font-medium py-1">💡 Voir indice</summary>
+              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-blue-200">
+                Pense au flag <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700">-A</code> ou <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700">--all-namespaces</code> avec <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700">kubectl get pods</code>.
               </div>
             </details>
 
             <details class="mt-2 text-sm">
-              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">✅ Voir solution</summary>
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-700 font-medium py-1">✅ Voir solution</summary>
               <div class="mt-2 text-gray-600 space-y-2 pl-2 border-l-2 border-green-200">
                 <p>Commande possible :</p>
                 <pre class="bg-gray-900 text-gray-100 text-xs sm:text-sm rounded-lg p-3 overflow-x-auto font-mono"><code>kubectl get pods -A</code></pre>
-                <p>Repère ensuite un pod ayant un nom du type <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">frontend-…</code> et note son namespace.</p>
+                <p>Repère ensuite un pod ayant un nom du type <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700">frontend-…</code> et note son namespace.</p>
               </div>
             </details>
           </div>
@@ -261,27 +255,27 @@ kubectl get ns</code></pre>
           <div class="flex-1 min-w-0">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
               <h3 class="font-semibold text-base sm:text-lg text-gray-800">Inspecter les pods avec k9s</h3>
-              <span class="text-xs px-2.5 py-1 rounded-full bg-orange-50 text-orange font-medium w-fit">1 pt</span>
+              <span class="text-xs px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 font-medium w-fit">1 pt</span>
             </div>
             <p class="text-sm sm:text-base text-gray-700 leading-relaxed mt-2">
               Ouvre k9s, navigue jusqu’au namespace de ton application, puis affiche les logs d’un pod backend.
             </p>
 
             <details class="mt-3 text-sm">
-              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">💡 Voir indice</summary>
-              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-orange-200">
-                Une fois dans k9s, tu peux changer de namespace avec <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">:</code> puis le nom du namespace.
-                Utilise <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">l</code> sur un pod pour voir les logs.
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-700 font-medium py-1">💡 Voir indice</summary>
+              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-blue-200">
+                Une fois dans k9s, tu peux changer de namespace avec <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700">:</code> puis le nom du namespace.
+                Utilise <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700">l</code> sur un pod pour voir les logs.
               </div>
             </details>
 
             <details class="mt-2 text-sm">
-              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">✅ Voir solution</summary>
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-700 font-medium py-1">✅ Voir solution</summary>
               <div class="mt-2 text-gray-600 space-y-2 pl-2 border-l-2 border-green-200">
                 <ul class="list-disc list-inside space-y-1">
-                  <li>Exécuter <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">k9s</code> dans ton terminal.</li>
-                  <li>Taper <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">:</code> puis le nom du namespace (ex. <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">playground</code>).</li>
-                  <li>Se positionner sur un pod backend, puis appuyer sur <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">l</code> pour afficher les logs.</li>
+                  <li>Exécuter <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700">k9s</code> dans ton terminal.</li>
+                  <li>Taper <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700">:</code> puis le nom du namespace (ex. <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700">playground</code>).</li>
+                  <li>Se positionner sur un pod backend, puis appuyer sur <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-blue-700">l</code> pour afficher les logs.</li>
                 </ul>
               </div>
             </details>
@@ -306,15 +300,15 @@ kubectl get ns</code></pre>
             </p>
 
             <details class="mt-3 text-sm">
-              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">💡 Voir indice</summary>
-              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-orange-200">
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-700 font-medium py-1">💡 Voir indice</summary>
+              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-blue-200">
                 Tu peux utiliser soit <code>kubectl scale</code>, soit modifier la spec du Deployment
                 (manifeste ou values Helm).
               </div>
             </details>
 
             <details class="mt-2 text-sm">
-              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">✅ Voir solution</summary>
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-700 font-medium py-1">✅ Voir solution</summary>
               <div class="mt-2 text-gray-600 space-y-2 pl-2 border-l-2 border-green-200">
                 <p>Exemple avec <code>kubectl</code> :</p>
                 <pre class="bg-gray-900 text-gray-100 text-xs sm:text-sm rounded-lg p-3 overflow-x-auto font-mono"><code>kubectl scale deployment frontend -n playground --replicas=3
@@ -349,15 +343,15 @@ kubectl get pods -n playground</code></pre>
             </p>
 
             <details class="mt-3 text-sm">
-              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">💡 Voir indice</summary>
-              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-orange-200">
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-700 font-medium py-1">💡 Voir indice</summary>
+              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-blue-200">
                 L’host est défini dans les règles de l’Ingress. Pense aussi à ajouter une entrée dans ton
                 <code>/etc/hosts</code> si nécessaire.
               </div>
             </details>
 
             <details class="mt-2 text-sm">
-              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">✅ Voir solution</summary>
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-700 font-medium py-1">✅ Voir solution</summary>
               <div class="mt-2 text-gray-600 space-y-2">
                 <p>Exemple (extrait d’Ingress) :</p>
                 <pre class="bg-gray-900 text-gray-100 text-xs sm:text-sm rounded-lg p-3 overflow-x-auto font-mono"><code>spec:
@@ -400,14 +394,14 @@ kubectl get pods -n playground</code></pre>
             </p>
 
             <details class="mt-3 text-sm">
-              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">💡 Voir indice</summary>
-              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-orange-200">
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-700 font-medium py-1">💡 Voir indice</summary>
+              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-blue-200">
                 Tu peux ajouter un second path dans la même règle d’Ingress, avec un backend différent.
               </div>
             </details>
 
             <details class="mt-2 text-sm">
-              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">✅ Voir solution</summary>
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-700 font-medium py-1">✅ Voir solution</summary>
               <div class="mt-2 text-gray-600 space-y-2">
                 <p>Exemple :</p>
                 <pre class="bg-gray-900 text-gray-100 text-xs sm:text-sm rounded-lg p-3 overflow-x-auto font-mono"><code>spec:
@@ -452,15 +446,15 @@ kubectl get pods -n playground</code></pre>
             </p>
 
             <details class="mt-3 text-sm">
-              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">💡 Voir indice</summary>
-              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-orange-200">
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-700 font-medium py-1">💡 Voir indice</summary>
+              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-blue-200">
                 Traefik peut être configuré via une <em>Entrypoint</em> spécifique et un IngressRoute ou Ingress
                 selon la version / chart. Regarde les exemples du chart Helm Traefik.
               </div>
             </details>
 
             <details class="mt-2 text-sm">
-              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">✅ Voir solution</summary>
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-700 font-medium py-1">✅ Voir solution</summary>
               <div class="mt-2 text-gray-600 text-xs space-y-2">
                 <p>Une solution typique (à adapter à ta config Traefik / Helm) :</p>
                 <ul class="list-disc list-inside">
@@ -498,14 +492,14 @@ kubectl get pods -n playground</code></pre>
             </p>
 
             <details class="mt-3 text-sm">
-              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">💡 Voir indice</summary>
-              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-orange-200">
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-700 font-medium py-1">💡 Voir indice</summary>
+              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-blue-200">
                 Tu peux passer la valeur soit en variable d’environnement, soit via un fichier monté dans un volume.
               </div>
             </details>
 
             <details class="mt-2 text-sm">
-              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">✅ Voir solution</summary>
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-700 font-medium py-1">✅ Voir solution</summary>
               <div class="mt-2 text-gray-600 text-xs space-y-2">
                 <p>Exemple ConfigMap :</p>
                 <pre class="bg-gray-900 text-gray-100 text-xs sm:text-sm rounded-lg p-3 overflow-x-auto font-mono"><code>apiVersion: v1
@@ -546,14 +540,14 @@ data:
             </p>
 
             <details class="mt-3 text-sm">
-              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">💡 Voir indice</summary>
-              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-orange-200">
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-700 font-medium py-1">💡 Voir indice</summary>
+              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-blue-200">
                 Tu peux utiliser <code>kubectl create secret</code> ou un manifest YAML de type Secret.
               </div>
             </details>
 
             <details class="mt-2 text-sm">
-              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">✅ Voir solution</summary>
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-700 font-medium py-1">✅ Voir solution</summary>
               <div class="mt-2 text-gray-600 text-xs space-y-2">
                 <p>Exemple en ligne de commande :</p>
                 <pre class="bg-gray-900 text-gray-100 text-xs sm:text-sm rounded-lg p-3 overflow-x-auto font-mono"><code>kubectl create secret generic db-credentials \
@@ -590,15 +584,15 @@ data:
             </p>
 
             <details class="mt-3 text-sm">
-              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">💡 Voir indice</summary>
-              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-orange-200">
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-700 font-medium py-1">💡 Voir indice</summary>
+              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-blue-200">
                 Regarde dans le dossier <code>helm/charts/app-frontend</code> et ses <code>values.yaml</code>.
                 Cherche une valeur facile à vérifier une fois déployée.
               </div>
             </details>
 
             <details class="mt-2 text-sm">
-              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">✅ Voir solution</summary>
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-700 font-medium py-1">✅ Voir solution</summary>
               <div class="mt-2 text-gray-600 text-xs space-y-2">
                 <p>Exemple :</p>
                 <pre class="bg-gray-900 text-gray-100 text-xs sm:text-sm rounded-lg p-3 overflow-x-auto font-mono"><code># Modifier helm/values/values-dev.yaml
@@ -637,15 +631,15 @@ appTitle: "K8s Playground – Dev"</code></pre>
             </p>
 
             <details class="mt-3 text-sm">
-              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">💡 Voir indice</summary>
-              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-orange-200">
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-700 font-medium py-1">💡 Voir indice</summary>
+              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-blue-200">
                 Modifie la version de l’image dans le Deployment ou les values Helm, par ex.
                 <code>backend:does-not-exist</code>, puis regarde les pods.
               </div>
             </details>
 
             <details class="mt-2 text-sm">
-              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">✅ Voir solution</summary>
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-700 font-medium py-1">✅ Voir solution</summary>
               <div class="mt-2 text-gray-600 text-xs space-y-2">
                 <p>Étapes :</p>
                 <ol class="list-decimal list-inside">
@@ -678,15 +672,15 @@ appTitle: "K8s Playground – Dev"</code></pre>
             </p>
 
             <details class="mt-3 text-sm">
-              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">💡 Voir indice</summary>
-              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-orange-200">
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-700 font-medium py-1">💡 Voir indice</summary>
+              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-blue-200">
                 Regarde <code>helm history &lt;release-name&gt;</code> pour voir les révisions et
                 <code>helm rollback</code> pour revenir en arrière.
               </div>
             </details>
 
             <details class="mt-2 text-sm">
-              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">✅ Voir solution</summary>
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-700 font-medium py-1">✅ Voir solution</summary>
               <div class="mt-2 text-gray-600 text-xs space-y-2">
                 <p>Exemple :</p>
                 <pre class="bg-gray-900 text-gray-100 text-xs sm:text-sm rounded-lg p-3 overflow-x-auto font-mono"><code># Mauvaise modification
@@ -722,15 +716,15 @@ helm rollback app-frontend 1</code></pre>
             </p>
 
             <details class="mt-3 text-sm">
-              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">💡 Voir indice</summary>
-              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-orange-200">
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-700 font-medium py-1">💡 Voir indice</summary>
+              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-blue-200">
                 Pense à passer le namespace à Helm (<code>-n feature-x</code>) et à changer le nom de la release
                 (ex. <code>app-frontend-feature-x</code>).
               </div>
             </details>
 
             <details class="mt-2 text-sm">
-              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">✅ Voir solution</summary>
+              <summary class="cursor-pointer text-gray-700 hover:text-blue-700 font-medium py-1">✅ Voir solution</summary>
               <div class="mt-2 text-gray-600 text-xs space-y-2">
                 <p>Exemple :</p>
                 <pre class="bg-gray-900 text-gray-100 text-xs sm:text-sm rounded-lg p-3 overflow-x-auto font-mono"><code>kubectl create namespace feature-x
