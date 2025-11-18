@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kubernetes Playground – Exercices</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in { animation: fadeIn 0.5s ease-out; }
+    .mobile-menu-hidden { display: none; }
+    .mobile-menu-visible { display: block; }
+    .text-orange { color: #FF7000; }
+    .bg-orange-50 { background-color: #FFF5E6; }
+    .bg-orange-100 { background-color: #FFE6CC; }
+    .border-orange-100 { border-color: #FFE6CC; }
+    .hover\:text-orange:hover { color: #FF7000; }
+    .bg-gradient-orange { background: linear-gradient(to right, #FFF5E6, #FFE6CC); }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 via-orange-50/20 to-gray-50 text-gray-800 min-h-screen">
+
+  <!-- Navbar commune -->
+  <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-gray-200/80 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center gap-2 sm:gap-3">
+          <span class="text-2xl sm:text-3xl">🧪</span>
+          <div>
+            <div class="font-bold text-base sm:text-lg">Kubernetes Playground</div>
+            <div class="text-xs text-gray-500 hidden sm:block">k3d • Traefik • Helm • k9s</div>
+          </div>
+        </div>
+        
+        <!-- Desktop Navigation -->
+        <nav class="hidden md:flex items-center gap-1 text-sm">
+          <a href="index.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-orange hover:bg-gray-50 transition-colors">Démarrage</a>
+          <a href="exercices.html" class="px-4 py-2 rounded-lg font-semibold text-orange bg-orange-50">Exercices</a>
+          <a href="ressources.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-orange hover:bg-gray-50 transition-colors">Ressources</a>
+          <a href="astuces.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-orange hover:bg-gray-50 transition-colors">Astuces</a>
+        </nav>
+
+        <!-- Desktop Score -->
+        <div class="hidden md:flex items-center gap-3">
+          <div 
+            id="score-container"
+            class="text-base font-bold bg-gradient-orange px-5 py-2.5 rounded-xl border-2 border-orange-100 cursor-pointer hover:shadow-md transition-all"
+            style="color: #FF7000;"
+            title="Cliquer pour réinitialiser"
+          >
+            <span id="score-total">0</span> pts
+          </div>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Mobile Menu -->
+      <div id="mobile-menu" class="mobile-menu-hidden md:hidden pb-4 border-t border-gray-200 mt-2 pt-4">
+        <nav class="flex flex-col gap-2">
+          <a href="index.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-orange hover:bg-gray-50 transition-colors">Démarrage</a>
+          <a href="exercices.html" class="px-4 py-2 rounded-lg font-semibold text-orange bg-orange-50">Exercices</a>
+          <a href="ressources.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-orange hover:bg-gray-50 transition-colors">Ressources</a>
+          <a href="astuces.html" class="px-4 py-2 rounded-lg text-gray-700 hover:text-orange hover:bg-gray-50 transition-colors">Astuces</a>
+        </nav>
+        <div class="mt-4 pt-4 border-t border-gray-200">
+          <div 
+            id="score-container-mobile"
+            class="text-base font-bold bg-gradient-orange px-5 py-2.5 rounded-xl border-2 border-orange-100 cursor-pointer hover:shadow-md transition-all text-center"
+            style="color: #FF7000;"
+            title="Cliquer pour réinitialiser"
+          >
+            <span id="score-total-mobile">0</span> pts
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 pt-6 sm:pt-8 space-y-6 sm:space-y-8 fade-in">
+
+    <section class="bg-white rounded-2xl shadow-lg p-6 sm:p-8 border border-gray-100">
+      <h1 class="text-2xl sm:text-3xl font-bold mb-4 text-gray-800">📋 Parcours d'exercices</h1>
+      <p class="text-gray-700 leading-relaxed mb-3">
+        Chaque exercice correspond à une situation réaliste de développeur / devops :
+        lire des logs, corriger un déploiement, ajuster un Ingress, faire un rollback…
+        Coche un exercice quand tu l'as réellement effectué dans le cluster.
+      </p>
+      <p class="text-gray-700 text-sm sm:text-base leading-relaxed">
+        Plus l'exercice est difficile, plus il rapporte de points. Utilise
+        <strong class="text-orange">💡 "Voir indice"</strong> si tu bloques, puis <strong class="text-orange">✅ "Voir solution"</strong> pour vérifier.
+      </p>
+    </section>
+
+    <!-- NIVEAU 0 - BASIQUE -->
+    <section class="bg-white rounded-2xl shadow-lg p-6 sm:p-8 border border-gray-100 space-y-4 sm:space-y-5">
+      <h2 class="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-gray-800">⚪ Niveau 0 — Premiers pas</h2>
+
+      <!-- Exo 0.1 -->
+      <article class="border border-gray-200 rounded-xl p-4 sm:p-5 space-y-3 hover:shadow-md transition-shadow bg-white">
+        <div class="flex items-start gap-3 sm:gap-4">
+          <input type="checkbox"
+                 class="exercice mt-1 h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 cursor-pointer"
+                 data-id="0.1"
+                 data-points="1">
+          <div class="flex-1 min-w-0">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <h3 class="font-semibold text-base sm:text-lg text-gray-800">Vérifier que kubectl fonctionne</h3>
+              <span class="text-xs px-2.5 py-1 rounded-full bg-orange-50 text-orange font-medium w-fit">1 pt</span>
+            </div>
+            <p class="text-sm sm:text-base text-gray-700 leading-relaxed mt-2">
+              Vérifie que <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">kubectl</code> est bien installé et configuré en exécutant une commande simple.
+            </p>
+
+            <details class="mt-3 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">💡 Voir indice</summary>
+              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-orange-200">
+                Utilise <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">kubectl version</code> ou <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">kubectl cluster-info</code>.
+              </div>
+            </details>
+
+            <details class="mt-2 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">✅ Voir solution</summary>
+              <div class="mt-2 text-gray-600 space-y-2 pl-2 border-l-2 border-green-200">
+                <p>Commande :</p>
+                <pre class="bg-gray-900 text-gray-100 text-xs sm:text-sm rounded-lg p-3 overflow-x-auto font-mono"><code>kubectl version --client
+kubectl cluster-info</code></pre>
+              </div>
+            </details>
+          </div>
+        </div>
+      </article>
+
+      <!-- Exo 0.2 -->
+      <article class="border border-gray-200 rounded-xl p-4 sm:p-5 space-y-3 hover:shadow-md transition-shadow bg-white">
+        <div class="flex items-start gap-3 sm:gap-4">
+          <input type="checkbox"
+                 class="exercice mt-1 h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 cursor-pointer"
+                 data-id="0.2"
+                 data-points="1">
+          <div class="flex-1 min-w-0">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <h3 class="font-semibold text-base sm:text-lg text-gray-800">Lister les namespaces</h3>
+              <span class="text-xs px-2.5 py-1 rounded-full bg-orange-50 text-orange font-medium w-fit">1 pt</span>
+            </div>
+            <p class="text-sm sm:text-base text-gray-700 leading-relaxed mt-2">
+              Affiche la liste de tous les namespaces présents dans ton cluster.
+            </p>
+
+            <details class="mt-3 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">💡 Voir indice</summary>
+              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-orange-200">
+                Utilise <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">kubectl get</code> avec le type de ressource approprié.
+              </div>
+            </details>
+
+            <details class="mt-2 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">✅ Voir solution</summary>
+              <div class="mt-2 text-gray-600 space-y-2 pl-2 border-l-2 border-green-200">
+                <p>Commande :</p>
+                <pre class="bg-gray-900 text-gray-100 text-xs sm:text-sm rounded-lg p-3 overflow-x-auto font-mono"><code>kubectl get namespaces
+# ou en raccourci :
+kubectl get ns</code></pre>
+              </div>
+            </details>
+          </div>
+        </div>
+      </article>
+
+      <!-- Exo 0.3 -->
+      <article class="border border-gray-200 rounded-xl p-4 sm:p-5 space-y-3 hover:shadow-md transition-shadow bg-white">
+        <div class="flex items-start gap-3 sm:gap-4">
+          <input type="checkbox"
+                 class="exercice mt-1 h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 cursor-pointer"
+                 data-id="0.3"
+                 data-points="1">
+          <div class="flex-1 min-w-0">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <h3 class="font-semibold text-base sm:text-lg text-gray-800">Voir les nodes du cluster</h3>
+              <span class="text-xs px-2.5 py-1 rounded-full bg-orange-50 text-orange font-medium w-fit">1 pt</span>
+            </div>
+            <p class="text-sm sm:text-base text-gray-700 leading-relaxed mt-2">
+              Affiche la liste des nodes (machines) qui composent ton cluster Kubernetes.
+            </p>
+
+            <details class="mt-3 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">💡 Voir indice</summary>
+              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-orange-200">
+                Utilise <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">kubectl get nodes</code>.
+              </div>
+            </details>
+
+            <details class="mt-2 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">✅ Voir solution</summary>
+              <div class="mt-2 text-gray-600 space-y-2 pl-2 border-l-2 border-green-200">
+                <p>Commande :</p>
+                <pre class="bg-gray-900 text-gray-100 text-xs sm:text-sm rounded-lg p-3 overflow-x-auto font-mono"><code>kubectl get nodes</code></pre>
+                <p>Tu devrais voir au moins un node (le serveur k3d).</p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- NIVEAU 1 -->
+    <section class="bg-white rounded-2xl shadow-lg p-6 sm:p-8 border border-gray-100 space-y-4 sm:space-y-5">
+      <h2 class="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-gray-800">🟢 Niveau 1 — Découverte & inspection</h2>
+
+      <!-- Exo 1 -->
+      <article class="border border-gray-200 rounded-xl p-4 sm:p-5 space-y-3 hover:shadow-md transition-shadow bg-white">
+        <div class="flex items-start gap-3 sm:gap-4">
+          <input type="checkbox"
+                 class="exercice mt-1 h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 cursor-pointer"
+                 data-id="1"
+                 data-points="1">
+          <div class="flex-1 min-w-0">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <h3 class="font-semibold text-base sm:text-lg text-gray-800">Lister les pods de tous les namespaces</h3>
+              <span class="text-xs px-2.5 py-1 rounded-full bg-orange-50 text-orange font-medium w-fit">1 pt</span>
+            </div>
+            <p class="text-sm sm:text-base text-gray-700 leading-relaxed mt-2">
+              Depuis ton cluster local, liste tous les pods qui tournent, dans tous les namespaces,
+              puis identifie le namespace où tourne ton application front.
+            </p>
+
+            <details class="mt-3 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">💡 Voir indice</summary>
+              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-orange-200">
+                Pense au flag <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">-A</code> ou <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">--all-namespaces</code> avec <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">kubectl get pods</code>.
+              </div>
+            </details>
+
+            <details class="mt-2 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">✅ Voir solution</summary>
+              <div class="mt-2 text-gray-600 space-y-2 pl-2 border-l-2 border-green-200">
+                <p>Commande possible :</p>
+                <pre class="bg-gray-900 text-gray-100 text-xs sm:text-sm rounded-lg p-3 overflow-x-auto font-mono"><code>kubectl get pods -A</code></pre>
+                <p>Repère ensuite un pod ayant un nom du type <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">frontend-…</code> et note son namespace.</p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </article>
+
+      <!-- Exo 2 -->
+      <article class="border border-gray-200 rounded-xl p-4 sm:p-5 space-y-3 hover:shadow-md transition-shadow bg-white">
+        <div class="flex items-start gap-3 sm:gap-4">
+          <input type="checkbox"
+                 class="exercice mt-1 h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 cursor-pointer"
+                 data-id="2"
+                 data-points="1">
+          <div class="flex-1 min-w-0">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <h3 class="font-semibold text-base sm:text-lg text-gray-800">Inspecter les pods avec k9s</h3>
+              <span class="text-xs px-2.5 py-1 rounded-full bg-orange-50 text-orange font-medium w-fit">1 pt</span>
+            </div>
+            <p class="text-sm sm:text-base text-gray-700 leading-relaxed mt-2">
+              Ouvre k9s, navigue jusqu’au namespace de ton application, puis affiche les logs d’un pod backend.
+            </p>
+
+            <details class="mt-3 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">💡 Voir indice</summary>
+              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-orange-200">
+                Une fois dans k9s, tu peux changer de namespace avec <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">:</code> puis le nom du namespace.
+                Utilise <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">l</code> sur un pod pour voir les logs.
+              </div>
+            </details>
+
+            <details class="mt-2 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">✅ Voir solution</summary>
+              <div class="mt-2 text-gray-600 space-y-2 pl-2 border-l-2 border-green-200">
+                <ul class="list-disc list-inside space-y-1">
+                  <li>Exécuter <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">k9s</code> dans ton terminal.</li>
+                  <li>Taper <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">:</code> puis le nom du namespace (ex. <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">playground</code>).</li>
+                  <li>Se positionner sur un pod backend, puis appuyer sur <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono text-orange">l</code> pour afficher les logs.</li>
+                </ul>
+              </div>
+            </details>
+          </div>
+        </div>
+      </article>
+
+      <!-- Exo 3 -->
+      <article class="border border-gray-200 rounded-xl p-4 sm:p-5 space-y-3 hover:shadow-md transition-shadow bg-white">
+        <div class="flex items-start gap-3 sm:gap-4">
+          <input type="checkbox"
+                 class="exercice mt-1 h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 cursor-pointer"
+                 data-id="3"
+                 data-points="2">
+          <div class="flex-1 min-w-0">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <h3 class="font-semibold text-base sm:text-lg text-gray-800">Scaler le frontend de 1 à 3 replicas</h3>
+              <span class="text-xs px-2.5 py-1 rounded-full bg-green-50 text-green-700 font-medium w-fit">2 pts</span>
+            </div>
+            <p class="text-sm sm:text-base text-gray-700 leading-relaxed mt-2">
+              Augmente le nombre de replicas du Deployment frontend à 3, puis vérifie que le changement est effectif.
+            </p>
+
+            <details class="mt-3 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">💡 Voir indice</summary>
+              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-orange-200">
+                Tu peux utiliser soit <code>kubectl scale</code>, soit modifier la spec du Deployment
+                (manifeste ou values Helm).
+              </div>
+            </details>
+
+            <details class="mt-2 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">✅ Voir solution</summary>
+              <div class="mt-2 text-gray-600 space-y-2 pl-2 border-l-2 border-green-200">
+                <p>Exemple avec <code>kubectl</code> :</p>
+                <pre class="bg-gray-900 text-gray-100 text-xs sm:text-sm rounded-lg p-3 overflow-x-auto font-mono"><code>kubectl scale deployment frontend -n playground --replicas=3
+kubectl get pods -n playground</code></pre>
+                <p>Tu dois voir 3 pods <code>frontend-…</code> en état <code>Running</code>.</p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- NIVEAU 2 -->
+    <section class="bg-white rounded-2xl shadow-lg p-6 sm:p-8 border border-gray-100 space-y-4 sm:space-y-5">
+      <h2 class="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-gray-800">🟡 Niveau 2 — Réseau & Ingress</h2>
+
+      <!-- Exo 4 -->
+      <article class="border border-gray-200 rounded-xl p-4 sm:p-5 space-y-3 hover:shadow-md transition-shadow bg-white">
+        <div class="flex items-start gap-3 sm:gap-4">
+          <input type="checkbox"
+                 class="exercice mt-1 h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 cursor-pointer"
+                 data-id="4"
+                 data-points="2">
+          <div class="flex-1">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <h3 class="font-semibold text-base sm:text-lg text-gray-800">Changer le host de l’Ingress frontend</h3>
+              <span class="text-xs px-2.5 py-1 rounded-full bg-green-50 text-green-700 font-medium w-fit">2 pts</span>
+            </div>
+            <p class="text-sm sm:text-base text-gray-700 leading-relaxed mt-2">
+              Modifie l’Ingress pour que le frontend soit accessible via
+              <code>play.localhost</code> au lieu de <code>frontend.localhost</code>.
+            </p>
+
+            <details class="mt-3 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">💡 Voir indice</summary>
+              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-orange-200">
+                L’host est défini dans les règles de l’Ingress. Pense aussi à ajouter une entrée dans ton
+                <code>/etc/hosts</code> si nécessaire.
+              </div>
+            </details>
+
+            <details class="mt-2 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">✅ Voir solution</summary>
+              <div class="mt-2 text-gray-600 space-y-2">
+                <p>Exemple (extrait d’Ingress) :</p>
+                <pre class="bg-gray-900 text-gray-100 text-xs sm:text-sm rounded-lg p-3 overflow-x-auto font-mono"><code>spec:
+  rules:
+    - host: play.localhost
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80</code></pre>
+                <p>
+                  Puis dans <code>/etc/hosts</code> (ou équivalent) :
+                </p>
+                <pre class="bg-gray-900 text-gray-100 text-xs sm:text-sm rounded-lg p-3 overflow-x-auto font-mono"><code>127.0.0.1   play.localhost</code></pre>
+              </div>
+            </details>
+          </div>
+        </div>
+      </article>
+
+      <!-- Exo 5 -->
+      <article class="border border-gray-200 rounded-xl p-4 sm:p-5 space-y-3 hover:shadow-md transition-shadow bg-white">
+        <div class="flex items-start gap-3 sm:gap-4">
+          <input type="checkbox"
+                 class="exercice mt-1 h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 cursor-pointer"
+                 data-id="5"
+                 data-points="2">
+          <div class="flex-1">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <h3 class="font-semibold text-base sm:text-lg text-gray-800">Exposer le backend via le chemin <code>/api</code></h3>
+              <span class="text-xs px-2.5 py-1 rounded-full bg-green-50 text-green-700 font-medium w-fit">2 pts</span>
+            </div>
+            <p class="text-sm sm:text-base text-gray-700 leading-relaxed mt-2">
+              Configure l’Ingress pour que la route <code>http://play.localhost/api</code> soit envoyée au
+              service backend.
+            </p>
+
+            <details class="mt-3 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">💡 Voir indice</summary>
+              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-orange-200">
+                Tu peux ajouter un second path dans la même règle d’Ingress, avec un backend différent.
+              </div>
+            </details>
+
+            <details class="mt-2 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">✅ Voir solution</summary>
+              <div class="mt-2 text-gray-600 space-y-2">
+                <p>Exemple :</p>
+                <pre class="bg-gray-900 text-gray-100 text-xs sm:text-sm rounded-lg p-3 overflow-x-auto font-mono"><code>spec:
+  rules:
+    - host: play.localhost
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: backend
+                port:
+                  number: 80</code></pre>
+              </div>
+            </details>
+          </div>
+        </div>
+      </article>
+
+      <!-- Exo 6 -->
+      <article class="border border-gray-200 rounded-xl p-4 sm:p-5 space-y-3 hover:shadow-md transition-shadow bg-white">
+        <div class="flex items-start gap-3 sm:gap-4">
+          <input type="checkbox"
+                 class="exercice mt-1 h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 cursor-pointer"
+                 data-id="6"
+                 data-points="3">
+          <div class="flex-1">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <h3 class="font-semibold text-base sm:text-lg text-gray-800">Accéder au dashboard Traefik</h3>
+              <span class="text-xs px-2.5 py-1 rounded-full bg-yellow-50 text-yellow-700 font-medium w-fit">3 pts</span>
+            </div>
+            <p class="text-sm sm:text-base text-gray-700 leading-relaxed mt-2">
+              Expose le dashboard Traefik dans ton cluster via un Ingress dédié et vérifie qu’il liste tes routes.
+            </p>
+
+            <details class="mt-3 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">💡 Voir indice</summary>
+              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-orange-200">
+                Traefik peut être configuré via une <em>Entrypoint</em> spécifique et un IngressRoute ou Ingress
+                selon la version / chart. Regarde les exemples du chart Helm Traefik.
+              </div>
+            </details>
+
+            <details class="mt-2 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">✅ Voir solution</summary>
+              <div class="mt-2 text-gray-600 text-xs space-y-2">
+                <p>Une solution typique (à adapter à ta config Traefik / Helm) :</p>
+                <ul class="list-disc list-inside">
+                  <li>Activer le dashboard dans les <code>values.yaml</code> de Traefik.</li>
+                  <li>Créer un Ingress (ou IngressRoute) pointant vers le service interne du dashboard.</li>
+                  <li>Accéder via <code>http://traefik.localhost</code>.</li>
+                </ul>
+                <p>La mise en œuvre exacte dépendra de ton chart Traefik.</p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- NIVEAU 3 -->
+    <section class="bg-white rounded-2xl shadow-lg p-6 sm:p-8 border border-gray-100 space-y-4 sm:space-y-5">
+      <h2 class="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-gray-800">🔵 Niveau 3 — ConfigMaps, Secrets & Helm</h2>
+
+      <!-- Exo 7 -->
+      <article class="border border-gray-200 rounded-xl p-4 sm:p-5 space-y-3 hover:shadow-md transition-shadow bg-white">
+        <div class="flex items-start gap-3 sm:gap-4">
+          <input type="checkbox"
+                 class="exercice mt-1 h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 cursor-pointer"
+                 data-id="7"
+                 data-points="2">
+          <div class="flex-1">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <h3 class="font-semibold text-base sm:text-lg text-gray-800">Ajouter un message via ConfigMap</h3>
+              <span class="text-xs px-2.5 py-1 rounded-full bg-green-50 text-green-700 font-medium w-fit">2 pts</span>
+            </div>
+            <p class="text-sm sm:text-base text-gray-700 leading-relaxed mt-2">
+              Crée une ConfigMap contenant une clé <code>APP_MESSAGE</code>, monte-la dans le backend et expose
+              son contenu sur un endpoint (ex. <code>/message</code>).
+            </p>
+
+            <details class="mt-3 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">💡 Voir indice</summary>
+              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-orange-200">
+                Tu peux passer la valeur soit en variable d’environnement, soit via un fichier monté dans un volume.
+              </div>
+            </details>
+
+            <details class="mt-2 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">✅ Voir solution</summary>
+              <div class="mt-2 text-gray-600 text-xs space-y-2">
+                <p>Exemple ConfigMap :</p>
+                <pre class="bg-gray-900 text-gray-100 text-xs sm:text-sm rounded-lg p-3 overflow-x-auto font-mono"><code>apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+data:
+  APP_MESSAGE: "Hello from ConfigMap"</code></pre>
+                <p>Dans le Deployment backend :</p>
+                <pre class="bg-gray-900 text-gray-100 text-xs sm:text-sm rounded-lg p-3 overflow-x-auto font-mono"><code>env:
+  - name: APP_MESSAGE
+    valueFrom:
+      configMapKeyRef:
+        name: backend-config
+        key: APP_MESSAGE</code></pre>
+                <p>Le code backend lit ensuite <code>APP_MESSAGE</code> et l’affiche sur l’endpoint.</p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </article>
+
+      <!-- Exo 8 -->
+      <article class="border border-gray-200 rounded-xl p-4 sm:p-5 space-y-3 hover:shadow-md transition-shadow bg-white">
+        <div class="flex items-start gap-3 sm:gap-4">
+          <input type="checkbox"
+                 class="exercice mt-1 h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 cursor-pointer"
+                 data-id="8"
+                 data-points="2">
+          <div class="flex-1">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <h3 class="font-semibold text-base sm:text-lg text-gray-800">Stocker un mot de passe dans un Secret</h3>
+              <span class="text-xs px-2.5 py-1 rounded-full bg-green-50 text-green-700 font-medium w-fit">2 pts</span>
+            </div>
+            <p class="text-sm sm:text-base text-gray-700 leading-relaxed mt-2">
+              Crée un Secret avec une clé <code>DB_PASSWORD</code> et injecte-le comme variable d’environnement
+              dans le backend, au lieu de mettre le mot de passe en clair.
+            </p>
+
+            <details class="mt-3 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">💡 Voir indice</summary>
+              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-orange-200">
+                Tu peux utiliser <code>kubectl create secret</code> ou un manifest YAML de type Secret.
+              </div>
+            </details>
+
+            <details class="mt-2 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">✅ Voir solution</summary>
+              <div class="mt-2 text-gray-600 text-xs space-y-2">
+                <p>Exemple en ligne de commande :</p>
+                <pre class="bg-gray-900 text-gray-100 text-xs sm:text-sm rounded-lg p-3 overflow-x-auto font-mono"><code>kubectl create secret generic db-credentials \
+  -n playground \
+  --from-literal=DB_PASSWORD=supersecret</code></pre>
+                <p>Dans le Deployment backend :</p>
+                <pre class="bg-gray-900 text-gray-100 text-xs sm:text-sm rounded-lg p-3 overflow-x-auto font-mono"><code>env:
+  - name: DB_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: db-credentials
+        key: DB_PASSWORD</code></pre>
+              </div>
+            </details>
+          </div>
+        </div>
+      </article>
+
+      <!-- Exo 9 -->
+      <article class="border border-gray-200 rounded-xl p-4 sm:p-5 space-y-3 hover:shadow-md transition-shadow bg-white">
+        <div class="flex items-start gap-3 sm:gap-4">
+          <input type="checkbox"
+                 class="exercice mt-1 h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 cursor-pointer"
+                 data-id="9"
+                 data-points="3">
+          <div class="flex-1">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <h3 class="font-semibold text-base sm:text-lg text-gray-800">Modifier la config via Helm et déployer</h3>
+              <span class="text-xs px-2.5 py-1 rounded-full bg-yellow-50 text-yellow-700 font-medium w-fit">3 pts</span>
+            </div>
+            <p class="text-sm sm:text-base text-gray-700 leading-relaxed mt-2">
+              Change un paramètre dans les <code>values.yaml</code> du chart frontend (par exemple le titre
+              affiché ou le nombre de replicas), puis applique la modification avec <code>helm upgrade</code>.
+            </p>
+
+            <details class="mt-3 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">💡 Voir indice</summary>
+              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-orange-200">
+                Regarde dans le dossier <code>helm/charts/app-frontend</code> et ses <code>values.yaml</code>.
+                Cherche une valeur facile à vérifier une fois déployée.
+              </div>
+            </details>
+
+            <details class="mt-2 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">✅ Voir solution</summary>
+              <div class="mt-2 text-gray-600 text-xs space-y-2">
+                <p>Exemple :</p>
+                <pre class="bg-gray-900 text-gray-100 text-xs sm:text-sm rounded-lg p-3 overflow-x-auto font-mono"><code># Modifier helm/values/values-dev.yaml
+
+replicaCount: 3
+appTitle: "K8s Playground – Dev"</code></pre>
+                <p>Appliquer la mise à jour :</p>
+                <pre class="bg-gray-900 text-gray-100 text-xs sm:text-sm rounded-lg p-3 overflow-x-auto font-mono"><code>helm upgrade app-frontend ./helm/charts/app-frontend \
+  -f helm/values/values-dev.yaml</code></pre>
+              </div>
+            </details>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- NIVEAU 4 -->
+    <section class="bg-white rounded-2xl shadow-lg p-6 sm:p-8 border border-gray-100 space-y-4 sm:space-y-5">
+      <h2 class="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-gray-800">🔴 Niveau 4 — Gestion d'incidents & rollback</h2>
+
+      <!-- Exo 10 -->
+      <article class="border border-gray-200 rounded-xl p-4 sm:p-5 space-y-3 hover:shadow-md transition-shadow bg-white">
+        <div class="flex items-start gap-3 sm:gap-4">
+          <input type="checkbox"
+                 class="exercice mt-1 h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 cursor-pointer"
+                 data-id="10"
+                 data-points="3">
+          <div class="flex-1">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <h3 class="font-semibold text-base sm:text-lg text-gray-800">Corriger une image Docker invalide</h3>
+              <span class="text-xs px-2.5 py-1 rounded-full bg-yellow-50 text-yellow-700 font-medium w-fit">3 pts</span>
+            </div>
+            <p class="text-sm sm:text-base text-gray-700 leading-relaxed mt-2">
+              Simule un incident en mettant une image Docker invalide sur le backend, constate l’erreur,
+              puis corrige pour rétablir le service.
+            </p>
+
+            <details class="mt-3 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">💡 Voir indice</summary>
+              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-orange-200">
+                Modifie la version de l’image dans le Deployment ou les values Helm, par ex.
+                <code>backend:does-not-exist</code>, puis regarde les pods.
+              </div>
+            </details>
+
+            <details class="mt-2 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">✅ Voir solution</summary>
+              <div class="mt-2 text-gray-600 text-xs space-y-2">
+                <p>Étapes :</p>
+                <ol class="list-decimal list-inside">
+                  <li>Changer l’image du backend en une valeur invalide.</li>
+                  <li>Déployer : pods en <code>ImagePullBackOff</code>.</li>
+                  <li>Inspecter avec <code>kubectl describe pod</code> ou k9s.</li>
+                  <li>Remettre l’image correcte, redéployer.</li>
+                </ol>
+              </div>
+            </details>
+          </div>
+        </div>
+      </article>
+
+      <!-- Exo 11 -->
+      <article class="border border-gray-200 rounded-xl p-4 sm:p-5 space-y-3 hover:shadow-md transition-shadow bg-white">
+        <div class="flex items-start gap-3 sm:gap-4">
+          <input type="checkbox"
+                 class="exercice mt-1 h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 cursor-pointer"
+                 data-id="11"
+                 data-points="3">
+          <div class="flex-1">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <h3 class="font-semibold text-base sm:text-lg text-gray-800">Faire un rollback Helm après un déploiement cassé</h3>
+              <span class="text-xs px-2.5 py-1 rounded-full bg-yellow-50 text-yellow-700 font-medium w-fit">3 pts</span>
+            </div>
+            <p class="text-sm sm:text-base text-gray-700 leading-relaxed mt-2">
+              Fais volontairement une mauvaise modification via Helm (front cassé), puis utilise
+              <code>helm rollback</code> pour revenir à la version précédente.
+            </p>
+
+            <details class="mt-3 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">💡 Voir indice</summary>
+              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-orange-200">
+                Regarde <code>helm history &lt;release-name&gt;</code> pour voir les révisions et
+                <code>helm rollback</code> pour revenir en arrière.
+              </div>
+            </details>
+
+            <details class="mt-2 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">✅ Voir solution</summary>
+              <div class="mt-2 text-gray-600 text-xs space-y-2">
+                <p>Exemple :</p>
+                <pre class="bg-gray-900 text-gray-100 text-xs sm:text-sm rounded-lg p-3 overflow-x-auto font-mono"><code># Mauvaise modification
+helm upgrade app-frontend ./helm/charts/app-frontend \
+  -f helm/values/values-broken.yaml
+
+# Constat : front KO
+helm history app-frontend
+
+# Rollback à la révision précédente
+helm rollback app-frontend 1</code></pre>
+              </div>
+            </details>
+          </div>
+        </div>
+      </article>
+
+      <!-- Exo 12 -->
+      <article class="border border-gray-200 rounded-xl p-4 sm:p-5 space-y-3 hover:shadow-md transition-shadow bg-white">
+        <div class="flex items-start gap-3 sm:gap-4">
+          <input type="checkbox"
+                 class="exercice mt-1 h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 cursor-pointer"
+                 data-id="12"
+                 data-points="2">
+          <div class="flex-1">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <h3 class="font-semibold text-base sm:text-lg text-gray-800">Créer un namespace de feature isolé</h3>
+              <span class="text-xs px-2.5 py-1 rounded-full bg-green-50 text-green-700 font-medium w-fit">2 pts</span>
+            </div>
+            <p class="text-sm sm:text-base text-gray-700 leading-relaxed mt-2">
+              Crée un namespace <code>feature-x</code> et déploie-y une seconde instance du frontend
+              avec un titre différent (via Helm), accessible sur un autre host.
+            </p>
+
+            <details class="mt-3 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">💡 Voir indice</summary>
+              <div class="mt-2 text-gray-600 pl-2 border-l-2 border-orange-200">
+                Pense à passer le namespace à Helm (<code>-n feature-x</code>) et à changer le nom de la release
+                (ex. <code>app-frontend-feature-x</code>).
+              </div>
+            </details>
+
+            <details class="mt-2 text-sm">
+              <summary class="cursor-pointer text-gray-700 hover:text-orange font-medium py-1">✅ Voir solution</summary>
+              <div class="mt-2 text-gray-600 text-xs space-y-2">
+                <p>Exemple :</p>
+                <pre class="bg-gray-900 text-gray-100 text-xs sm:text-sm rounded-lg p-3 overflow-x-auto font-mono"><code>kubectl create namespace feature-x
+
+helm install app-frontend-feature-x ./helm/charts/app-frontend \
+  -n feature-x \
+  -f helm/values/values-feature-x.yaml</code></pre>
+                <p>Avec un Ingress dédié sur un host du type <code>feature-x.localhost</code>.</p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </article>
+    </section>
+
+  </main>
+
+  <!-- Script commun score / reset + gestion exos -->
+  <script>
+    const scoreElement = document.getElementById('score-total');
+    const scoreElementMobile = document.getElementById('score-total-mobile');
+    const scoreContainer = document.getElementById('score-container');
+    const scoreContainerMobile = document.getElementById('score-container-mobile');
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const checkboxes = document.querySelectorAll('.exercice');
+
+    function updateScore() {
+      let score = parseInt(localStorage.getItem('score_total') || '0', 10);
+      if (isNaN(score)) score = 0;
+      if (scoreElement) scoreElement.textContent = score;
+      if (scoreElementMobile) scoreElementMobile.textContent = score;
+    }
+
+    function initScore() {
+      let score = parseInt(localStorage.getItem('score_total') || '0', 10);
+      if (isNaN(score)) score = 0;
+      localStorage.setItem('score_total', score);
+      updateScore();
+    }
+
+    function loadCheckboxState() {
+      checkboxes.forEach(cb => {
+        const id = cb.dataset.id;
+        const saved = localStorage.getItem('exo_' + id);
+        cb.checked = (saved === '1');
+      });
+    }
+
+    checkboxes.forEach(cb => {
+      cb.addEventListener('change', () => {
+        const id = cb.dataset.id;
+        const points = parseInt(cb.dataset.points || '1', 10);
+        const key = 'exo_' + id;
+        const previously = localStorage.getItem(key) === '1';
+        let score = parseInt(localStorage.getItem('score_total') || '0', 10);
+        if (isNaN(score)) score = 0;
+
+        if (cb.checked && !previously) {
+          localStorage.setItem(key, '1');
+          score += points;
+        } else if (!cb.checked && previously) {
+          localStorage.setItem(key, '0');
+          score -= points;
+        }
+
+        localStorage.setItem('score_total', String(score));
+        updateScore();
+      });
+    });
+
+    function resetScore() {
+      if (confirm('Réinitialiser tous les exercices et le score ?')) {
+        Object.keys(localStorage).forEach((key) => {
+          if (key.startsWith('exo_')) {
+            localStorage.removeItem(key);
+          }
+        });
+        localStorage.setItem('score_total', '0');
+        updateScore();
+        checkboxes.forEach(cb => cb.checked = false);
+      }
+    }
+
+    if (scoreContainer) scoreContainer.addEventListener('click', resetScore);
+    if (scoreContainerMobile) scoreContainerMobile.addEventListener('click', resetScore);
+
+    if (mobileMenuBtn && mobileMenu) {
+      mobileMenuBtn.addEventListener('click', () => {
+        if (mobileMenu.classList.contains('mobile-menu-hidden')) {
+          mobileMenu.classList.remove('mobile-menu-hidden');
+          mobileMenu.classList.add('mobile-menu-visible');
+        } else {
+          mobileMenu.classList.remove('mobile-menu-visible');
+          mobileMenu.classList.add('mobile-menu-hidden');
+        }
+      });
+    }
+
+    initScore();
+    loadCheckboxState();
+  </script>
+</body>
+</html>
