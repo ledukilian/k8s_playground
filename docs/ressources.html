@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kubernetes Playground</title>
+  <title>Ressources - Kubernetes Playground</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧪</text></svg>">
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <script>
@@ -25,14 +25,40 @@
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-10px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
     .fade-in { animation: fadeIn 0.5s ease-out; }
+    .slide-in { animation: slideIn 0.3s ease-out; }
     .mobile-menu-hidden { display: none; }
     .mobile-menu-visible { display: block; }
     html { scroll-behavior: smooth; }
     h2[id], h1[id] { scroll-margin-top: 80px; }
+    pre code { display: block; }
+    /* Style pour les commandes (jaune) et URLs (bleu) dans les blocs de code */
+    pre code .cmd { color: #fbbf24 !important; } /* yellow-400 */
+    pre code .url { color: #3b82f6 !important; } /* blue-500 */
+    pre code .comment { color: #6b7280 !important; } /* gray-500 */
+    .code-block { position: relative; }
+    .copy-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .code-block:hover .copy-btn {
+      opacity: 1;
+    }
+    .hidden-item { display: none !important; }
+    .highlight { background-color: rgba(251, 191, 36, 0.3); padding: 0.125rem 0.25rem; border-radius: 0.25rem; }
+    @media (max-width: 640px) {
+      .copy-btn { opacity: 1; }
+    }
   </style>
 </head>
-<body class="bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50 dark:from-zinc-900 dark:via-zinc-800 dark:to-zinc-900 text-gray-800 dark:text-zinc-100 dark:text-zinc-100 min-h-screen transition-colors">
+<body class="bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50 dark:from-zinc-900 dark:via-zinc-800 dark:to-zinc-900 text-gray-800 dark:text-zinc-100 min-h-screen transition-colors">
 
   <!-- Navbar commune -->
   <header class="sticky top-0 z-30 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border-b border-gray-200/80 dark:border-zinc-700/80 shadow-sm">
@@ -114,94 +140,622 @@
 
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 pt-6 sm:pt-8 space-y-8 sm:space-y-10 fade-in scroll-smooth">
 
+    <!-- Hero Section avec recherche -->
     <section class="bg-gradient-to-br from-blue-50 via-indigo-50/50 to-blue-50 dark:from-zinc-900 dark:via-zinc-800 dark:to-zinc-900 p-6 sm:p-8 border-l-4 border-blue-600 dark:border-blue-500 shadow-sm">
       <h1 id="ressources" class="text-2xl sm:text-3xl font-bold mb-4 text-gray-800 dark:text-zinc-100">📚 Ressources pratiques</h1>
       <p class="text-base sm:text-lg text-gray-700 dark:text-zinc-300 mb-6 leading-relaxed">
-        Quelques liens et rappels pour t'aider pendant les exercices. Tu peux compléter cette page avec
-        les outils internes de ton projet (docs, Confluence, Notion…).
+        Une collection complète de liens, commandes et outils pour t'aider pendant les exercices. Recherche rapide, copie en un clic, et tout ce dont tu as besoin !
       </p>
+      
+      <!-- Barre de recherche -->
+      <div class="relative mb-6">
+        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+          <svg class="h-5 w-5 text-gray-400 dark:text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </div>
+        <input 
+          type="text" 
+          id="search-input"
+          placeholder="Rechercher une commande, une ressource, un outil... (Ctrl+K ou Cmd+K)"
+          class="w-full pl-12 pr-4 py-3 bg-white dark:bg-zinc-800 border-2 border-gray-300 dark:border-zinc-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent text-gray-800 dark:text-zinc-100 placeholder-gray-400 dark:placeholder-zinc-500"
+        />
+        <div class="absolute inset-y-0 right-0 pr-4 flex items-center">
+          <kbd class="hidden sm:inline-flex px-2 py-1 text-xs font-semibold text-gray-500 dark:text-zinc-400 bg-gray-100 dark:bg-zinc-700 border border-gray-300 dark:border-zinc-600 rounded">Ctrl+K</kbd>
+        </div>
+      </div>
+    </section>
 
-      <div class="grid gap-6 sm:gap-8 md:grid-cols-2">
-        <div class="bg-white dark:bg-zinc-800 p-5 sm:p-6 border-l-4 border-blue-600 dark:border-blue-500 shadow-sm">
-          <h2 id="kubernetes" class="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-800 dark:text-zinc-100 border-b-2 border-gray-200 dark:border-zinc-700 pb-2">Kubernetes</h2>
-          <ul class="list-disc list-inside text-sm sm:text-base text-gray-700 dark:text-zinc-300 space-y-2 ml-2">
-            <li><a href="https://kubernetes.io/docs/home/" target="_blank" class="text-blue-700 dark:text-blue-400 hover:underline font-medium">Documentation Kubernetes</a></li>
-            <li><a href="https://kubernetes.io/docs/reference/kubectl/" target="_blank" class="text-blue-700 dark:text-blue-400 hover:underline font-medium">Référence kubectl</a></li>
-            <li><a href="https://kubernetes.io/docs/concepts/" target="_blank" class="text-blue-700 dark:text-blue-400 hover:underline font-medium">Concepts (Pods, Services, Deployments…)</a></li>
+    <!-- Section Documentation officielle -->
+    <section id="documentation" class="bg-white dark:bg-zinc-800 p-6 sm:p-8 border-l-4 border-blue-600 dark:border-blue-500 shadow-sm searchable-section">
+      <h2 class="text-xl sm:text-2xl font-semibold mb-6 text-gray-800 dark:text-zinc-100 border-b-2 border-gray-200 dark:border-zinc-700 pb-3">
+        📖 Documentation officielle
+      </h2>
+      <div class="grid gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div class="bg-gradient-to-br from-blue-50 to-indigo-50/50 dark:from-zinc-900 dark:to-zinc-800 p-5 sm:p-6 border-2 border-blue-200 dark:border-blue-900 rounded-lg shadow-sm hover:shadow-md transition-shadow searchable-item">
+          <h3 class="text-lg font-semibold mb-3 text-gray-800 dark:text-zinc-100 flex items-center gap-2">
+            <span>☸️</span> Kubernetes
+          </h3>
+          <ul class="space-y-2 text-sm sm:text-base text-gray-700 dark:text-zinc-300">
+            <li>
+              <a href="https://kubernetes.io/docs/home/" target="_blank" class="text-blue-700 dark:text-blue-400 hover:underline font-medium flex items-center gap-1">
+                Documentation complète
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+              </a>
+            </li>
+            <li>
+              <a href="https://kubernetes.io/docs/reference/kubectl/" target="_blank" class="text-blue-700 dark:text-blue-400 hover:underline font-medium flex items-center gap-1">
+                Référence kubectl
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+              </a>
+            </li>
+            <li>
+              <a href="https://kubernetes.io/docs/concepts/" target="_blank" class="text-blue-700 dark:text-blue-400 hover:underline font-medium flex items-center gap-1">
+                Concepts (Pods, Services...)
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+              </a>
+            </li>
+            <li>
+              <a href="https://kubernetes.io/docs/tasks/" target="_blank" class="text-blue-700 dark:text-blue-400 hover:underline font-medium flex items-center gap-1">
+                Guide des tâches
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+              </a>
+            </li>
           </ul>
         </div>
-        <div class="bg-white dark:bg-zinc-800 p-5 sm:p-6 border-l-4 border-blue-600 dark:border-blue-500 shadow-sm">
-          <h2 id="outils" class="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-800 dark:text-zinc-100 border-b-2 border-gray-200 dark:border-zinc-700 pb-2">k3d, Traefik, Helm & k9s</h2>
-          <ul class="list-disc list-inside text-sm sm:text-base text-gray-700 dark:text-zinc-300 space-y-2 ml-2">
-            <li><a href="https://k3d.io/" target="_blank" class="text-blue-700 dark:text-blue-400 hover:underline font-medium">k3d – Kubernetes dans Docker</a></li>
-            <li><a href="https://doc.traefik.io/traefik/" target="_blank" class="text-blue-700 dark:text-blue-400 hover:underline font-medium">Documentation Traefik</a></li>
-            <li><a href="https://helm.sh/docs/" target="_blank" class="text-blue-700 dark:text-blue-400 hover:underline font-medium">Documentation Helm</a></li>
-            <li><a href="https://github.com/derailed/k9s" target="_blank" class="text-blue-700 dark:text-blue-400 hover:underline font-medium">k9s – TUI pour Kubernetes</a></li>
+
+        <div class="bg-gradient-to-br from-green-50 to-emerald-50/50 dark:from-zinc-900 dark:to-zinc-800 p-5 sm:p-6 border-2 border-green-200 dark:border-green-900 rounded-lg shadow-sm hover:shadow-md transition-shadow searchable-item">
+          <h3 class="text-lg font-semibold mb-3 text-gray-800 dark:text-zinc-100 flex items-center gap-2">
+            <span>⚓</span> Helm
+          </h3>
+          <ul class="space-y-2 text-sm sm:text-base text-gray-700 dark:text-zinc-300">
+            <li>
+              <a href="https://helm.sh/docs/" target="_blank" class="text-green-700 dark:text-green-400 hover:underline font-medium flex items-center gap-1">
+                Documentation Helm
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+              </a>
+            </li>
+            <li>
+              <a href="https://artifacthub.io/" target="_blank" class="text-green-700 dark:text-green-400 hover:underline font-medium flex items-center gap-1">
+                Artifact Hub (charts)
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+              </a>
+            </li>
+            <li>
+              <a href="https://helm.sh/docs/chart_template_guide/" target="_blank" class="text-green-700 dark:text-green-400 hover:underline font-medium flex items-center gap-1">
+                Guide des templates
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-gradient-to-br from-purple-50 to-pink-50/50 dark:from-zinc-900 dark:to-zinc-800 p-5 sm:p-6 border-2 border-purple-200 dark:border-purple-900 rounded-lg shadow-sm hover:shadow-md transition-shadow searchable-item">
+          <h3 class="text-lg font-semibold mb-3 text-gray-800 dark:text-zinc-100 flex items-center gap-2">
+            <span>🦊</span> Traefik
+          </h3>
+          <ul class="space-y-2 text-sm sm:text-base text-gray-700 dark:text-zinc-300">
+            <li>
+              <a href="https://doc.traefik.io/traefik/" target="_blank" class="text-purple-700 dark:text-purple-400 hover:underline font-medium flex items-center gap-1">
+                Documentation Traefik
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+              </a>
+            </li>
+            <li>
+              <a href="https://doc.traefik.io/traefik/routing/providers/kubernetes-ingress/" target="_blank" class="text-purple-700 dark:text-purple-400 hover:underline font-medium flex items-center gap-1">
+                Provider Kubernetes Ingress
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-gradient-to-br from-orange-50 to-amber-50/50 dark:from-zinc-900 dark:to-zinc-800 p-5 sm:p-6 border-2 border-orange-200 dark:border-orange-900 rounded-lg shadow-sm hover:shadow-md transition-shadow searchable-item">
+          <h3 class="text-lg font-semibold mb-3 text-gray-800 dark:text-zinc-100 flex items-center gap-2">
+            <span>🐳</span> k3d
+          </h3>
+          <ul class="space-y-2 text-sm sm:text-base text-gray-700 dark:text-zinc-300">
+            <li>
+              <a href="https://k3d.io/" target="_blank" class="text-orange-700 dark:text-orange-400 hover:underline font-medium flex items-center gap-1">
+                Site officiel k3d
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+              </a>
+            </li>
+            <li>
+              <a href="https://k3d.io/v5.6.0/usage/guides/exposing_services/" target="_blank" class="text-orange-700 dark:text-orange-400 hover:underline font-medium flex items-center gap-1">
+                Exposer des services
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-gradient-to-br from-cyan-50 to-blue-50/50 dark:from-zinc-900 dark:to-zinc-800 p-5 sm:p-6 border-2 border-cyan-200 dark:border-cyan-900 rounded-lg shadow-sm hover:shadow-md transition-shadow searchable-item">
+          <h3 class="text-lg font-semibold mb-3 text-gray-800 dark:text-zinc-100 flex items-center gap-2">
+            <span>🐶</span> k9s
+          </h3>
+          <ul class="space-y-2 text-sm sm:text-base text-gray-700 dark:text-zinc-300">
+            <li>
+              <a href="https://github.com/derailed/k9s" target="_blank" class="text-cyan-700 dark:text-cyan-400 hover:underline font-medium flex items-center gap-1">
+                k9s sur GitHub
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+              </a>
+            </li>
+            <li>
+              <a href="https://k9scli.io/topics/aliases/" target="_blank" class="text-cyan-700 dark:text-cyan-400 hover:underline font-medium flex items-center gap-1">
+                Raccourcis k9s
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+              </a>
+            </li>
           </ul>
         </div>
       </div>
     </section>
 
-    <section class="bg-white dark:bg-zinc-800 p-6 sm:p-8 border-l-4 border-blue-600 dark:border-blue-500 shadow-sm">
-      <h2 id="cheatsheet" class="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-gray-800 dark:text-zinc-100 border-b-2 border-gray-200 dark:border-zinc-700 pb-3">🧾 Cheatsheet kubectl</h2>
-      <div class="space-y-4 sm:space-y-5">
-        <div class="bg-gray-50 dark:bg-zinc-900/50 p-4 sm:p-5 border-2 border-gray-300 dark:border-zinc-700">
-          <h3 class="font-semibold text-base sm:text-lg text-gray-800 dark:text-zinc-100 mb-3">Inspection</h3>
-          <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 p-3 sm:p-4 overflow-x-auto text-xs sm:text-sm font-mono border-2 border-gray-700 dark:border-zinc-600"><code># Lister tous les pods dans tous les namespaces
-kubectl get pods -A
+    <!-- Section Outils en ligne -->
+    <section id="outils-ligne" class="bg-white dark:bg-zinc-800 p-6 sm:p-8 border-l-4 border-indigo-600 dark:border-indigo-500 shadow-sm searchable-section">
+      <h2 class="text-xl sm:text-2xl font-semibold mb-6 text-gray-800 dark:text-zinc-100 border-b-2 border-gray-200 dark:border-zinc-700 pb-3">
+        🌐 Outils en ligne
+      </h2>
+      <div class="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <a href="https://www.play-with-k8s.com/" target="_blank" class="bg-gradient-to-br from-indigo-50 to-purple-50/50 dark:from-zinc-900 dark:to-zinc-800 p-5 border-2 border-indigo-200 dark:border-indigo-900 rounded-lg shadow-sm hover:shadow-md transition-all searchable-item block">
+          <h3 class="text-lg font-semibold mb-2 text-indigo-700 dark:text-indigo-400 flex items-center gap-2">
+            Play with Kubernetes
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+          </h3>
+          <p class="text-sm text-gray-600 dark:text-zinc-400">Playground Kubernetes gratuit dans le navigateur</p>
+        </a>
 
-# Lister les services dans un namespace
-kubectl get svc -n playground
+        <a href="https://www.yamlvalidator.com/" target="_blank" class="bg-gradient-to-br from-indigo-50 to-purple-50/50 dark:from-zinc-900 dark:to-zinc-800 p-5 border-2 border-indigo-200 dark:border-indigo-900 rounded-lg shadow-sm hover:shadow-md transition-all searchable-item block">
+          <h3 class="text-lg font-semibold mb-2 text-indigo-700 dark:text-indigo-400 flex items-center gap-2">
+            YAML Validator
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+          </h3>
+          <p class="text-sm text-gray-600 dark:text-zinc-400">Valider et formater des fichiers YAML</p>
+        </a>
 
-# Lister les deployments dans un namespace
-kubectl get deploy -n playground
+        <a href="https://kubectl.docs.kubernetes.io/" target="_blank" class="bg-gradient-to-br from-indigo-50 to-purple-50/50 dark:from-zinc-900 dark:to-zinc-800 p-5 border-2 border-indigo-200 dark:border-indigo-900 rounded-lg shadow-sm hover:shadow-md transition-all searchable-item block">
+          <h3 class="text-lg font-semibold mb-2 text-indigo-700 dark:text-indigo-400 flex items-center gap-2">
+            kubectl Docs Interactive
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+          </h3>
+          <p class="text-sm text-gray-600 dark:text-zinc-400">Documentation interactive kubectl</p>
+        </a>
 
-# Décrire un pod (détails, événements, etc.)
-kubectl describe pod &lt;nom&gt; -n playground</code></pre>
+        <a href="https://kubernetes.io/docs/reference/kubectl/cheatsheet/" target="_blank" class="bg-gradient-to-br from-indigo-50 to-purple-50/50 dark:from-zinc-900 dark:to-zinc-800 p-5 border-2 border-indigo-200 dark:border-indigo-900 rounded-lg shadow-sm hover:shadow-md transition-all searchable-item block">
+          <h3 class="text-lg font-semibold mb-2 text-indigo-700 dark:text-indigo-400 flex items-center gap-2">
+            kubectl Cheatsheet officiel
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+          </h3>
+          <p class="text-sm text-gray-600 dark:text-zinc-400">Cheatsheet kubectl officielle Kubernetes</p>
+        </a>
+
+        <a href="https://k8syaml.com/" target="_blank" class="bg-gradient-to-br from-indigo-50 to-purple-50/50 dark:from-zinc-900 dark:to-zinc-800 p-5 border-2 border-indigo-200 dark:border-indigo-900 rounded-lg shadow-sm hover:shadow-md transition-all searchable-item block">
+          <h3 class="text-lg font-semibold mb-2 text-indigo-700 dark:text-indigo-400 flex items-center gap-2">
+            k8syaml.com
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+          </h3>
+          <p class="text-sm text-gray-600 dark:text-zinc-400">Générateur de manifests Kubernetes</p>
+        </a>
+      </div>
+    </section>
+
+    <!-- Cheatsheet kubectl -->
+    <section id="cheatsheet" class="bg-white dark:bg-zinc-800 p-6 sm:p-8 border-l-4 border-green-600 dark:border-green-500 shadow-sm searchable-section">
+      <h2 class="text-xl sm:text-2xl font-semibold mb-6 text-gray-800 dark:text-zinc-100 border-b-2 border-gray-200 dark:border-zinc-700 pb-3">
+        🧾 Cheatsheet kubectl
+      </h2>
+      <div class="space-y-5 sm:space-y-6">
+        <div class="bg-gray-50 dark:bg-zinc-900/50 p-4 sm:p-5 border-2 border-gray-300 dark:border-zinc-700 rounded-lg searchable-item">
+          <h3 class="font-semibold text-base sm:text-lg text-gray-800 dark:text-zinc-100 mb-3 flex items-center gap-2">
+            <span>🔍</span> Inspection & visualisation
+          </h3>
+          <div class="code-block">
+            <button class="copy-btn bg-blue-600 dark:bg-blue-700 text-white px-3 py-1.5 rounded text-xs font-medium hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors" onclick="copyCode(this)" title="Copier">
+              📋 Copier
+            </button>
+            <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs sm:text-sm p-3 sm:p-4 overflow-x-auto font-mono border-2 border-gray-700 dark:border-zinc-600"><code data-command="# Lister tous les pods dans tous les namespaces
+<span class="cmd">kubectl</span> get pods -A
+
+<span class="comment"># Lister les pods d'un namespace</span>
+<span class="cmd">kubectl</span> get pods -n playground
+
+<span class="comment"># Lister les services</span>
+<span class="cmd">kubectl</span> get svc -n playground
+
+<span class="comment"># Lister les deployments</span>
+<span class="cmd">kubectl</span> get deploy -n playground
+
+<span class="comment"># Lister toutes les ressources d'un namespace</span>
+<span class="cmd">kubectl</span> get all -n playground
+
+<span class="comment"># Décrire un pod (détails, événements, etc.)</span>
+<span class="cmd">kubectl</span> describe pod &lt;nom&gt; -n playground
+
+<span class="comment"># Décrire une ressource</span>
+<span class="cmd">kubectl</span> describe deploy/frontend -n playground
+
+<span class="comment"># Obtenir des informations au format YAML</span>
+<span class="cmd">kubectl</span> get pod &lt;nom&gt; -n playground -o yaml
+
+<span class="comment"># Obtenir des informations au format JSON</span>
+<span class="cmd">kubectl</span> get pod &lt;nom&gt; -n playground -o json
+
+<span class="comment"># Lister avec des colonnes personnalisées</span>
+<span class="cmd">kubectl</span> get pods -n playground -o custom-columns=NAME:.metadata.name,STATUS:.status.phase,NODE:.spec.nodeName</code></pre>
+          </div>
         </div>
-        <div class="bg-gray-50 dark:bg-zinc-900/50 p-4 sm:p-5 border-2 border-gray-300 dark:border-zinc-700">
-          <h3 class="font-semibold text-base sm:text-lg text-gray-800 dark:text-zinc-100 mb-3">Logs & exec</h3>
-          <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 p-3 sm:p-4 overflow-x-auto text-xs sm:text-sm font-mono border-2 border-gray-700 dark:border-zinc-600"><code># Voir les logs d'un pod
-kubectl logs &lt;pod&gt; -n playground
 
-# Suivre les logs en temps réel (comme tail -f)
-kubectl logs -f &lt;pod&gt; -n playground
+        <div class="bg-gray-50 dark:bg-zinc-900/50 p-4 sm:p-5 border-2 border-gray-300 dark:border-zinc-700 rounded-lg searchable-item">
+          <h3 class="font-semibold text-base sm:text-lg text-gray-800 dark:text-zinc-100 mb-3 flex items-center gap-2">
+            <span>📋</span> Logs & exécution
+          </h3>
+          <div class="code-block">
+            <button class="copy-btn bg-blue-600 dark:bg-blue-700 text-white px-3 py-1.5 rounded text-xs font-medium hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors" onclick="copyCode(this)" title="Copier">
+              📋 Copier
+            </button>
+            <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs sm:text-sm p-3 sm:p-4 overflow-x-auto font-mono border-2 border-gray-700 dark:border-zinc-600"><code data-command="# Voir les logs d'un pod
+<span class="cmd">kubectl</span> logs &lt;pod&gt; -n playground
 
-# Exécuter une commande dans un pod (ouvre un shell)
-kubectl exec -it &lt;pod&gt; -n playground -- sh</code></pre>
+<span class="comment"># Suivre les logs en temps réel (comme tail -f)</span>
+<span class="cmd">kubectl</span> logs -f &lt;pod&gt; -n playground
+
+<span class="comment"># Logs des 100 dernières lignes</span>
+<span class="cmd">kubectl</span> logs &lt;pod&gt; -n playground --tail=100
+
+<span class="comment"># Logs depuis une heure</span>
+<span class="cmd">kubectl</span> logs &lt;pod&gt; -n playground --since=1h
+
+<span class="comment"># Exécuter une commande dans un pod (ouvre un shell)</span>
+<span class="cmd">kubectl</span> exec -it &lt;pod&gt; -n playground -- sh
+
+<span class="comment"># Exécuter une commande spécifique</span>
+<span class="cmd">kubectl</span> exec &lt;pod&gt; -n playground -- ls -la
+
+<span class="comment"># Exécuter dans le premier container d'un pod multi-containers</span>
+<span class="cmd">kubectl</span> exec -it &lt;pod&gt; -n playground -c &lt;container-name&gt; -- sh</code></pre>
+          </div>
         </div>
-        <div class="bg-gray-50 dark:bg-zinc-900/50 p-4 sm:p-5 border-2 border-gray-300 dark:border-zinc-700">
-          <h3 class="font-semibold text-base sm:text-lg text-gray-800 dark:text-zinc-100 mb-3">Scale & rollout</h3>
-          <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 p-3 sm:p-4 overflow-x-auto text-xs sm:text-sm font-mono border-2 border-gray-700 dark:border-zinc-600"><code># Changer le nombre de replicas d'un deployment
-kubectl scale deploy frontend -n playground --replicas=3
 
-# Voir le statut d'un rollout (déploiement en cours)
-kubectl rollout status deploy/frontend -n playground
+        <div class="bg-gray-50 dark:bg-zinc-900/50 p-4 sm:p-5 border-2 border-gray-300 dark:border-zinc-700 rounded-lg searchable-item">
+          <h3 class="font-semibold text-base sm:text-lg text-gray-800 dark:text-zinc-100 mb-3 flex items-center gap-2">
+            <span>⚖️</span> Scale & rollout
+          </h3>
+          <div class="code-block">
+            <button class="copy-btn bg-blue-600 dark:bg-blue-700 text-white px-3 py-1.5 rounded text-xs font-medium hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors" onclick="copyCode(this)" title="Copier">
+              📋 Copier
+            </button>
+            <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs sm:text-sm p-3 sm:p-4 overflow-x-auto font-mono border-2 border-gray-700 dark:border-zinc-600"><code data-command="# Changer le nombre de replicas d'un deployment
+<span class="cmd">kubectl</span> scale deploy frontend -n playground --replicas=3
 
-# Redémarrer un deployment (force un nouveau rollout)
-kubectl rollout restart deploy/backend -n playground</code></pre>
+<span class="comment"># Voir le statut d'un rollout (déploiement en cours)</span>
+<span class="cmd">kubectl</span> rollout status deploy/frontend -n playground
+
+<span class="comment"># Voir l'historique des rollouts</span>
+<span class="cmd">kubectl</span> rollout history deploy/frontend -n playground
+
+<span class="comment"># Redémarrer un deployment (force un nouveau rollout)</span>
+<span class="cmd">kubectl</span> rollout restart deploy/backend -n playground
+
+<span class="comment"># Annuler un rollout en cours</span>
+<span class="cmd">kubectl</span> rollout undo deploy/frontend -n playground
+
+<span class="comment"># Rollback vers une version spécifique</span>
+<span class="cmd">kubectl</span> rollout undo deploy/frontend -n playground --to-revision=2</code></pre>
+          </div>
         </div>
-        <div class="bg-gray-50 dark:bg-zinc-900/50 p-4 sm:p-5 border-2 border-gray-300 dark:border-zinc-700">
-          <h3 class="font-semibold text-base sm:text-lg text-gray-800 dark:text-zinc-100 mb-3">ConfigMaps, Secrets & fichiers</h3>
-          <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 p-3 sm:p-4 overflow-x-auto text-xs sm:text-sm font-mono border-2 border-gray-700 dark:border-zinc-600"><code># Lister les ConfigMaps dans un namespace
-kubectl get cm -n playground
 
-# Lister les Secrets dans un namespace
-kubectl get secret -n playground
+        <div class="bg-gray-50 dark:bg-zinc-900/50 p-4 sm:p-5 border-2 border-gray-300 dark:border-zinc-700 rounded-lg searchable-item">
+          <h3 class="font-semibold text-base sm:text-lg text-gray-800 dark:text-zinc-100 mb-3 flex items-center gap-2">
+            <span>🔐</span> ConfigMaps, Secrets & fichiers
+          </h3>
+          <div class="code-block">
+            <button class="copy-btn bg-blue-600 dark:bg-blue-700 text-white px-3 py-1.5 rounded text-xs font-medium hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors" onclick="copyCode(this)" title="Copier">
+              📋 Copier
+            </button>
+            <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs sm:text-sm p-3 sm:p-4 overflow-x-auto font-mono border-2 border-gray-700 dark:border-zinc-600"><code data-command="# Lister les ConfigMaps dans un namespace
+<span class="cmd">kubectl</span> get cm -n playground
 
-# Appliquer un fichier YAML (créer ou mettre à jour)
-kubectl apply -f fichier.yaml
+<span class="comment"># Décrire un ConfigMap</span>
+<span class="cmd">kubectl</span> describe cm &lt;nom&gt; -n playground
 
-# Supprimer des ressources définies dans un fichier YAML
-kubectl delete -f fichier.yaml</code></pre>
+<span class="comment"># Voir le contenu d'un ConfigMap</span>
+<span class="cmd">kubectl</span> get cm &lt;nom&gt; -n playground -o yaml
+
+<span class="comment"># Lister les Secrets dans un namespace</span>
+<span class="cmd">kubectl</span> get secret -n playground
+
+<span class="comment"># Voir les clés d'un Secret (pas les valeurs)</span>
+<span class="cmd">kubectl</span> describe secret &lt;nom&gt; -n playground
+
+<span class="comment"># Décoder un Secret (base64)</span>
+<span class="cmd">kubectl</span> get secret &lt;nom&gt; -n playground -o jsonpath='{.data.&lt;key&gt;}' | base64 -d
+
+<span class="comment"># Appliquer un fichier YAML (créer ou mettre à jour)</span>
+<span class="cmd">kubectl</span> apply -f fichier.yaml
+
+<span class="comment"># Appliquer tous les fichiers d'un répertoire</span>
+<span class="cmd">kubectl</span> apply -f ./k8s/
+
+<span class="comment"># Supprimer des ressources définies dans un fichier YAML</span>
+<span class="cmd">kubectl</span> delete -f fichier.yaml</code></pre>
+          </div>
+        </div>
+
+        <div class="bg-gray-50 dark:bg-zinc-900/50 p-4 sm:p-5 border-2 border-gray-300 dark:border-zinc-700 rounded-lg searchable-item">
+          <h3 class="font-semibold text-base sm:text-lg text-gray-800 dark:text-zinc-100 mb-3 flex items-center gap-2">
+            <span>🔧</span> Port-forward & proxy
+          </h3>
+          <div class="code-block">
+            <button class="copy-btn bg-blue-600 dark:bg-blue-700 text-white px-3 py-1.5 rounded text-xs font-medium hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors" onclick="copyCode(this)" title="Copier">
+              📋 Copier
+            </button>
+            <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs sm:text-sm p-3 sm:p-4 overflow-x-auto font-mono border-2 border-gray-700 dark:border-zinc-600"><code data-command="# Port-forward d'un pod
+<span class="cmd">kubectl</span> port-forward pod/&lt;nom&gt; 8080:80 -n playground
+
+<span class="comment"># Port-forward d'un service</span>
+<span class="cmd">kubectl</span> port-forward svc/&lt;nom&gt; 8080:80 -n playground
+
+<span class="comment"># Port-forward en arrière-plan</span>
+<span class="cmd">kubectl</span> port-forward pod/&lt;nom&gt; 8080:80 -n playground &
+
+<span class="comment"># Proxy Kubernetes API</span>
+<span class="cmd">kubectl</span> proxy --port=8001</code></pre>
+          </div>
+        </div>
+
+        <div class="bg-gray-50 dark:bg-zinc-900/50 p-4 sm:p-5 border-2 border-gray-300 dark:border-zinc-700 rounded-lg searchable-item">
+          <h3 class="font-semibold text-base sm:text-lg text-gray-800 dark:text-zinc-100 mb-3 flex items-center gap-2">
+            <span>🗑️</span> Suppression & nettoyage
+          </h3>
+          <div class="code-block">
+            <button class="copy-btn bg-blue-600 dark:bg-blue-700 text-white px-3 py-1.5 rounded text-xs font-medium hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors" onclick="copyCode(this)" title="Copier">
+              📋 Copier
+            </button>
+            <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs sm:text-sm p-3 sm:p-4 overflow-x-auto font-mono border-2 border-gray-700 dark:border-zinc-600"><code data-command="# Supprimer un pod
+<span class="cmd">kubectl</span> delete pod &lt;nom&gt; -n playground
+
+<span class="comment"># Supprimer un deployment</span>
+<span class="cmd">kubectl</span> delete deploy frontend -n playground
+
+<span class="comment"># Supprimer toutes les ressources d'un type</span>
+<span class="cmd">kubectl</span> delete pods --all -n playground
+
+<span class="comment"># Supprimer toutes les ressources d'un namespace</span>
+<span class="cmd">kubectl</span> delete all --all -n playground
+
+<span class="comment"># Supprimer avec un fichier</span>
+<span class="cmd">kubectl</span> delete -f fichier.yaml
+
+<span class="comment"># Supprimer avec grace period</span>
+<span class="cmd">kubectl</span> delete pod &lt;nom&gt; -n playground --grace-period=30</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cheatsheet Helm -->
+    <section id="cheatsheet-helm" class="bg-white dark:bg-zinc-800 p-6 sm:p-8 border-l-4 border-green-600 dark:border-green-500 shadow-sm searchable-section">
+      <h2 class="text-xl sm:text-2xl font-semibold mb-6 text-gray-800 dark:text-zinc-100 border-b-2 border-gray-200 dark:border-zinc-700 pb-3">
+        ⚓ Cheatsheet Helm
+      </h2>
+      <div class="space-y-5 sm:space-y-6">
+        <div class="bg-gray-50 dark:bg-zinc-900/50 p-4 sm:p-5 border-2 border-gray-300 dark:border-zinc-700 rounded-lg searchable-item">
+          <h3 class="font-semibold text-base sm:text-lg text-gray-800 dark:text-zinc-100 mb-3 flex items-center gap-2">
+            <span>📦</span> Installation & gestion
+          </h3>
+          <div class="code-block">
+            <button class="copy-btn bg-green-600 dark:bg-green-700 text-white px-3 py-1.5 rounded text-xs font-medium hover:bg-green-700 dark:hover:bg-green-600 transition-colors" onclick="copyCode(this)" title="Copier">
+              📋 Copier
+            </button>
+            <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs sm:text-sm p-3 sm:p-4 overflow-x-auto font-mono border-2 border-gray-700 dark:border-zinc-600"><code data-command="# Installer un chart
+<span class="cmd">helm</span> install &lt;release-name&gt; ./helm/charts/frontend -n playground
+
+<span class="comment"># Installer avec un fichier values</span>
+<span class="cmd">helm</span> install frontend ./helm/charts/frontend -f ./helm/values/frontend/dev.yaml -n playground
+
+<span class="comment"># Mettre à jour une release (upgrade)</span>
+<span class="cmd">helm</span> upgrade frontend ./helm/charts/frontend -n playground
+
+<span class="comment"># Upgrade avec values</span>
+<span class="cmd">helm</span> upgrade frontend ./helm/charts/frontend -f ./helm/values/frontend/staging.yaml -n playground
+
+<span class="comment"># Lister les releases installées</span>
+<span class="cmd">helm</span> list -n playground
+
+<span class="comment"># Lister toutes les releases (tous les namespaces)</span>
+<span class="cmd">helm</span> list -A
+
+<span class="comment"># Désinstaller une release</span>
+<span class="cmd">helm</span> uninstall frontend -n playground</code></pre>
+          </div>
+        </div>
+
+        <div class="bg-gray-50 dark:bg-zinc-900/50 p-4 sm:p-5 border-2 border-gray-300 dark:border-zinc-700 rounded-lg searchable-item">
+          <h3 class="font-semibold text-base sm:text-lg text-gray-800 dark:text-zinc-100 mb-3 flex items-center gap-2">
+            <span>🧪</span> Test & debug
+          </h3>
+          <div class="code-block">
+            <button class="copy-btn bg-green-600 dark:bg-green-700 text-white px-3 py-1.5 rounded text-xs font-medium hover:bg-green-700 dark:hover:bg-green-600 transition-colors" onclick="copyCode(this)" title="Copier">
+              📋 Copier
+            </button>
+            <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs sm:text-sm p-3 sm:p-4 overflow-x-auto font-mono border-2 border-gray-700 dark:border-zinc-600"><code data-command="# Linter un chart
+<span class="cmd">helm</span> lint ./helm/charts/frontend
+
+<span class="comment"># Template rendering (prévisualiser sans installer)</span>
+<span class="cmd">helm</span> template frontend ./helm/charts/frontend -n playground
+
+<span class="comment"># Template avec values</span>
+<span class="cmd">helm</span> template frontend ./helm/charts/frontend -f ./helm/values/frontend/dev.yaml -n playground
+
+<span class="comment"># Dry-run (simuler une installation)</span>
+<span class="cmd">helm</span> install frontend ./helm/charts/frontend --dry-run --debug -n playground
+
+<span class="comment"># Voir les valeurs par défaut d'un chart</span>
+<span class="cmd">helm</span> show values ./helm/charts/frontend
+
+<span class="comment"># Voir les valeurs utilisées par une release</span>
+<span class="cmd">helm</span> get values frontend -n playground</code></pre>
+          </div>
+        </div>
+
+        <div class="bg-gray-50 dark:bg-zinc-900/50 p-4 sm:p-5 border-2 border-gray-300 dark:border-zinc-700 rounded-lg searchable-item">
+          <h3 class="font-semibold text-base sm:text-lg text-gray-800 dark:text-zinc-100 mb-3 flex items-center gap-2">
+            <span>📊</span> Inspection & historique
+          </h3>
+          <div class="code-block">
+            <button class="copy-btn bg-green-600 dark:bg-green-700 text-white px-3 py-1.5 rounded text-xs font-medium hover:bg-green-700 dark:hover:bg-green-600 transition-colors" onclick="copyCode(this)" title="Copier">
+              📋 Copier
+            </button>
+            <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs sm:text-sm p-3 sm:p-4 overflow-x-auto font-mono border-2 border-gray-700 dark:border-zinc-600"><code data-command="# Voir le statut d'une release
+<span class="cmd">helm</span> status frontend -n playground
+
+<span class="comment"># Voir l'historique des releases</span>
+<span class="cmd">helm</span> history frontend -n playground
+
+<span class="comment"># Rollback vers une version précédente</span>
+<span class="cmd">helm</span> rollback frontend 2 -n playground
+
+<span class="comment"># Voir les manifests générés</span>
+<span class="cmd">helm</span> get manifest frontend -n playground
+
+<span class="comment"># Voir les notes d'une release</span>
+<span class="cmd">helm</span> get notes frontend -n playground</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cheatsheet k3d -->
+    <section id="cheatsheet-k3d" class="bg-white dark:bg-zinc-800 p-6 sm:p-8 border-l-4 border-orange-600 dark:border-orange-500 shadow-sm searchable-section">
+      <h2 class="text-xl sm:text-2xl font-semibold mb-6 text-gray-800 dark:text-zinc-100 border-b-2 border-gray-200 dark:border-zinc-700 pb-3">
+        🐳 Cheatsheet k3d
+      </h2>
+      <div class="space-y-5 sm:space-y-6">
+        <div class="bg-gray-50 dark:bg-zinc-900/50 p-4 sm:p-5 border-2 border-gray-300 dark:border-zinc-700 rounded-lg searchable-item">
+          <h3 class="font-semibold text-base sm:text-lg text-gray-800 dark:text-zinc-100 mb-3 flex items-center gap-2">
+            <span>🚀</span> Gestion des clusters
+          </h3>
+          <div class="code-block">
+            <button class="copy-btn bg-orange-600 dark:bg-orange-700 text-white px-3 py-1.5 rounded text-xs font-medium hover:bg-orange-700 dark:hover:bg-orange-600 transition-colors" onclick="copyCode(this)" title="Copier">
+              📋 Copier
+            </button>
+            <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs sm:text-sm p-3 sm:p-4 overflow-x-auto font-mono border-2 border-gray-700 dark:border-zinc-600"><code data-command="# Créer un cluster depuis un fichier config
+<span class="cmd">k3d</span> cluster create --config ./k3d/k3d-cluster.yaml
+
+<span class="comment"># Créer un cluster simple</span>
+<span class="cmd">k3d</span> cluster create mycluster
+
+<span class="comment"># Lister les clusters</span>
+<span class="cmd">k3d</span> cluster list
+
+<span class="comment"># Supprimer un cluster</span>
+<span class="cmd">k3d</span> cluster delete mycluster
+
+<span class="comment"># Démarrer un cluster arrêté</span>
+<span class="cmd">k3d</span> cluster start mycluster
+
+<span class="comment"># Arrêter un cluster</span>
+<span class="cmd">k3d</span> cluster stop mycluster</code></pre>
+          </div>
+        </div>
+
+        <div class="bg-gray-50 dark:bg-zinc-900/50 p-4 sm:p-5 border-2 border-gray-300 dark:border-zinc-700 rounded-lg searchable-item">
+          <h3 class="font-semibold text-base sm:text-lg text-gray-800 dark:text-zinc-100 mb-3 flex items-center gap-2">
+            <span>🔄</span> Images & registries
+          </h3>
+          <div class="code-block">
+            <button class="copy-btn bg-orange-600 dark:bg-orange-700 text-white px-3 py-1.5 rounded text-xs font-medium hover:bg-orange-700 dark:hover:bg-orange-600 transition-colors" onclick="copyCode(this)" title="Copier">
+              📋 Copier
+            </button>
+            <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs sm:text-sm p-3 sm:p-4 overflow-x-auto font-mono border-2 border-gray-700 dark:border-zinc-600"><code data-command="# Importer une image Docker dans k3d
+<span class="cmd">k3d</span> image import myimage:latest -c mycluster
+
+<span class="comment"># Lister les images dans le cluster</span>
+<span class="cmd">k3d</span> image list
+
+<span class="comment"># Créer un registry local</span>
+<span class="cmd">k3d</span> registry create myregistry.localhost --port 5000
+
+<span class="comment"># Connecter un registry à un cluster</span>
+<span class="cmd">k3d</span> cluster edit mycluster --registry-use myregistry.localhost:5000</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section Troubleshooting -->
+    <section id="troubleshooting" class="bg-white dark:bg-zinc-800 p-6 sm:p-8 border-l-4 border-red-600 dark:border-red-500 shadow-sm searchable-section">
+      <h2 class="text-xl sm:text-2xl font-semibold mb-6 text-gray-800 dark:text-zinc-100 border-b-2 border-gray-200 dark:border-zinc-700 pb-3">
+        🔧 Troubleshooting & diagnostic
+      </h2>
+      <div class="space-y-5 sm:space-y-6">
+        <div class="bg-red-50 dark:bg-red-900/20 p-4 sm:p-5 border-2 border-red-200 dark:border-red-900 rounded-lg searchable-item">
+          <h3 class="font-semibold text-base sm:text-lg text-gray-800 dark:text-zinc-100 mb-3 flex items-center gap-2">
+            <span>🐛</span> Diagnostic de pods
+          </h3>
+          <div class="code-block">
+            <button class="copy-btn bg-red-600 dark:bg-red-700 text-white px-3 py-1.5 rounded text-xs font-medium hover:bg-red-700 dark:hover:bg-red-600 transition-colors" onclick="copyCode(this)" title="Copier">
+              📋 Copier
+            </button>
+            <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs sm:text-sm p-3 sm:p-4 overflow-x-auto font-mono border-2 border-gray-700 dark:border-zinc-600"><code data-command="# Voir les événements d'un namespace
+<span class="cmd">kubectl</span> get events -n playground --sort-by='.lastTimestamp'
+
+<span class="comment"># Voir les pods en erreur</span>
+<span class="cmd">kubectl</span> get pods -n playground | grep -v Running
+
+<span class="comment"># Décrire un pod problématique</span>
+<span class="cmd">kubectl</span> describe pod &lt;nom&gt; -n playground
+
+<span class="comment"># Logs du pod précédent (si recréé)</span>
+<span class="cmd">kubectl</span> logs &lt;pod&gt; -n playground --previous
+
+<span class="comment"># Voir les ressources utilisées</span>
+<span class="cmd">kubectl</span> top pods -n playground
+
+<span class="comment"># Voir les noeuds et leur statut</span>
+<span class="cmd">kubectl</span> get nodes
+
+<span class="comment"># Voir les détails d'un noeud</span>
+<span class="cmd">kubectl</span> describe node &lt;node-name&gt;</code></pre>
+          </div>
+        </div>
+
+        <div class="bg-red-50 dark:bg-red-900/20 p-4 sm:p-5 border-2 border-red-200 dark:border-red-900 rounded-lg searchable-item">
+          <h3 class="font-semibold text-base sm:text-lg text-gray-800 dark:text-zinc-100 mb-3 flex items-center gap-2">
+            <span>🌐</span> Diagnostic réseau
+          </h3>
+          <div class="code-block">
+            <button class="copy-btn bg-red-600 dark:bg-red-700 text-white px-3 py-1.5 rounded text-xs font-medium hover:bg-red-700 dark:hover:bg-red-600 transition-colors" onclick="copyCode(this)" title="Copier">
+              📋 Copier
+            </button>
+            <pre class="bg-gray-900 dark:bg-zinc-900 text-gray-100 text-xs sm:text-sm p-3 sm:p-4 overflow-x-auto font-mono border-2 border-gray-700 dark:border-zinc-600"><code data-command="# Lister les services et leurs endpoints
+<span class="cmd">kubectl</span> get svc,endpoints -n playground
+
+<span class="comment"># Voir les détails d'un service</span>
+<span class="cmd">kubectl</span> describe svc &lt;nom&gt; -n playground
+
+<span class="comment"># Lister les Ingress</span>
+<span class="cmd">kubectl</span> get ingress -n playground
+
+<span class="comment"># Voir les détails d'un Ingress</span>
+<span class="cmd">kubectl</span> describe ingress &lt;nom&gt; -n playground
+
+<span class="comment"># Tester la connectivité réseau entre pods</span>
+<span class="cmd">kubectl</span> run test-pod --image=busybox --rm -it --restart=Never -- nslookup &lt;service-name&gt;.playground
+
+<span class="comment"># Tester avec curl depuis un pod</span>
+<span class="cmd">kubectl</span> run curl-test --image=curlimages/curl --rm -it --restart=Never -- curl http://&lt;service-name&gt;.playground</code></pre>
+          </div>
         </div>
       </div>
     </section>
 
   </main>
 
-  <!-- Script commun score / reset / theme -->
+  <!-- Script commun score / reset / theme / recherche / copie -->
   <script>
+    // Score management
     const scoreElement = document.getElementById('score-total');
     const scoreElementMobile = document.getElementById('score-total-mobile');
     const scoreContainer = document.getElementById('score-container');
@@ -238,6 +792,7 @@ kubectl delete -f fichier.yaml</code></pre>
     if (scoreContainer) scoreContainer.addEventListener('click', resetScore);
     if (scoreContainerMobile) scoreContainerMobile.addEventListener('click', resetScore);
 
+    // Mobile menu
     if (mobileMenuBtn && mobileMenu) {
       mobileMenuBtn.addEventListener('click', () => {
         if (mobileMenu.classList.contains('mobile-menu-hidden')) {
@@ -250,7 +805,192 @@ kubectl delete -f fichier.yaml</code></pre>
       });
     }
 
+    // Fonction de copie de code
+    function copyCode(button) {
+      const codeBlock = button.parentElement;
+      const codeElement = codeBlock.querySelector('code');
+      const command = codeElement.getAttribute('data-command') || codeElement.textContent;
+      
+      navigator.clipboard.writeText(command).then(() => {
+        const originalText = button.textContent;
+        button.textContent = '✓ Copié !';
+        button.classList.add('bg-green-600', 'dark:bg-green-700');
+        button.classList.remove('bg-blue-600', 'dark:bg-blue-700', 'bg-orange-600', 'dark:bg-orange-700', 'bg-red-600', 'dark:bg-red-700', 'bg-green-600', 'dark:bg-green-700');
+        
+        setTimeout(() => {
+          button.textContent = originalText;
+          // Restaurer la couleur originale selon le type de bouton
+          if (button.classList.contains('bg-green')) {
+            button.classList.remove('bg-green-600', 'dark:bg-green-700');
+            button.classList.add('bg-blue-600', 'dark:bg-blue-700');
+          } else if (button.classList.contains('bg-orange')) {
+            button.classList.remove('bg-green-600', 'dark:bg-green-700');
+            button.classList.add('bg-orange-600', 'dark:bg-orange-700');
+          } else if (button.classList.contains('bg-red')) {
+            button.classList.remove('bg-green-600', 'dark:bg-green-700');
+            button.classList.add('bg-red-600', 'dark:bg-red-700');
+          } else {
+            button.classList.remove('bg-green-600', 'dark:bg-green-700');
+            button.classList.add('bg-blue-600', 'dark:bg-blue-700');
+          }
+        }, 2000);
+      }).catch(err => {
+        console.error('Erreur lors de la copie:', err);
+        button.textContent = '❌ Erreur';
+      });
+    }
+
+    // Fonction de recherche
+    function initSearch() {
+      const searchInput = document.getElementById('search-input');
+      const searchableItems = document.querySelectorAll('.searchable-item');
+      
+      if (!searchInput) return;
+
+      // Sauvegarder le HTML original de chaque élément (une seule fois)
+      const originalHTML = new Map();
+      searchableItems.forEach(item => {
+        // Sauvegarder seulement les éléments qui peuvent être modifiés (titre, liens, etc.)
+        const titleElements = item.querySelectorAll('h2, h3, a, p:not(.code-block p), li');
+        titleElements.forEach(el => {
+          if (!el.closest('pre, code')) {
+            const key = el;
+            if (!originalHTML.has(key)) {
+              originalHTML.set(key, el.innerHTML);
+            }
+          }
+        });
+      });
+
+      function restoreOriginalHTML() {
+        originalHTML.forEach((html, element) => {
+          if (element && element.parentNode) {
+            element.innerHTML = html;
+          }
+        });
+      }
+
+      function performSearch() {
+        const query = searchInput.value.toLowerCase().trim();
+        
+        // Restaurer le HTML original avant chaque recherche
+        restoreOriginalHTML();
+        
+        if (query === '') {
+          // Afficher tout
+          searchableItems.forEach(item => {
+            item.classList.remove('hidden-item');
+          });
+          // Afficher toutes les sections
+          document.querySelectorAll('.searchable-section').forEach(section => {
+            section.style.display = '';
+          });
+          // Supprimer le message "aucun résultat"
+          const resultsSection = document.getElementById('no-results');
+          if (resultsSection) {
+            resultsSection.remove();
+          }
+          return;
+        }
+
+        let hasResults = false;
+        const sections = document.querySelectorAll('.searchable-section');
+        
+        searchableItems.forEach(item => {
+          // Exclure les blocs de code de la recherche
+          const itemClone = item.cloneNode(true);
+          itemClone.querySelectorAll('pre, code, .code-block').forEach(codeEl => {
+            codeEl.remove();
+          });
+          const text = itemClone.textContent.toLowerCase();
+          const matches = text.includes(query);
+          
+          if (matches) {
+            item.classList.remove('hidden-item');
+            hasResults = true;
+            
+            // Mettre en évidence les correspondances dans les titres et liens seulement
+            const titleElements = item.querySelectorAll('h2, h3, a, p:not(.code-block p), li');
+            titleElements.forEach(el => {
+              // Ne pas toucher aux éléments dans les blocs de code
+              if (el.closest('pre, code, .code-block')) {
+                return;
+              }
+              
+              const original = originalHTML.get(el);
+              if (original && original.toLowerCase().includes(query)) {
+                try {
+                  const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                  const regex = new RegExp(`(${escapedQuery})`, 'gi');
+                  el.innerHTML = original.replace(regex, '<span class="highlight">$1</span>');
+                } catch (e) {
+                  console.error('Erreur regex:', e);
+                }
+              }
+            });
+          } else {
+            item.classList.add('hidden-item');
+          }
+        });
+
+        // Masquer les sections vides
+        sections.forEach(section => {
+          const visibleItems = section.querySelectorAll('.searchable-item:not(.hidden-item)');
+          if (visibleItems.length === 0 && query !== '') {
+            section.style.display = 'none';
+          } else {
+            section.style.display = '';
+          }
+        });
+
+        // Afficher un message si aucun résultat
+        let resultsSection = document.getElementById('no-results');
+        if (!hasResults && query !== '') {
+          if (!resultsSection) {
+            resultsSection = document.createElement('div');
+            resultsSection.id = 'no-results';
+            resultsSection.className = 'bg-yellow-50 dark:bg-yellow-900/20 border-2 border-yellow-300 dark:border-yellow-700 p-6 rounded-lg text-center';
+            resultsSection.innerHTML = '<p class="text-yellow-800 dark:text-yellow-200">Aucun résultat trouvé pour "<strong>' + escapeHtml(query) + '</strong>"</p>';
+            const searchSection = searchInput.closest('section');
+            if (searchSection && searchSection.nextElementSibling) {
+              searchSection.nextElementSibling.insertAdjacentElement('beforebegin', resultsSection);
+            } else {
+              searchInput.parentElement.parentElement.appendChild(resultsSection);
+            }
+          }
+        } else if (resultsSection) {
+          resultsSection.remove();
+        }
+      }
+
+      function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      searchInput.addEventListener('input', performSearch);
+      searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          searchInput.value = '';
+          performSearch();
+          searchInput.blur();
+        }
+      });
+
+      // Raccourci clavier Ctrl+K ou Cmd+K pour focus
+      document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+          e.preventDefault();
+          searchInput.focus();
+          searchInput.select();
+        }
+      });
+    }
+
+    // Initialize everything
     initScore();
+    initSearch();
   </script>
 </body>
 </html>
